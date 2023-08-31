@@ -1,22 +1,22 @@
 #!/bin/bash
 BADCC1=()
-BADCC3=("/root/installs/llvm-3.6.0-buildfromsrc/bin/clang  -O3")
+BADCC3=("clang-3.6.0  -O3")
 BADCC2=()
 MODE=$MODE
 
 # need to configure this part 
-#BADCC1=("clang-trunk -O3")  # compilation failures
+#BADCC1=("clang-7.1.0 -O3")  # compilation failures
 #BADCC2=() # exec failures 
 #BADCC3=() # wrong results 
 #MODE=-m64
 
-GOODCC=("/root/installs/gcc-4.8.0/bin/gcc -O0")
-TIMEOUTCC=15
-TIMEOUTEXE=5
-TIMEOUTCCOMP=15
+GOODCC=("gcc-4.8.0 -O0")
+TIMEOUTCC=10
+TIMEOUTEXE=2
+TIMEOUTCCOMP=10
 CFILE=small.c
 CFLAG="-o t"
-CLANGFC="clang -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
+CLANGFC="clang-7.1.0 -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
 
 #################################################################################
 
@@ -25,7 +25,7 @@ CLANGFC="clang -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
 rm -f out*.txt 
 
 if 
-  clang -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
+  clang-7.1.0 -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
   ! grep 'conversions than data arguments' out.txt &&\
   ! grep 'incompatible redeclaration' out.txt &&\
   ! grep 'ordered comparison between pointer' out.txt &&\
@@ -37,7 +37,7 @@ if
   ! grep 'incompatible pointer to' out.txt &&\
   ! grep 'incompatible integer to' out.txt &&\
   ! grep 'type specifier missing' out.txt &&\
-  gcc -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
+  gcc-7.1.0 -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
 #  ! grep uninitialized outa.txt &&\
   ! grep 'division by zero' outa.txt &&\
   ! grep 'without a cast' outa.txt &&\
@@ -184,7 +184,7 @@ for cc in "${BADCC3[@]}" ; do
         if [ $ret != 0 ] ; then 
         exit 1 
         fi 
-
+        
         # compare with reference: out0.txt 
         if diff -q out0.txt out2.txt >/dev/null ; then
         exit 1

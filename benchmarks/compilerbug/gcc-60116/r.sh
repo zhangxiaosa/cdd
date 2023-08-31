@@ -1,13 +1,12 @@
 #!/bin/bash
 
 # need to configure this part 
-BADCC=("/root/installs/gcc-4.8.2/bin/gcc -m32 -Os")
-#GOODCC=("/home/guancheng/installs/gccs/gcc-4.8.2-multilib/bin/gcc -m32 -O0")
-GOODCC=("gcc")
+BADCC=("gcc-4.8.2 -m32 -Os")
+GOODCC=("gcc-4.8.2 -m32 -O0")
 TIMEOUT=10
 CFILE=small.c
 CFLAG="-o t"
-CLANGFC="clang -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
+CLANGFC="clang-7.1.0 -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
 
 #################################################################################
 
@@ -16,7 +15,7 @@ CLANGFC="clang -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
 rm -f out*.txt 
 
 if 
-  clang -m32 -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
+  clang-7.1.0 -m32 -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
   ! grep 'conversions than data arguments' out.txt &&\
   ! grep 'incompatible redeclaration' out.txt &&\
   ! grep 'ordered comparison between pointer' out.txt &&\
@@ -29,8 +28,7 @@ if
   ! grep 'incompatible pointer to' out.txt &&\
   ! grep 'incompatible integer to' out.txt &&\
   ! grep 'type specifier missing' out.txt &&\
-  #gcc-trunk -m32 -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
-  gcc -m32 -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
+  gcc-7.1.0 -m32 -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
 #  ! grep uninitialized outa.txt &&\
   ! grep 'division by zero' outa.txt &&\
   ! grep 'without a cast' outa.txt &&\
@@ -79,6 +77,7 @@ fi
 #############################
 # iterate over the good ones 
 #############################
+
 timeout -s 9 $TIMEOUT ccomp -interp $CFILE >& /dev/null
 ret=$? 
 if [ $ret != 0 ] ; then 
@@ -94,6 +93,7 @@ for cc in "${GOODCC[@]}" ; do
     if [ $ret != 0 ] ; then 
 	exit 1 
     fi
+
     # execute 
     (timeout -s 9 $TIMEOUT ./t >out1.txt 2>&1) >&/dev/null
     ret=$? 
@@ -106,28 +106,28 @@ for cc in "${GOODCC[@]}" ; do
 	exit 1
     fi    
 done
+
 #############################
 # iterate over the bad ones 
 #############################
 
 for cc in "${BADCC[@]}" ; do 
     rm -f ./t ./out2.txt 
-    #echo "hello1"
+
     # compile 
-    #echo timeout -s 9 $TIMEOUT $cc $CFLAG $CFILE
     timeout -s 9 $TIMEOUT $cc $CFLAG $CFILE >& /dev/null
     ret=$? 
     if [ $ret != 0 ] ; then 
 	exit 1 
     fi
-    #echo "hello2"
+
     # execute 
     (timeout -s 9 $TIMEOUT ./t >out2.txt 2>&1) >&/dev/null
     ret=$? 
     if [ $ret != 0 ] ; then 
 	exit 1 
     fi 
-    #echo "hello3"
+    
     # compare with reference: out0.txt 
     if diff -q out0.txt out2.txt >/dev/null ; then
 	exit 1

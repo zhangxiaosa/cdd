@@ -1,14 +1,12 @@
 #!/bin/bash
 
 # need to configure this part 
-BADCC=("/root/installs/gcc-4.8.2/bin/gcc -m32 -O3")
-#GOODCC=("ccomp -fall")
-GOODCC=("gcc")
-TIMEOUT=50
+BADCC=("gcc-4.8.2 -m32 -O3")
+GOODCC=("ccomp -fall")
+TIMEOUT=30
 CFILE=small.c
 CFLAG="-o t"
-#CLANGFC="clang -m32 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined,address"
-CLANGFC="clang -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined,address"
+CLANGFC="clang-7.1.0 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined,address"
 
 #################################################################################
 
@@ -17,7 +15,7 @@ CLANGFC="clang -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined,address"
 rm -f out*.txt 
 
 if 
-  clang -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
+  clang-7.1.0 -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
   ! grep 'conversions than data arguments' out.txt &&\
   ! grep 'incompatible redeclaration' out.txt &&\
   ! grep 'ordered comparison between pointer' out.txt &&\
@@ -30,8 +28,7 @@ if
   ! grep 'incompatible pointer to' out.txt &&\
   ! grep 'incompatible integer to' out.txt &&\
   ! grep 'type specifier missing' out.txt &&\
-  #gcc-trunk -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
-  gcc -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
+  gcc-7.1.0 -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
 #  ! grep uninitialized outa.txt &&\
   ! grep 'division by zero' outa.txt &&\
   ! grep 'without a cast' outa.txt &&\
@@ -81,8 +78,7 @@ fi
 # iterate over the good ones 
 #############################
 
-for cc in "${GOODCC[@]}" ; do
-   # echo "hello" 
+for cc in "${GOODCC[@]}" ; do 
     rm -f ./t ./out1.txt 
 
     # compile 
@@ -112,8 +108,6 @@ for cc in "${GOODCC[@]}" ; do
 	exit 1
     fi    
 done
-
-#echo "hello"
 
 #############################
 # iterate over the bad ones 

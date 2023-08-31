@@ -1,25 +1,25 @@
 #!/bin/bash
-BADCC1=("/root/installs/llvm-3.6.0-buildfromsrc/bin/clang -O3")
+BADCC1=("clang-3.6.0 -O3")
 BADCC2=()
 BADCC3=()
 MODE=("-m64")
 
 # need to configure this part
-#BADCC1=("clang -O3")  # compilation failures
+#BADCC1=("clang-7.1.0 -O3")  # compilation failures
 #BADCC2=() # exec failures
 #BADCC3=() # wrong results
 #MODE=-m64
 
 readonly GOODCC=()
-readonly TIMEOUTCC=30
+readonly TIMEOUTCC=10
 readonly TIMEOUTEXE=2
 readonly TIMEOUTCCOMP=10
 # flag to control whether to use CompCert to validate the test program.
 readonly USE_COMPCERT=true
 readonly CFILE=small.c
 readonly CFLAG="-o t"
-readonly CLANGFC="clang-8 -w -m64 -O0 -Wfatal-errors -fwrapv -ftrapv -fsanitize=undefined,address"
-readonly CLANG_MEM_SANITIZER="/root/installs/llvm-3.7.0/bin/clang -w -O0 -m64 -fsanitize=memory"
+readonly CLANGFC="clang-7.1.0 -w -m64 -O0 -Wfatal-errors -fwrapv -ftrapv -fsanitize=undefined,address"
+readonly CLANG_MEM_SANITIZER="clang-7.1.0 -w -O0 -m64 -fsanitize=memory"
 
 #################################################################################
 
@@ -28,7 +28,7 @@ readonly CLANG_MEM_SANITIZER="/root/installs/llvm-3.7.0/bin/clang -w -O0 -m64 -f
 rm -f out*.txt
 
 if
-clang-8 -Wfatal-errors -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
+clang-7.1.0 -Wfatal-errors -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
 ! grep -q 'conversions than data arguments' out.txt &&\
 ! grep -q 'incompatible redeclaration' out.txt &&\
 ! grep -q 'ordered comparison between pointer' out.txt &&\
@@ -41,7 +41,7 @@ clang-8 -Wfatal-errors -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 
 ! grep -q 'incompatible pointer to' out.txt &&\
 ! grep -q 'incompatible integer to' out.txt &&\
 ! grep -q 'type specifier missing' out.txt &&\
-gcc -Wfatal-errors -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
+gcc-7.1.0 -Wfatal-errors -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
 #  ! grep -q uninitialized outa.txt &&\
 ! grep -q 'division by zero' outa.txt &&\
 ! grep -q 'without a cast' outa.txt &&\
@@ -144,12 +144,9 @@ for cc in "${BADCC1[@]}" ; do
     
     # compile
     (timeout -s 9 $TIMEOUTCC $cc $CFLAG $mode $CFILE >out2.txt 2>&1) >& /dev/null
-    #if ! grep -q 'internal compiler error' out2.txt && \
-    #! grep -q 'PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT' out2.txt && \
-    #! grep -q 'clang: error: linker command failed with exit code 1 (use -v to see invocation)' out2.txt 
-    if ! grep -q 'PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT' out2.txt && \
-    ! grep -q 'shiftAmt <= BitWidth' out2.txt && \
-    ! grep -q 'Invalid shift amout' out2.txt
+    if ! grep -q 'internal compiler error' out2.txt && \
+    ! grep -q 'PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT' out2.txt && \
+    ! grep -q 'clang: error: linker command failed with exit code 1 (use -v to see invocation)' out2.txt 
     then
       exit 1
     fi

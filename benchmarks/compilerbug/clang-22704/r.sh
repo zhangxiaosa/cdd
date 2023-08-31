@@ -1,31 +1,31 @@
 #!/bin/bash
-BADCC1=("/root/installs/llvm-3.6.0-buildfromsrc/bin/clang -O3")
+BADCC1=("clang-3.6.0 -O3")
 BADCC2=()
 BADCC3=()
 MODE=("-m32" "-m64")
 
-# need to configure this part 
-#BADCC1=("clang-trunk -O3")  # compilation failures
-#BADCC2=() # exec failures 
-#BADCC3=() # wrong results 
+# need to configure this part
+#BADCC1=("clang-7.1.0 -O3")  # compilation failures
+#BADCC2=() # exec failures
+#BADCC3=() # wrong results
 #MODE=-m64
 
-GOODCC=("/root/installs/gcc-4.8.0/bin/gcc -O0")
-TIMEOUTCC=15
+GOODCC=("gcc-7.1.0 -O0")
+TIMEOUTCC=10
 TIMEOUTEXE=2
 TIMEOUTCCOMP=10
 CFILE=small.c
 CFLAG="-o t"
-CLANGFC="clang -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
+CLANGFC="clang-7.1.0 -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
 
 #################################################################################
 
-### check for undefined behaviors first (from creduce scripts) 
+### check for undefined behaviors first (from creduce scripts)
 
-rm -f out*.txt 
+rm -f out*.txt
 
-if 
-  clang -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
+if
+  clang-7.1.0 -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
   ! grep 'conversions than data arguments' out.txt &&\
   ! grep 'incompatible redeclaration' out.txt &&\
   ! grep 'ordered comparison between pointer' out.txt &&\
@@ -38,7 +38,7 @@ if
   ! grep 'incompatible pointer to' out.txt &&\
   ! grep 'incompatible integer to' out.txt &&\
   ! grep 'type specifier missing' out.txt &&\
-  gcc -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
+  gcc-7.1.0 -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
 #  ! grep uninitialized outa.txt &&\
   ! grep 'division by zero' outa.txt &&\
   ! grep 'without a cast' outa.txt &&\
@@ -60,133 +60,133 @@ if
   ! grep 'comparison between pointer and integer' outa.txt #&&\
 #  frama-c -val-signed-overflow-alarms -val -stop-at-first-alarm -no-val-show-progress -machdep x86_64 -obviously-terminates -precise-unions $CFILE >out_framac.txt 2>&1 &&\
 #  ! egrep -i '(user error|assert)' out_framac.txt >/dev/null 2>&1
-then 
-    : # do nothing 
-else 
-    exit 1 
-fi 
+then
+    : # do nothing
+else
+    exit 1
+fi
 
 #
-# compcert first 
+# compcert first
 #
 
 
 ###################################################
-# @ clangtkfc @ -O0 to check for undefined behavior  
+# @ clangtkfc @ -O0 to check for undefined behavior
 ###################################################
 
-rm -f ./t ./out*.txt 
-timeout -s 15 $TIMEOUTCC $CLANGFC $CFLAG -m64 $CFILE >& /dev/null
-ret=$? 
+rm -f ./t ./out*.txt
+timeout -s 9 $TIMEOUTCC $CLANGFC $CFLAG -m64 $CFILE >& /dev/null
+ret=$?
 
-if [ $ret != 0 ] ; then 
-    # interesting, save a copy  
+if [ $ret != 0 ] ; then
+    # interesting, save a copy
 #    cp $CFILE $DIR/`date +%j:%T`-compile-$CFILE
-    exit 1 
-fi 
+    exit 1
+fi
 
-(timeout -s 15 $TIMEOUTEXE ./t >out0.txt 2>&1) >&/dev/null
-ret=$? 
+(timeout -s 9 $TIMEOUTEXE ./t >out0.txt 2>&1) >&/dev/null
+ret=$?
 
-if [ $ret != 0 ] ; then 
+if [ $ret != 0 ] ; then
 #    cp $CFILE $DIR/`date +%j:%T`-exe-$CFILE
-    exit 1 
-fi 
+    exit 1
+fi
 
-if grep -q "runtime error" out0.txt ; then 
+if grep -q "runtime error" out0.txt ; then
 #    cp $CFILE $DIR/`date +%j:%T`-result-$CFILE
     exit 1
-fi 
+fi
 
 #############################
-# iterate over the good ones 
+# iterate over the good ones
 #############################
 
 
-for cc in "${GOODCC[@]}" ; do 
-    rm -f ./t ./out1.txt 
+for cc in "${GOODCC[@]}" ; do
+    rm -f ./t ./out1.txt
 
-    timeout -s 15 $TIMEOUTCC $cc $CFLAG $CFILE >& /dev/null
-    ret=$? 
-    if [ $ret != 0 ] ; then 
-	exit 1 
+    timeout -s 9 $TIMEOUTCC $cc $CFLAG $CFILE >& /dev/null
+    ret=$?
+    if [ $ret != 0 ] ; then
+	exit 1
     fi
 
-    # execute 
-    (timeout -s 15 $TIMEOUTEXE ./t >out1.txt 2>&1) >&/dev/null
-    ret=$? 
-    if [ $ret != 0 ] ; then 
-	exit 1 
-    fi 
-    
-    # compare with reference: out0.txt 
+    # execute
+    (timeout -s 9 $TIMEOUTEXE ./t >out1.txt 2>&1) >&/dev/null
+    ret=$?
+    if [ $ret != 0 ] ; then
+	exit 1
+    fi
+
+    # compare with reference: out0.txt
     if ! diff -q out0.txt out1.txt >/dev/null ; then
 	exit 1
-    fi    
+    fi
 done
 
 #############################
-# iterate over the bad ones 
+# iterate over the bad ones
 #############################
 
 for cc in "${BADCC1[@]}" ; do
     for mode in "${MODE[@]}" ; do
-        rm -f ./t ./out2.txt 
+        rm -f ./t ./out2.txt
 
-        # compile 
-        (timeout -s 15 $TIMEOUTCC $cc $CFLAG $mode $CFILE >out2.txt 2>&1) >& /dev/null
+        # compile
+        (timeout -s 9 $TIMEOUTCC $cc $CFLAG $mode $CFILE >out2.txt 2>&1) >& /dev/null
         if ! grep 'internal compiler error' out2.txt && \
            ! grep 'PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT' out2.txt
-        then	
+        then
             exit 1
         fi
     done
 done
 
-for cc in "${BADCC2[@]}" ; do 
+for cc in "${BADCC2[@]}" ; do
     for mode in "${MODE[@]}" ; do
-        rm -f ./t ./out2.txt 
+        rm -f ./t ./out2.txt
 
-        # compile 
-        timeout -s 15 $TIMEOUTCC $cc $CFLAG $mode $CFILE >& /dev/null
-        ret=$? 
-        if [ $ret -ne 0 ] ; then 
-        exit 1 
+        # compile
+        timeout -s 9 $TIMEOUTCC $cc $CFLAG $mode $CFILE >& /dev/null
+        ret=$?
+        if [ $ret -ne 0 ] ; then
+        exit 1
         fi
 
-        # execute 
-        (timeout -s 15 $TIMEOUTEXE ./t >out2.txt 2>&1) >&/dev/null
-        ret=$? 
-        if [ $ret -ne 137 ] ; then 
-            exit 1 
+        # execute
+        (timeout -s 9 $TIMEOUTEXE ./t >out2.txt 2>&1) >&/dev/null
+        ret=$?
+        if [ $ret -ne 137 ] ; then
+            exit 1
         fi
     done
 done
 
-for cc in "${BADCC3[@]}" ; do 
+for cc in "${BADCC3[@]}" ; do
     for mode in "${MODE[@]}" ; do
-        rm -f ./t ./out2.txt 
+        rm -f ./t ./out2.txt
 
-        # compile 
-        timeout -s 15 $TIMEOUTCC $cc $CFLAG $mode $CFILE >& /dev/null
-        ret=$? 
-        if [ $ret != 0 ] ; then 
-        exit 1 
+        # compile
+        timeout -s 9 $TIMEOUTCC $cc $CFLAG $mode $CFILE >& /dev/null
+        ret=$?
+        if [ $ret != 0 ] ; then
+        exit 1
         fi
 
-        # execute 
-        (timeout -s 15 $TIMEOUTEXE ./t >out2.txt 2>&1) >&/dev/null
-        ret=$? 
-        if [ $ret != 0 ] ; then 
-        exit 1 
-        fi 
-        
-        # compare with reference: out0.txt 
+        # execute
+        (timeout -s 9 $TIMEOUTEXE ./t >out2.txt 2>&1) >&/dev/null
+        ret=$?
+        if [ $ret != 0 ] ; then
+        exit 1
+        fi
+
+        # compare with reference: out0.txt
         if diff -q out0.txt out2.txt >/dev/null ; then
         exit 1
-        fi   
-    done 
+        fi
+    done
 done
 
 # now we have passed everything, return 0
-exit 0 
+exit 0

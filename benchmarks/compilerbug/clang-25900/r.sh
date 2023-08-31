@@ -1,22 +1,22 @@
 #!/bin/bash
 BADCC1=()
-BADCC2=("/root/installs/llvm-3.6.0-buildfromsrc/bin/clang -O1")
+BADCC2=("clang-3.6.0 -O1")
 BADCC3=()
 MODE=("-m64")
 
 # need to configure this part 
-#BADCC1=("clang -O3")  # compilation failures
+#BADCC1=("clang-7.1.0 -O3")  # compilation failures
 #BADCC2=() # exec failures 
 #BADCC3=() # wrong results 
 #MODE=-m64
 
-GOODCC=("/root/installs/gcc-4.8.0/bin/gcc -O0")
+GOODCC=("gcc-4.8.0 -O0")
 TIMEOUTCC=10
 TIMEOUTEXE=2
 TIMEOUTCCOMP=10
 CFILE=small.c
 CFLAG="-o t"
-CLANGFC="/root/installs/llvm-3.7.0/bin/clang -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined,address"
+CLANGFC="clang-7.1.0 -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined,address"
 
 #################################################################################
 
@@ -25,7 +25,7 @@ CLANGFC="/root/installs/llvm-3.7.0/bin/clang -m64 -O0 -Wall -fwrapv -ftrapv -fsa
 rm -f out*.txt 
 
 if 
-  clang-8 -pedantic  -O0 -c $CFILE  >out.txt 2>&1 &&\
+  clang-7.1.0 -pedantic  -O0 -c $CFILE  >out.txt 2>&1 &&\
   ! grep 'conversions than data arguments' out.txt &&\
   ! grep 'incompatible redeclaration' out.txt &&\
   ! grep 'ordered comparison between pointer' out.txt &&\
@@ -75,31 +75,33 @@ fi
  if [ $ret != 0 ] ; then 
      exit 1 
  fi
+
 ###################################################
 # @ clangtkfc @ -O0 to check for undefined behavior  
 ###################################################
 
-#rm -f ./t ./out*.txt 
-#timeout -s 9 $TIMEOUTCC $CLANGFC $CFLAG -m64 $CFILE >& /dev/null
-#ret=$? 
-#
-#if [ $ret != 0 ] ; then 
-#    # interesting, save a copy  
-##    cp $CFILE $DIR/`date +%j:%T`-compile-$CFILE
-#    exit 1 
-#fi 
-#(timeout -s 9 $TIMEOUTEXE ./t >out0.txt 2>&1) >&/dev/null
-#ret=$? 
-#
-#if [ $ret != 0 ] ; then 
-##    cp $CFILE $DIR/`date +%j:%T`-exe-$CFILE
-#    exit 1 
-#fi 
-#
-#if grep -q "runtime error" out0.txt ; then 
-##    cp $CFILE $DIR/`date +%j:%T`-result-$CFILE
-#    exit 1
-#fi 
+rm -f ./t ./out*.txt 
+timeout -s 9 $TIMEOUTCC $CLANGFC $CFLAG -m64 $CFILE >& /dev/null
+ret=$? 
+
+if [ $ret != 0 ] ; then 
+    # interesting, save a copy  
+#    cp $CFILE $DIR/`date +%j:%T`-compile-$CFILE
+    exit 1 
+fi 
+
+(timeout -s 9 $TIMEOUTEXE ./t >out0.txt 2>&1) >&/dev/null
+ret=$? 
+
+if [ $ret != 0 ] ; then 
+#    cp $CFILE $DIR/`date +%j:%T`-exe-$CFILE
+    exit 1 
+fi 
+
+if grep -q "runtime error" out0.txt ; then 
+#    cp $CFILE $DIR/`date +%j:%T`-result-$CFILE
+    exit 1
+fi 
 
 #############################
 # iterate over the good ones 
@@ -122,10 +124,10 @@ for cc in "${GOODCC[@]}" ; do
 	exit 1 
     fi 
     
-    ## compare with reference: out0.txt 
-    #if ! diff -q out0.txt out1.txt >/dev/null ; then
-    #    exit 1
-    #fi    
+    # compare with reference: out0.txt 
+    if ! diff -q out0.txt out1.txt >/dev/null ; then
+	exit 1
+    fi    
 done
 
 #############################

@@ -1,17 +1,16 @@
 #!/bin/bash
 BADCC1=()
 BADCC2=()
-BADCC3=("/root/installs/llvm-3.8.0/bin/clang -Os")
+BADCC3=("clang-3.8.0 -Os")
 MODE=("-m32")
 
 # need to configure this part
-#BADCC1=("clang-trunk -O3")  # compilation failures
+#BADCC1=("clang-7.1.0 -O3")  # compilation failures
 #BADCC2=() # exec failures
 #BADCC3=() # wrong results
 #MODE=-m64
 
-#readonly GOODCC=("gcc-4.8 -O0" "clang -m32 -O1") 
-readonly GOODCC=("/root/installs/gcc-4.8.2/bin/gcc -O0" "clang -O1") 
+readonly GOODCC=("gcc-4.8.0 -O0" "clang-7.1.0 -m32 -O1")
 readonly TIMEOUTCC=20
 readonly TIMEOUTEXE=2
 readonly TIMEOUTCCOMP=10
@@ -19,8 +18,8 @@ readonly TIMEOUTCCOMP=10
 readonly USE_COMPCERT=true
 readonly CFILE=small.c
 readonly CFLAG="-o t"
-readonly CLANGFC="clang-8 -w -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined,address"
-readonly CLANG_MEM_SANITIZER="clang-8 -w -O0 -m64 -fsanitize=memory"
+readonly CLANGFC="clang-7.1.0 -w -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined,address"
+readonly CLANG_MEM_SANITIZER="clang-7.1.0 -w -O0 -m64 -fsanitize=memory"
 
 #################################################################################
 
@@ -29,7 +28,7 @@ readonly CLANG_MEM_SANITIZER="clang-8 -w -O0 -m64 -fsanitize=memory"
 rm -f out*.txt
 
 if
-clang-8 -Wfatal-errors -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
+clang-7.1.0 -Wfatal-errors -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
 ! grep -q 'conversions than data arguments' out.txt &&\
 ! grep -q 'incompatible redeclaration' out.txt &&\
 ! grep -q 'ordered comparison between pointer' out.txt &&\
@@ -42,7 +41,7 @@ clang-8 -Wfatal-errors -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 
 ! grep -q 'incompatible pointer to' out.txt &&\
 ! grep -q 'incompatible integer to' out.txt &&\
 ! grep -q 'type specifier missing' out.txt &&\
-gcc -Wfatal-errors -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
+gcc-7.1.0 -Wfatal-errors -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
 #  ! grep -q uninitialized outa.txt &&\
 ! grep -q 'division by zero' outa.txt &&\
 ! grep -q 'without a cast' outa.txt &&\
@@ -81,7 +80,7 @@ if $USE_COMPCERT ; then
   fi
 fi
 ###################################################
-# clang memory sanitizer
+# clang-7.1.0 memory sanitizer
 ###################################################
 readonly TEMP_EXE="temp.exe"
 timeout -s 9 $TIMEOUTCC $CLANG_MEM_SANITIZER $CFILE -o $TEMP_EXE > /dev/null
@@ -100,6 +99,7 @@ if grep -q "MemorySanitizer" $MEM_SANITIZER_OUTPUT ; then
 fi
 
 rm $MEM_SANITIZER_OUTPUT $TEMP_EXE
+
 
 
 ###################################################

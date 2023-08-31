@@ -6,7 +6,7 @@ set -o nounset
 # need to configure this part
 WHICH=0     # 0: gcc; 1: clang
 GOODCOMP=1  # 0: doesn't compile; 1: compiles
-BADCC=("/root/installs/gcc-4.9.0/bin/gcc -O3")
+BADCC=("gcc-4.9.0 -O3")
 GOODCC=("gcc")
 CFILE=small.c
 TIMEOUTCC=30

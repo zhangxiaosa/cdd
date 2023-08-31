@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # need to configure this part 
-BADCC1=("/root/installs/gcc-4.9.0/bin/gcc -m32 -O3" "/root/installs/gcc-4.9.0/bin/gcc -m64 -O3")  # compilation failures
+BADCC1=("gcc-4.9.0 -m32 -O3" "gcc-4.9.0 -m64 -O3")  # compilation failures
 BADCC2=() # exec failures 
 BADCC3=() # wrong results 
 GOODCC=() 
@@ -10,7 +10,7 @@ TIMEOUTEXE=2
 TIMEOUTCCOMP=20
 CFILE=small.c
 CFLAG="-o t"
-CLANGFC="clang -m32 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
+CLANGFC="clang-7.1.0 -m32 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
 CHECKCCOMP=1
 
 #################################################################################
@@ -20,7 +20,7 @@ CHECKCCOMP=1
 rm -f out*.txt 
 
 if 
-  clang -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
+  clang-7.1.0 -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
   ! grep 'conversions than data arguments' out.txt &&\
 #  ! grep 'incompatible redeclaration' out.txt &&\
   ! grep 'ordered comparison between pointer' out.txt &&\
@@ -33,8 +33,7 @@ if
   ! grep 'incompatible pointer to' out.txt &&\
   ! grep 'incompatible integer to' out.txt &&\
   ! grep 'type specifier missing' out.txt &&\
-  #gcc-trunk -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
-  gcc -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
+  gcc-7.1.0 -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
 #  ! grep uninitialized outa.txt &&\
   ! grep 'division by zero' outa.txt &&\
   ! grep 'without a cast' outa.txt &&\

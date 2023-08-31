@@ -1,22 +1,22 @@
 #!/bin/bash
-BADCC1=("/root/installs/llvm-3.6.0-buildfromsrc/bin/clang -O3")
+BADCC1=("clang-3.6.0 -O3")
 BADCC2=()
 BADCC3=()
 MODE=-m64
 
 # need to configure this part 
-#BADCC1=("clang -O3")  # compilation failures
+#BADCC1=("clang-7.1.0 -O3")  # compilation failures
 #BADCC2=() # exec failures 
 #BADCC3=() # wrong results 
 #MODE=-m64
 
-GOODCC=("/root/installs/gcc-4.8.0/bin/gcc -O0")
-TIMEOUTCC=20
+GOODCC=("gcc-4.8.0 -O0")
+TIMEOUTCC=10
 TIMEOUTEXE=2
 TIMEOUTCCOMP=10
 CFILE=small.c
 CFLAG="-o t"
-CLANGFC="clang-8 -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
+CLANGFC="clang-7.1.0 -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
 
 #################################################################################
 
@@ -25,7 +25,7 @@ CLANGFC="clang-8 -m64 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined"
 rm -f out*.txt 
 
 if 
-  clang-8 -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
+  clang-7.1.0 -pedantic -Wall -Wsystem-headers -O0 -c $CFILE  >out.txt 2>&1 &&\
   ! grep 'conversions than data arguments' out.txt &&\
   ! grep 'incompatible redeclaration' out.txt &&\
   ! grep 'ordered comparison between pointer' out.txt &&\
@@ -38,7 +38,7 @@ if
   ! grep 'incompatible pointer to' out.txt &&\
   ! grep 'incompatible integer to' out.txt &&\
   ! grep 'type specifier missing' out.txt &&\
-  gcc -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
+  gcc-7.1.0 -Wall -Wextra -Wsystem-headers -O0 $CFILE >outa.txt 2>&1 &&\
 #  ! grep uninitialized outa.txt &&\
   ! grep 'division by zero' outa.txt &&\
   ! grep 'without a cast' outa.txt &&\
@@ -133,9 +133,9 @@ for cc in "${BADCC1[@]}" ; do
         rm -f ./t ./out2.txt 
 
         # compile 
-        (timeout -s 15 $TIMEOUTCC $cc $CFLAG $mode $CFILE >out2.txt 2>&1) >& /dev/null
-        #if ! grep 'internal compiler error' out2.txt && \
-         if ! grep 'PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT' out2.txt
+        (timeout -s 9 $TIMEOUTCC $cc $CFLAG $mode $CFILE >out2.txt 2>&1) >& /dev/null
+        if ! grep 'internal compiler error' out2.txt && \
+           ! grep 'PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT' out2.txt
         then	
             exit 1
         fi
