@@ -1,1 +1,8 @@
-exclude picireny/antlr4/parser/ANTLRv4*.py
+include README.rst
+include LICENSE.rst
+include RELNOTES.rst
+include MANIFEST.in
+include picireny/VERSION
+recursive-include picireny/antlr4/resources *
+global-exclude __pycache__
+global-exclude *.py[co]

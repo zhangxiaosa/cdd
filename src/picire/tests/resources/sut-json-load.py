@@ -7,4 +7,4 @@ import sys
 with open(sys.argv[1], 'r') as f:
     j = json.load(f)
 
-print(f'j!r')
+print("%s" % repr(j))

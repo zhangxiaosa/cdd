@@ -2,68 +2,6 @@
 *Picireny* Release Notes
 ========================
 
-21.8
-====
-
-Summary of changes:
-
-* Dropped support for Python 2.
-* Upgraded dependency to *Picire* 21.8 to use new/improved argument logging, CLI
-  argument processing; and adapted code to the updated API.
-* Heavily simplified the signatures of picireny.build_with_antlr4 and
-  picireny.reduce.
-* Changed the API of several functions and methods, made numerous arguments
-  keyword-only.
-* Added a new phase that applies the coarse filter to tree nodes and runs both
-  pruning and hoisting on them.
-* Fixed HDDr to correctly traverse the tree in case of filtered nodes.
-* Fixed line-column calculations for tree nodes.
-* Fixed "skip unremovable" transformation to correctly determine the unparsed
-  representation of nodes for all parametrizations.
-* Upgraded dependency *ANTLeRinator* to Epoch 1 (breaking away from ANTLR
-  version numbering) and made use of its new feature to generate the lexer and
-  parser from the ANTLRv4 grammar at build-time.
-* Added direct dependency on ANTLR and upgraded it to v4.9.2.
-* Made use of the *inators* package to unify CLI argument handling and logging.
-* Dropped runtime dependency on setuptools.
-* Moved to pyproject.toml & setup.cfg-based packaging.
-* Improved log output.
-* Improved documentation.
-* Improved the testing infrastructure (stabilized tests, improved resource
-  handling, better output on failure, testing Windows & PyPy).
-* Various internal refactorings.
-
-
-21.3
-====
-
-Summary of changes:
-
-* Introduced phases of reduction to allow executing the same HDD algorithm
-  variant multiple times with different parametrizations (e.g., run Coarse HDDr
-  and HDDr after each other).
-* Added a new transformation-based reduction technique called hoisting, as a new
-  optional phase, to complement the existing pruning-based approaches.
-* Added support for "tokens" section (i.e., token names without an associated
-  lexer rule) in grammars.
-* Added support for grammars with resource files that contain utility code or
-  base classes of lexers and parsers.
-* Upgraded dependency to *Picire* 20.12 to utilize its new generalized split
-  factor concept and updated API.
-* Upgraded dependency to ANTLR v4.9 (via *ANTLeRinator*).
-* Bumped minimum Python 3 requirement to 3.5.
-* Improved log output.
-* Adapted versioning to use setuptools_scm (included distance from latest
-  release into non-released version strings).
-* Added classification metadata to project.
-* Improved documentation.
-* Improved the testing infrastructure (linting, faster test suite, testing
-  Python 3.8 and 3.9, testing macOS, migrated testing from Travis CI to GitHub
-  Actions).
-* Various internal refactorings and performance improvements.
-* Minor bug fixes.
-
-
 19.3
 ====
 

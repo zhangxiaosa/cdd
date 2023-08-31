@@ -1,5 +1,4 @@
-# Copyright (c) 2016-2023 Renata Hodovan, Akos Kiss.
-# Copyright (c) 2023 Daniel Vince.
+# Copyright (c) 2016-2018 Renata Hodovan, Akos Kiss.
 #
 # Licensed under the BSD 3-Clause License
 # <LICENSE.rst or https://opensource.org/licenses/BSD-3-Clause>.
@@ -7,7 +6,6 @@
 # according to those terms.
 
 import logging
-import math
 import pytest
 
 import picire
@@ -53,7 +51,23 @@ class CaseTest:
         self.interesting = interesting
 
     def __call__(self, config, config_id):
-        return picire.Outcome.FAIL if self.interesting([self.content[x] for x in config]) else picire.Outcome.PASS
+        return picire.AbstractDD.FAIL if self.interesting([self.content[x] for x in config]) else picire.AbstractDD.PASS
+
+
+iterator_parameters_combined = [
+    (True, picire.config_iterators.forward, picire.config_iterators.forward),
+    (True, picire.config_iterators.forward, picire.config_iterators.backward),
+    (True, picire.config_iterators.backward, picire.config_iterators.forward),
+    (True, picire.config_iterators.backward, picire.config_iterators.backward),
+    (False, picire.config_iterators.forward, picire.config_iterators.forward),
+    (False, picire.config_iterators.forward, picire.config_iterators.backward),
+    (False, picire.config_iterators.backward, picire.config_iterators.forward),
+    (False, picire.config_iterators.backward, picire.config_iterators.backward),
+]
+iterator_parameters_noncombined = [
+    (True, picire.config_iterators.skip, picire.config_iterators.forward),
+    (True, picire.config_iterators.skip, picire.config_iterators.backward),
+]
 
 
 @pytest.mark.parametrize('interesting, config, expect', [
@@ -63,43 +77,80 @@ class CaseTest:
 ])
 @pytest.mark.parametrize('granularity', [
     2,
-    math.inf,
+    float('inf'),
 ])
 class TestApi:
 
     def _run_picire(self, interesting, config, expect, granularity, dd, split, subset_first, subset_iterator, complement_iterator, cache):
-        if dd != picire.DD:
+        if dd != picire.CombinedParallelDD:
+            it_kwargs = {
+                'subset_first': subset_first,
+                'subset_iterator': subset_iterator,
+                'complement_iterator': complement_iterator,
+            }
+        else:
+            it_kwargs = {
+                'config_iterator': picire.CombinedIterator(subset_first, subset_iterator, complement_iterator)
+            }
+
+        if dd != picire.LightDD:
             cache = picire.shared_cache_decorator(cache)
 
         logging.basicConfig(format='%(message)s')
         logging.getLogger('picire').setLevel(logging.DEBUG)
 
         dd_obj = dd(CaseTest(interesting, config),
-                    split=split(n=granularity),
+                    split=split,
                     cache=cache(),
-                    config_iterator=picire.iterator.CombinedIterator(subset_first, subset_iterator, complement_iterator))
-        output = [config[x] for x in dd_obj(list(range(len(config))))]
+                    **it_kwargs)
+        output = [config[x] for x in dd_obj.ddmin(list(range(len(config))), n=granularity)]
 
         assert output == expect
 
-    @pytest.mark.parametrize('split, subset_first, subset_iterator, complement_iterator, cache', [
-        (picire.splitter.BalancedSplit, True, picire.iterator.forward, picire.iterator.forward, picire.cache.NoCache),
-        (picire.splitter.ZellerSplit, True, picire.iterator.forward, picire.iterator.backward, picire.cache.ConfigCache),
-        (picire.splitter.BalancedSplit, False, picire.iterator.backward, picire.iterator.forward, picire.cache.ConfigTupleCache),
-        (picire.splitter.ZellerSplit, False, picire.iterator.backward, picire.iterator.backward, picire.cache.NoCache),
-        (picire.splitter.BalancedSplit, True, picire.iterator.skip, picire.iterator.forward, picire.cache.ConfigCache),
-        (picire.splitter.ZellerSplit, True, picire.iterator.skip, picire.iterator.backward, picire.cache.ConfigTupleCache),
+    @pytest.mark.parametrize('dd', [
+        picire.LightDD,
     ])
-    def test_dd(self, interesting, config, expect, granularity, split, subset_first, subset_iterator, complement_iterator, cache):
-        self._run_picire(interesting, config, expect, granularity, picire.DD, split, subset_first, subset_iterator, complement_iterator, cache)
+    @pytest.mark.parametrize('split', [
+        picire.config_splitters.balanced,
+        picire.config_splitters.zeller,
+    ])
+    @pytest.mark.parametrize('subset_first, subset_iterator, complement_iterator',
+        iterator_parameters_combined + iterator_parameters_noncombined
+    )
+    @pytest.mark.parametrize('cache', [
+        picire.OutcomeCache,
+        picire.ConfigCache,
+    ])
+    def test_light(self, interesting, config, expect, granularity, dd, split, subset_first, subset_iterator, complement_iterator, cache):
+        self._run_picire(interesting, config, expect, granularity, dd, split, subset_first, subset_iterator, complement_iterator, cache)
 
-    @pytest.mark.parametrize('split, subset_first, subset_iterator, complement_iterator, cache', [
-        (picire.splitter.ZellerSplit, False, picire.iterator.forward, picire.iterator.forward, picire.cache.ConfigCache),
-        (picire.splitter.BalancedSplit, False, picire.iterator.forward, picire.iterator.backward, picire.cache.ConfigTupleCache),
-        (picire.splitter.ZellerSplit, True, picire.iterator.backward, picire.iterator.forward, picire.cache.NoCache),
-        (picire.splitter.BalancedSplit, True, picire.iterator.backward, picire.iterator.backward, picire.cache.ConfigCache),
-        (picire.splitter.ZellerSplit, False, picire.iterator.skip, picire.iterator.forward, picire.cache.ConfigTupleCache),
-        (picire.splitter.BalancedSplit, False, picire.iterator.skip, picire.iterator.backward, picire.cache.NoCache),
+    @pytest.mark.parametrize('dd', [
+        picire.ParallelDD,
     ])
-    def test_parallel(self, interesting, config, expect, granularity, split, subset_first, subset_iterator, complement_iterator, cache):
-        self._run_picire(interesting, config, expect, granularity, picire.ParallelDD, split, subset_first, subset_iterator, complement_iterator, cache)
+    @pytest.mark.parametrize('split', [
+        picire.config_splitters.zeller,
+    ])
+    @pytest.mark.parametrize('subset_first, subset_iterator, complement_iterator',
+        iterator_parameters_combined + iterator_parameters_noncombined
+    )
+    @pytest.mark.parametrize('cache', [
+        picire.OutcomeCache,
+        picire.ConfigCache,
+    ])
+    def test_parallel(self, interesting, config, expect, granularity, dd, split, subset_first, subset_iterator, complement_iterator, cache):
+        self._run_picire(interesting, config, expect, granularity, dd, split, subset_first, subset_iterator, complement_iterator, cache)
+
+    @pytest.mark.parametrize('dd', [
+        picire.CombinedParallelDD,
+    ])
+    @pytest.mark.parametrize('split', [
+        picire.config_splitters.zeller,
+    ])
+    @pytest.mark.parametrize('subset_first, subset_iterator, complement_iterator',
+        iterator_parameters_combined
+    )
+    @pytest.mark.parametrize('cache', [
+        picire.ConfigCache,
+    ])
+    def test_combined(self, interesting, config, expect, granularity, dd, split, subset_first, subset_iterator, complement_iterator, cache):
+        self._run_picire(interesting, config, expect, granularity, dd, split, subset_first, subset_iterator, complement_iterator, cache)
