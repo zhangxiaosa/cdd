@@ -8,9 +8,10 @@
 import logging
 import multiprocessing
 import os
-import psutil
 import signal
 import sys
+
+import psutil
 
 logger = logging.getLogger(__name__)
 is_windows = sys.platform.startswith('win32')
@@ -20,16 +21,16 @@ is_windows = sys.platform.startswith('win32')
 # but only changes to shared objects will be visible in parent.
 def loop_body(shared_break, shared_slots, shared_lock, i, target, args):
     """
-    Executes the given function in its own process group (on Windows: in
-    its own process).
+    Executes the given function in its own process group (on Windows: in its own
+    process).
 
-    :param shared_break: Loop-wide shared integer. Should be set to 1 if
-                         the whole loop should be terminated.
-    :param shared_slots: Loop-wide shared array of slots to keep track of
-                         status of loop bodies. The slot corresponding to a
-                         loop body should be set to 0 once it has finished.
+    :param shared_break: Loop-wide shared integer. Should be set to 1 if  the
+        whole loop should be terminated.
+    :param shared_slots: Loop-wide shared array of slots to keep track of status
+        of loop bodies. The slot corresponding to a loop body should be set to 0
+        once it has finished.
     :param shared_lock: Loop-wide shared lock. Should be notified when a loop
-                         body has finished.
+        body has finished.
     :param i: The index of the current slot.
     :param target: The function to run in parallel.
     :param args: The arguments that the target should run with.
@@ -40,8 +41,8 @@ def loop_body(shared_break, shared_slots, shared_lock, i, target, args):
     try:
         if not target(*args):
             shared_break.value = 1
-    except:
-        logger.warning('', exc_info=True)
+    except Exception as e:
+        logger.warning('', exc_info=e)
         shared_break.value = 1
 
     shared_slots[i] = 0
@@ -51,7 +52,9 @@ def loop_body(shared_break, shared_slots, shared_lock, i, target, args):
 
 
 class Loop(object):
-    """Parallel loop implementation based on multiprocessing module."""
+    """
+    Parallel loop implementation based on multiprocessing module.
+    """
 
     # TODO: could be None if we trusted that wait for infinity would not hang
     _timeout = 1
@@ -61,8 +64,8 @@ class Loop(object):
         Initialize a parallel loop object.
 
         :param j: The maximum number of parallel jobs.
-        :param max_utilization: The maximum CPU utilization. Above this no more new jobs
-                                will be started.
+        :param max_utilization: The maximum CPU utilization. Above this no more
+            new jobs will be started.
         """
         self._j = j
         self._max_utilization = max_utilization
@@ -75,7 +78,9 @@ class Loop(object):
         psutil.cpu_percent(None)
 
     def _abort(self):
-        """Terminate all live jobs."""
+        """
+        Terminate all live jobs.
+        """
         for i, (slot, proc) in enumerate(zip(self._slots, self._procs)):
             if slot:
                 if not is_windows:
@@ -107,7 +112,7 @@ class Loop(object):
     def _cleanup_slots(self):
         for i, (slot, proc) in enumerate(zip(self._slots, self._procs)):
             if slot:
-                if not self._procs[i].is_alive() or not psutil.pid_exists(proc.pid):
+                if not proc.is_alive() or not psutil.pid_exists(proc.pid):
                     self._slots[i], self._procs[i] = 0, None
             else:
                 self._procs[i] = None
@@ -116,12 +121,13 @@ class Loop(object):
     # should break.
     def do(self, target, args):
         """
-        Execute the target function if there is empty slot for it and
-        the CPU utilization is suitable.
+        Execute the target function if there is empty slot for it and the CPU
+        utilization is suitable.
 
         :param target: The function to run in parallel.
         :param args: The parameters to run the target function with.
-        :return: False if an interesting configuration was found. Otherwise returns True.
+        :return: False if an interesting configuration was found. Otherwise
+            returns True.
         """
         if self._break.value:
             logger.debug('do() called on a broken loop')
@@ -149,7 +155,9 @@ class Loop(object):
         return True
 
     def join(self):
-        """Wait until all the parallel child processes have finished."""
+        """
+        Wait until all the parallel child processes have finished.
+        """
         if self._break.value:
             self._abort()
             return

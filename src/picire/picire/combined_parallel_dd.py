@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2019 Renata Hodovan, Akos Kiss.
+# Copyright (c) 2016-2020 Renata Hodovan, Akos Kiss.
 #
 # Licensed under the BSD 3-Clause License
 # <LICENSE.rst or https://opensource.org/licenses/BSD-3-Clause>.
@@ -11,7 +11,6 @@ import multiprocessing
 from . import config_iterators
 from . import config_splitters
 from . import parallel_loop
-from .abstract_dd import AbstractDD
 from .abstract_parallel_dd import AbstractParallelDD
 
 logger = logging.getLogger(__name__)
@@ -31,23 +30,24 @@ class CombinedParallelDD(AbstractParallelDD):
         :param split: Splitter method to break a configuration up to n part.
         :param proc_num: The level of parallelization.
         :param max_utilization: The maximum CPU utilization accepted.
-        :param config_iterator: Reference to a generator function that provides config indices in an arbitrary order.
+        :param config_iterator: Reference to a generator function that provides
+            config indices in an arbitrary order.
         """
         AbstractParallelDD.__init__(self, test, split, proc_num, max_utilization, cache=cache, id_prefix=id_prefix)
 
         self._config_iterator = config_iterator
 
-    def _reduce_config(self, run, config, subsets, complement_offset):
+    def _reduce_config(self, run, subsets, complement_offset):
         """
-        Perform the reduce task using multiple processes.
-        Subset and complement set tests are mixed and don't wait for each other.
+        Perform the reduce task using multiple processes. Subset and complement
+        set tests are mixed and don't wait for each other.
 
         :param run: The index of the current iteration.
-        :param config: The current configuration under testing.
         :param subsets: List of sets that the current configuration is split to.
-        :param complement_offset: A compensation offset needed to calculate the index
-               of the first unchecked complement (optimization purpose only).
-        :return: Tuple: (failing config or None, next n or None, next complement_offset).
+        :param complement_offset: A compensation offset needed to calculate the
+            index of the first unchecked complement (optimization purpose only).
+        :return: Tuple: (list of subsets composing the failing config or None,
+            next complement_offset).
         """
         n = len(subsets)
         self._fail_index.value = -1
@@ -62,13 +62,13 @@ class CombinedParallelDD(AbstractParallelDD):
             else:
                 i = int((i - n + complement_offset) % n) + n
                 config_id = ('r%d' % run, 'c%d' % (i - n))
-                config_set = self._minus(config, subsets[i - n])
+                config_set = [c for si, s in enumerate(subsets) for c in s if si != i - n]
 
             # If we checked this test before, return its result
             outcome = self._lookup_cache(config_set, config_id)
             if outcome == self.PASS:
                 continue
-            elif outcome == self.FAIL:
+            if outcome == self.FAIL:
                 self._fail_index.value = i
                 break
 
@@ -84,9 +84,8 @@ class CombinedParallelDD(AbstractParallelDD):
         if fvalue != -1:
             # Subset fail.
             if fvalue < n:
-                return subsets[fvalue], 2, 0
+                return [subsets[fvalue]], 0
             # Complement fail.
-            else:
-                return self._minus(config, subsets[fvalue - n]), max(n - 1, 2), fvalue - n
+            return subsets[:fvalue - n] + subsets[fvalue - n + 1:], fvalue - n
 
-        return None, None, complement_offset
+        return None, complement_offset

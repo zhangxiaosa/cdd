@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2019 Renata Hodovan, Akos Kiss.
+# Copyright (c) 2016-2020 Renata Hodovan, Akos Kiss.
 #
 # Licensed under the BSD 3-Clause License
 # <LICENSE.rst or https://opensource.org/licenses/BSD-3-Clause>.
@@ -11,7 +11,6 @@ import multiprocessing
 from . import config_iterators
 from . import config_splitters
 from . import parallel_loop
-from .abstract_dd import AbstractDD
 from .abstract_parallel_dd import AbstractParallelDD
 
 logger = logging.getLogger(__name__)
@@ -31,49 +30,51 @@ class ParallelDD(AbstractParallelDD):
         :param split: Splitter method to break a configuration up to n part.
         :param proc_num: The level of parallelization.
         :param max_utilization: The maximum CPU utilization accepted.
-        :param subset_first: Boolean value denoting whether the reduce has to start with the subset-based approach or not.
-        :param subset_iterator: Reference to a generator function that provides config indices in an arbitrary order.
-        :param complement_iterator: Reference to a generator function that provides config indices in an arbitrary order.
+        :param subset_first: Boolean value denoting whether the reduce has to
+            start with the subset-based approach or not.
+        :param subset_iterator: Reference to a generator function that provides
+            config indices in an arbitrary order.
+        :param complement_iterator: Reference to a generator function that
+            provides config indices in an arbitrary order.
         """
         AbstractParallelDD.__init__(self, test, split, proc_num, max_utilization, cache=cache, id_prefix=id_prefix)
 
-        self._subset_first = subset_first
         self._subset_iterator = subset_iterator
         self._complement_iterator = complement_iterator
 
-    def _reduce_config(self, run, config, subsets, complement_offset):
+        if subset_first:
+            self._first_reduce, self._second_reduce = self._reduce_to_subset, self._reduce_to_complement
+        else:
+            self._first_reduce, self._second_reduce = self._reduce_to_complement, self._reduce_to_subset
+
+    def _reduce_config(self, run, subsets, complement_offset):
         """
         Perform the reduce task using multiple processes.
         Subset and complement set tests are executed sequentially.
 
         :param run: The index of the current iteration.
-        :param config: The current configuration under testing.
         :param subsets: List of sets that the current configuration is split to.
-        :param complement_offset: A compensation offset needed to calculate the index
-               of the first unchecked complement (optimization purpose only).
-        :return: Tuple: (failing config or None, next n or None, next complement_offset).
+        :param complement_offset: A compensation offset needed to calculate the
+            index of the first unchecked complement (optimization purpose only).
+        :return: Tuple: (list of subsets composing the failing config or None,
+            next complement_offset).
         """
-        if self._subset_first:
-            first_reduce, second_reduce = self._reduce_to_subset, self._reduce_to_complement
-        else:
-            first_reduce, second_reduce = self._reduce_to_complement, self._reduce_to_subset
+        next_subsets, complement_offset = self._first_reduce(run, subsets, complement_offset)
+        if next_subsets is None:
+            next_subsets, complement_offset = self._second_reduce(run, subsets, complement_offset)
 
-        next_config, next_n, complement_offset = first_reduce(run, config, subsets, complement_offset)
-        if next_config is None:
-            next_config, next_n, complement_offset = second_reduce(run, config, subsets, complement_offset)
+        return next_subsets, complement_offset
 
-        return next_config, next_n, complement_offset
-
-    def _reduce_to_subset(self, run, config, subsets, complement_offset):
+    def _reduce_to_subset(self, run, subsets, complement_offset):
         """
         Perform a subset-based reduce task.
 
         :param run: The index of the current iteration.
-        :param config: The current configuration under testing.
         :param subsets: List of sets that the current configuration is split to.
-        :param complement_offset: A compensation offset needed to calculate the index
-               of the first unchecked complement (optimization purpose only).
-        :return: Tuple: (failing config or None, next n or None, next complement_offset).
+        :param complement_offset: A compensation offset needed to calculate the
+            index of the first unchecked complement (optimization purpose only).
+        :return: Tuple: (list of subsets composing the failing config or None,
+            next complement_offset).
         """
         # Looping through the subsets.
         n = len(subsets)
@@ -84,36 +85,37 @@ class ParallelDD(AbstractParallelDD):
                 continue
 
             config_id = ('r%d' % run, 's%d' % i)
+            subset = subsets[i]
 
             # If we had this test before, return the saved result.
-            outcome = self._lookup_cache(subsets[i], config_id)
+            outcome = self._lookup_cache(subset, config_id)
             if outcome == self.PASS:
                 continue
-            elif outcome == self.FAIL:
+            if outcome == self.FAIL:
                 self._fail_index.value = i
                 break
 
-            if not ploop.do(self._loop_body, (subsets[i], i, config_id)):
+            if not ploop.do(self._loop_body, (subset, i, config_id)):
                 # if do() returned False, the test was not started
                 break
         ploop.join()
 
         fvalue = self._fail_index.value
         if fvalue != -1:
-            return subsets[fvalue], 2, 0
+            return [subsets[fvalue]], 0
 
-        return None, None, complement_offset
+        return None, complement_offset
 
-    def _reduce_to_complement(self, run, config, subsets, complement_offset):
+    def _reduce_to_complement(self, run, subsets, complement_offset):
         """
         Perform a complement-based reduce task.
 
         :param run: The index of the current iteration.
-        :param config: The current configuration under testing.
         :param subsets: List of sets that the current configuration is split to.
-        :param complement_offset: A compensation offset needed to calculate the index
-               of the first unchecked complement (optimization purpose only).
-        :return: Tuple: (failing config or None, next n or None, next complement_offset).
+        :param complement_offset: A compensation offset needed to calculate the
+            index of the first unchecked complement (optimization purpose only).
+        :return: Tuple: (list of subsets composing the failing config or None,
+            next complement_offset).
         """
         n = len(subsets)
         self._fail_index.value = -1
@@ -123,14 +125,14 @@ class ParallelDD(AbstractParallelDD):
                 continue
             i = int((i + complement_offset) % n)
 
-            complement = self._minus(config, subsets[i])
             config_id = ('r%d' % run, 'c%d' % i)
+            complement = [c for si, s in enumerate(subsets) for c in s if si != i]
 
             # If we had this test before, return its result
             outcome = self._lookup_cache(complement, config_id)
             if outcome == self.PASS:
                 continue
-            elif outcome == self.FAIL:
+            if outcome == self.FAIL:
                 self._fail_index.value = i
                 break
 
@@ -142,6 +144,6 @@ class ParallelDD(AbstractParallelDD):
         fvalue = self._fail_index.value
         if fvalue != -1:
             # In next run, start removing the following subset.
-            return self._minus(config, subsets[fvalue]), max(n - 1, 2), fvalue
+            return subsets[:fvalue] + subsets[fvalue + 1:], fvalue
 
-        return None, None, complement_offset
+        return None, complement_offset
