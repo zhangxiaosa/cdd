@@ -22,7 +22,7 @@ setup(
     author_email='hodovan@inf.u-szeged.hu, akiss@inf.u-szeged.hu',
     description='Picireny Hierarchical Delta Debugging Framework',
     long_description=open('README.rst').read(),
-    install_requires=['antlerinator==4.7.1-1', 'picire==19.3'],
+    install_requires=['antlerinator==4.7.1-1', 'picire==20.12'],
     zip_safe=False,
     include_package_data=True,
     entry_points={
