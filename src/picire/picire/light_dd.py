@@ -21,7 +21,7 @@ class LightDD(AbstractDD):
     """
 
     def __init__(self, test, cache=None, id_prefix=(), split=config_splitters.zeller,
-                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward):
+                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward, shuffle=False, onepass=False, counter=0, no_sort_before_sample=False, use_ddmin_in_probdd=False, complement_only_in_probdd=False, use_counter_in_probdd=False, start_from_n=None):
         """
         Initialize a LightDD object.
 
@@ -37,7 +37,8 @@ class LightDD(AbstractDD):
             provides config indices in an arbitrary order.
         """
         cache = cache or ConfigCache()
-        AbstractDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix)
+
+        AbstractDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, shuffle=shuffle, onepass=onepass, start_from_n=start_from_n)
 
         self._subset_iterator = subset_iterator
         self._complement_iterator = complement_iterator
@@ -81,12 +82,20 @@ class LightDD(AbstractDD):
                 continue
 
             config_id = ('r%d' % run, 's%d' % i)
+            complement = [c for si, s in enumerate(subsets) for c in s if si != i]
             subset = subsets[i]
+            if (self.onepass):
+                if (complement in self.delete_history):
+                    continue
+                else:
+                    self.delete_history.append(subsets[i])
+            self.printIdx(subsets[i], "Try deleting(complement of)")
 
             # Get the outcome either from cache or by testing it.
             outcome = self._lookup_cache(subset, config_id) or self._test_config(subset, config_id)
-            if outcome == self.FAIL:
+            if outcome == self.PASS:
                 # Interesting subset is found.
+                self.printIdx(subsets[i], "Deleted(complement of)")
                 return [subsets[i]], 0
 
         return None, complement_offset
@@ -103,18 +112,34 @@ class LightDD(AbstractDD):
             next complement_offset).
         """
         n = len(subsets)
-        for i in self._complement_iterator(n):
+        iterator = self._complement_iterator(n)
+        for i in iterator:
             if i is None:
                 continue
             i = int((i + complement_offset) % n)
 
             config_id = ('r%d' % run, 'c%d' % i)
             complement = [c for si, s in enumerate(subsets) for c in s if si != i]
+            if (self.onepass):
+                if (subsets[i] in self.delete_history):
+                    continue
+                else:
+                    self.delete_history.append(subsets[i])
+            self.printIdx(subsets[i], "Try deleting")
 
             outcome = self._lookup_cache(complement, config_id) or self._test_config(complement, config_id)
-            if outcome == self.FAIL:
+            if outcome == self.PASS:
                 # Interesting complement is found.
                 # In next run, start removing the following subset
-                return subsets[:i] + subsets[i + 1:], i
+                self.printIdx(subsets[i], "Deleted")
+                iterator.reset()
+                return subsets[:i] + subsets[i + 1:], 0
 
         return None, complement_offset
+
+    def printIdx(self, config, info):
+        indices = []
+        for item in config:
+            indices.append(item)
+        indices.sort()
+        logger.info("\t%s: %r" % (info, indices))

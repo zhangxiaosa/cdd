@@ -5,8 +5,33 @@
 # This file may not be copied, modified, or distributed except
 # according to those terms.
 
-forward = range  #: Generator returning numbers from 0 to n-1.
+class ResetableIterator:
+    def __init__(self, list):
+        self.list = list
+        self.num = len(list)
+        self.idx = 0
+    def __iter__(self):
+        return self
+    def __next__(self):
+        if self.idx >= self.num:
+            raise StopIteration
+        idx = self.idx
+        self.idx += 1
+        return self.list[idx]
+    def reset(self):
+      self.idx = 0
 
+
+def forward(n):
+    """
+    Generator returning numbers from 0 to n - 1 increasing by 1.
+
+    :param n: Upper bound of the interval.
+    :return: Increasing numbers from 0 to n - 1.
+    """
+    l = list(range(n))
+    iterator = ResetableIterator(l)
+    return iterator
 
 def backward(n):
     """
@@ -15,8 +40,9 @@ def backward(n):
     :param n: Upper bound of the interval.
     :return: Decreasing numbers from n - 1 to 0.
     """
-    for i in range(n - 1, -1, -1):
-        yield i
+    l = list(range(n - 1, -1, -1))
+    iterator = ResetableIterator(l)
+    return iterator
 
 
 def skip(n):
@@ -28,8 +54,9 @@ def skip(n):
         reasons.
     :return: None
     """
-    for i in ():
-        yield i
+    l = list(range(0))
+    iterator = ResetableIterator(l)
+    return iterator
 
 
 def random(n):
@@ -43,5 +70,5 @@ def random(n):
 
     lst = list(range(n))
     shuffle(lst)
-    for i in lst:
-        yield i
+    iterator = ResetableIterator(lst)
+    return iterator

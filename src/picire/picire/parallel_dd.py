@@ -20,7 +20,7 @@ class ParallelDD(AbstractParallelDD):
 
     def __init__(self, test, cache=None, id_prefix=(), split=config_splitters.zeller,
                  proc_num=multiprocessing.cpu_count(), max_utilization=100,
-                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward):
+                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward, shuffle=False, counter=0, no_sort_before_sample=False):
         """
         Initialize a ParallelDD object.
 
@@ -37,7 +37,7 @@ class ParallelDD(AbstractParallelDD):
         :param complement_iterator: Reference to a generator function that
             provides config indices in an arbitrary order.
         """
-        AbstractParallelDD.__init__(self, test, split, proc_num, max_utilization, cache=cache, id_prefix=id_prefix)
+        AbstractParallelDD.__init__(self, test, split, proc_num, max_utilization, cache=cache, id_prefix=id_prefix, shuffle=shuffle)
 
         self._subset_iterator = subset_iterator
         self._complement_iterator = complement_iterator
@@ -89,9 +89,9 @@ class ParallelDD(AbstractParallelDD):
 
             # If we had this test before, return the saved result.
             outcome = self._lookup_cache(subset, config_id)
-            if outcome == self.PASS:
-                continue
             if outcome == self.FAIL:
+                continue
+            if outcome == self.PASS:
                 self._fail_index.value = i
                 break
 
@@ -130,9 +130,9 @@ class ParallelDD(AbstractParallelDD):
 
             # If we had this test before, return its result
             outcome = self._lookup_cache(complement, config_id)
-            if outcome == self.PASS:
-                continue
             if outcome == self.FAIL:
+                continue
+            if outcome == self.PASS:
                 self._fail_index.value = i
                 break
 

@@ -22,6 +22,9 @@ from . import logging
 from .combined_iterator import CombinedIterator
 from .combined_parallel_dd import CombinedParallelDD
 from .light_dd import LightDD
+from .prob_dd import ProbDD
+from .simplifiedprob_dd import SimplifiedProbDD
+from .fast_dd import FastDD
 from .parallel_dd import ParallelDD
 from .shared_cache import shared_cache_decorator
 from .subprocess_test import ConcatTestBuilder, SubprocessTest
@@ -45,7 +48,7 @@ def create_parser():
 
     # Base reduce settings.
     parser.add_argument('--cache', metavar='NAME',
-                        choices=[i for i in dir(outcome_cache) if not i.startswith('_') and i.islower()], default='config',
+                        choices=[i for i in dir(outcome_cache) if not i.startswith('_') and i.islower()], default='none',
                         help='cache strategy (%(choices)s; default: %(default)s)')
     parser.add_argument('--split', metavar='NAME',
                         choices=[i for i in dir(config_splitters) if not i.startswith('_') and i.islower()], default='zeller',
@@ -108,10 +111,7 @@ def process_args(parser, args):
         except LookupError:
             parser.error('The given encoding (%s) is not known.' % args.encoding)
     else:
-        args.encoding = chardet.detect(args.src)['encoding']
-        if not args.encoding:
-            parser.error('The encoding of the test case is not recognized. '
-                         'Please define it with the --encoding command line option.')
+        args.encoding = chardet.detect(args.src)['encoding'] or 'latin-1'
 
     args.test = realpath(args.test)
     if not exists(args.test) or not os.access(args.test, os.X_OK):
@@ -120,7 +120,7 @@ def process_args(parser, args):
     args.tester_class = SubprocessTest
     args.tester_config = {
         'encoding': args.encoding,
-        'command_pattern': '%s %%s' % args.test,
+        'command_pattern': [args.test, '%s'],
         'cleanup': args.cleanup,
     }
 
@@ -135,7 +135,15 @@ def process_args(parser, args):
     # Choose the reducer class that will be used and its configuration.
     args.reduce_config = {'split': split_class(n=args.granularity)}
     if not args.parallel:
-        args.reduce_class = LightDD
+        if (args.dd == 'probdd'):
+            args.reduce_class = ProbDD
+        elif (args.dd == 'ddmin'):
+            args.reduce_class = LightDD
+        elif (args.dd == 'fastdd'):
+            args.reduce_class = FastDD
+        elif (args.dd == 'simplifiedprobdd'):
+            args.reduce_class = SimplifiedProbDD
+        
         args.reduce_config['subset_iterator'] = subset_iterator
         args.reduce_config['complement_iterator'] = complement_iterator
         args.reduce_config['subset_first'] = args.subset_first
@@ -174,10 +182,20 @@ def log_args(title, args):
                     log += ['%s: %s' % (k_log, v_log)]
             return log if len(log) > 1 else log[0]
         if isinstance(args, list):
-            return ', '.join(_log_args(v) for v in args)
+            v_logs = [_log_args(v) for v in args]
+            if any(isinstance(v_log, list) for v_log in v_logs):
+                log = []
+                for v_log in v_logs:
+                    if not isinstance(v_log, list):
+                        v_log = [v_log]
+                    for i, line in enumerate(v_log):
+                        log += ['%s %s' % ('-' if i == 0 else ' ', line)]
+            else:
+                log = ', '.join(v_log for v_log in v_logs)
+            return log
         if hasattr(args, '__name__'):
             return '.'.join(([args.__module__] if hasattr(args, '__module__') else []) + [args.__name__])
-        return args
+        return str(args)
     logger.info('%s\n\t%s\n', title, '\n\t'.join(_log_args(args)))
 
 
@@ -240,7 +258,7 @@ def call(reduce_class, reduce_config,
                                    **tester_config),
                       cache=cache,
                       **reduce_config)
-    min_set = dd.ddmin(list(range(len(content))))
+    min_set = dd(list(range(len(content))))
 
     logger.trace('The cached results are: %s', cache)
     logger.debug('A minimal config is: %r', min_set)
@@ -265,6 +283,7 @@ def call(reduce_class, reduce_config,
 
 
 def execute():
+    print("enter cli.py:execute()")
     """
     The main entry point of picire.
     """

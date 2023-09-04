@@ -21,7 +21,7 @@ class AbstractParallelDD(AbstractDD):
     Abstract super-class of the various parallel DD implementations.
     """
 
-    def __init__(self, test, split, proc_num, max_utilization, cache=None, id_prefix=()):
+    def __init__(self, test, split, proc_num, max_utilization, cache=None, id_prefix=(), shuffle=False, counter=0, no_sort_before_sample=False):
         """
         Initialize an AbstractParallelDD object.
 
@@ -38,6 +38,7 @@ class AbstractParallelDD(AbstractDD):
         self._proc_num = proc_num
         self._max_utilization = max_utilization
         self._fail_index = Value('i', -1, lock=False)
+        self.shuffle = shuffle
 
     def _loop_body(self, config, index, config_id):
         """
