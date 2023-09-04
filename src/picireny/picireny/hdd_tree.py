@@ -1,5 +1,5 @@
 # Copyright (c) 2007 Ghassan Misherghi.
-# Copyright (c) 2016-2019 Renata Hodovan, Akos Kiss.
+# Copyright (c) 2016-2020 Renata Hodovan, Akos Kiss.
 #
 # Licensed under the BSD 3-Clause License
 # <LICENSE.rst or https://opensource.org/licenses/BSD-3-Clause>.
@@ -8,7 +8,10 @@
 
 
 class Position(object):
-    """Class defining a position in the input file. Used to recognise line breaks between tokens."""
+    """
+    Class defining a position in the input file. Used to recognise line breaks
+    between tokens.
+    """
     def __init__(self, line, idx):
         """
         Initialize position object.
@@ -48,31 +51,34 @@ class HDDTree:
 
         :param visitor: Function applying to the visited nodes.
         """
-        assert False, 'Should never be reached: it should be overridden in sub-classes.'
+        raise NotImplementedError()
 
     def synthetic_attribute(self, visitor):
         """
-        Call visitor on nodes without propagating any values (used by unparsing).
+        Call visitor on nodes without propagating any values (used by
+        unparsing).
 
         :param visitor: Function applying on the visited nodes.
         :return: The value returned by visitor after applying on the node.
         """
-        assert False, 'Should never be reached: it should be overridden in sub-classes.'
+        raise NotImplementedError()
 
     def inherited_attribute(self, visitor, attribute=None):
         """
-        Call visitor on the nodes and propagate the return value to the children (only setLevel uses it).
+        Call visitor on the nodes and propagate the return value to the children
+        (only setLevel uses it).
 
         :param visitor: Function applying to the visited nodes.
         :param attribute: The propagated value.
         """
-        assert False, 'Should never be reached: it should be overridden in sub-classes.'
+        raise NotImplementedError()
 
     def unparse(self, with_whitespace=True):
         """
         Build test case from a HDD tree.
 
-        :param with_whitespace: Add whitespace (space, new line) to separate nonadjacent nodes.
+        :param with_whitespace: Add whitespace (space, new line) to separate
+            nonadjacent nodes.
         :return: The unparsed test case.
         """
         def unparse_attribute(node, attribs):
@@ -119,7 +125,9 @@ class HDDTree:
         self.traverse(_set_state)
 
     def check(self):
-        """Run sanity check on the HDD tree."""
+        """
+        Run sanity check on the HDD tree.
+        """
         def bad_parent(node):
             if node is None:
                 return
@@ -130,7 +138,8 @@ class HDDTree:
         """
         Pretty print HDD tree to help debugging.
 
-        :param current: Reference to a node that will be marked with a '*' in the output.
+        :param current: Reference to a node that will be marked with a '*' in
+            the output.
         :return: String representation of the tree.
         """
 
@@ -146,7 +155,7 @@ class HDDTree:
                                                 node.end.idx)) if self.start is not None and self.end is not None else '',
                 '*' if node == current else '',
                 node.replace,
-                ''.join(['    ' + line + '\n' for line in ''.join(attrib).splitlines()]))
+                ''.join('    ' + line + '\n' for line in ''.join(attrib).splitlines()))
 
         return self.synthetic_attribute(_tree_str)
 

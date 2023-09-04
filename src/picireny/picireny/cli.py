@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2019 Renata Hodovan, Akos Kiss.
+# Copyright (c) 2016-2020 Renata Hodovan, Akos Kiss.
 #
 # Licensed under the BSD 3-Clause License
 # <LICENSE.rst or https://opensource.org/licenses/BSD-3-Clause>.
@@ -7,34 +7,36 @@
 
 from __future__ import absolute_import
 
-import antlerinator
 import codecs
 import json
 import logging
-import picire
-import pkgutil
 import sys
+import time
 
 from argparse import ArgumentParser
 from os import makedirs
-from os.path import abspath, basename, dirname, exists, isdir, join, relpath
+from os.path import abspath, basename, dirname, exists, isdir, join, realpath
 from shutil import rmtree
 
-from antlr4 import *
-from . import info, transform
-from .hdd import coarse_full_hddmin, coarse_hddmin, hddmin
-from .hddr import hddrmin
+import antlerinator
+import picire
+import pkg_resources
+import random
+
+from antlr4 import InputStream
+
+from . import hdd, hddr, info, transform
 
 logger = logging.getLogger('picireny')
-__version__ = pkgutil.get_data(__package__, 'VERSION').decode('ascii').strip()
+__version__ = pkg_resources.get_distribution(__package__).version
 antlr_default_path = antlerinator.antlr_jar_path
 
 
 args_hdd_choices = {
-    'full': hddmin,
-    'coarse': coarse_hddmin,
-    'coarse-full': coarse_full_hddmin,
-    'hddr': hddrmin,
+    'full': hdd.hddmin,
+    'coarse': hdd.coarse_hddmin,
+    'coarse-full': hdd.coarse_full_hddmin,
+    'hddr': hddr.hddrmin,
 }
 
 
@@ -44,10 +46,10 @@ def process_antlr4_path(antlr=None):
         antlerinator.install(lazy=True)
 
     if not exists(antlr):
-        logger.error('%s does not exist.' % antlr)
+        logger.error('%s does not exist.', antlr)
         return None
 
-    return abspath(relpath(antlr))
+    return realpath(antlr)
 
 
 def process_antlr4_format(format=None, grammar=None, start=None, replacements=None):
@@ -57,7 +59,7 @@ def process_antlr4_format(format=None, grammar=None, start=None, replacements=No
             for i, fn in enumerate(data['files']):
                 path = join(abspath(dirname(format)), fn)
                 if not exists(path):
-                    logger.error('{path}, defined in the format config, doesn\'t exist.'.format(path=path))
+                    logger.error('%s, defined in the format config, does not exist.', path)
                     return None, None
                 data['files'][i] = path
             data['islands'] = data.get('islands', {})
@@ -68,7 +70,7 @@ def process_antlr4_format(format=None, grammar=None, start=None, replacements=No
 
     if format:
         if not exists(format):
-            logger.error('{path} does not exist.'.format(path=format))
+            logger.error('%s does not exist.', format)
             return None, None
 
         with open(format, 'r') as f:
@@ -77,8 +79,8 @@ def process_antlr4_format(format=None, grammar=None, start=None, replacements=No
                 input_format = input_description['grammars']
                 if not start:
                     start = input_description.get('start', None)
-            except json.JSONDecodeError as err:
-                logger.error('The content of {path} is not a valid JSON object: {err}'.format(path=format, err=err))
+            except ValueError as err:
+                logger.error('The content of %s is not a valid JSON object.', format, exc_info=err)
                 return None, None
 
     if not start:
@@ -91,21 +93,21 @@ def process_antlr4_format(format=None, grammar=None, start=None, replacements=No
 
         if grammar:
             for i, g in enumerate(grammar):
-                input_format['']['files'].append(abspath(relpath(g)))
+                input_format['']['files'].append(realpath(g))
                 if not exists(input_format['']['files'][i]):
-                    logger.error('{path} does not exist.'.format(path=input_format['']['files'][i]))
+                    logger.error('%s does not exist.', input_format['']['files'][i])
                     return None, None
 
         if replacements:
             if not exists(replacements):
-                logger.error('{path} does not exist.'.format(path=replacements))
+                logger.error('%s does not exist.', replacements)
                 return None, None
 
             try:
                 with open(replacements, 'r') as f:
                     input_format['']['replacements'] = json.load(f)
-            except json.JSONDecodeError as err:
-                logger.error('The content of {path} is not a valid JSON object: {err}'.format(path=replacements, err=err))
+            except ValueError as err:
+                logger.error('The content of %s is not a valid JSON object.', replacements, exc_info=err)
                 return None, None
 
     return input_format, start
@@ -117,7 +119,7 @@ def process_antlr4_args(arg_parser, args):
         arg_parser.error('Invalid ANTLR definition.')
 
     args.input_format, args.start = process_antlr4_format(format=args.format, grammar=args.grammar, start=args.start,
-                                                         replacements=args.replacements)
+                                                          replacements=args.replacements)
     if args.input_format is None or args.start is None:
         arg_parser.error('Invalid input format definition.')
 
@@ -149,7 +151,7 @@ def log_args(title, args):
                 v_log = _log_args(v)
                 if isinstance(v_log, list):
                     log += ['%s:' % k_log]
-                    for i, line in enumerate(v_log):
+                    for line in v_log:
                         log += ['\t' + line]
                 else:
                     log += ['%s: %s' % (k_log, v_log)]
@@ -166,8 +168,8 @@ def log_tree(title, hdd_tree):
     logger.debug('%s\n\theight: %s\n\tshape: %s\n\tnodes: %s\n',
                  title,
                  info.height(hdd_tree),
-                 ', '.join(['%s' % cnt for cnt in info.shape(hdd_tree)]),
-                 ', '.join(['%d %s' % (cnt, ty) for ty, cnt in sorted(info.count(hdd_tree).items())]))
+                 ', '.join('%s' % cnt for cnt in info.shape(hdd_tree)),
+                 ', '.join('%d %s' % (cnt, ty) for ty, cnt in sorted(info.count(hdd_tree).items())))
 
 
 def build_with_antlr4(input, src, encoding, out,
@@ -188,8 +190,10 @@ def build_with_antlr4(input, src, encoding, out,
     :param start: Name of the start rule in [grammarname:]rulename format.
     :param antlr: Path to the ANTLR4 tool (Java jar binary).
     :param lang: The target language of the parser.
-    :param build_hidden_tokens: Build hidden tokens of the input format into the HDD tree.
-    :param cleanup: Binary flag denoting whether removing auxiliary files at the end is enabled.
+    :param build_hidden_tokens: Build hidden tokens of the input format into the
+        HDD tree.
+    :param cleanup: Binary flag denoting whether removing auxiliary files at the
+        end is enabled.
     :return: The built HDD tree.
     """
     # Get the parameters in a dictionary so that they can be pretty-printed
@@ -238,7 +242,7 @@ def reduce(hdd_tree,
            flatten_recursion=False, squeeze_tree=True,
            skip_unremovable=True, skip_whitespace=False,
            unparse_with_whitespace=True, granularity=2,
-           cache_class=None, cleanup=True):
+           cache_class=None, cleanup=True, shuffle=False, onepass=False, counter=False, no_sort_before_sample=True, use_ddmin_in_probdd=False, complement_only_in_probdd=False, use_counter_in_probdd=False, start_from_n=None):
     """
     Execute tree reduction part of picireny as if invoked from command line,
     however, control its behaviour not via command line arguments but function
@@ -246,22 +250,31 @@ def reduce(hdd_tree,
 
     :param hdd_tree: HDD tree to reduce.
     :param reduce_class: Reference to the reducer class.
-    :param reduce_config: Dictionary containing information to initialize the reduce_class.
-    :param tester_class: Reference to a runnable class that can decide about the interestingness of a test case.
-    :param tester_config: Dictionary containing information to initialize the tester_class.
-    :param input: Path to the test case to reduce (only used to determine the name of the output file).
+    :param reduce_config: Dictionary containing information to initialize the
+        reduce_class.
+    :param tester_class: Reference to a runnable class that can decide about the
+        interestingness of a test case.
+    :param tester_config: Dictionary containing information to initialize the
+        tester_class.
+    :param input: Path to the test case to reduce (only used to determine the
+        name of the output file).
     :param encoding: Encoding of the input test case.
     :param out: Path to the output directory.
     :param hddmin: Function implementing a HDD minimization algorithm.
     :param hdd_star: Boolean to enable the HDD star algorithm.
-    :param flatten_recursion: Boolean to enable flattening left/right-recursive trees.
+    :param flatten_recursion: Boolean to enable flattening left/right-recursive
+        trees.
     :param squeeze_tree: Boolean to enable the tree squeezing optimization.
-    :param skip_unremovable: Boolean to enable hiding unremovable nodes from ddmin.
-    :param skip_whitespace: Boolean to enable hiding whitespace-only tokens from ddmin.
-    :param unparse_with_whitespace: Unparse by adding whitespace between nonadjacent nodes.
+    :param skip_unremovable: Boolean to enable hiding unremovable nodes from
+        ddmin.
+    :param skip_whitespace: Boolean to enable hiding whitespace-only tokens from
+        ddmin.
+    :param unparse_with_whitespace: Unparse by adding whitespace between
+        nonadjacent nodes.
     :param granularity: Initial granularity.
     :param cache_class: Reference to the cache class to use.
-    :param cleanup: Binary flag denoting whether removing auxiliary files at the end is enabled.
+    :param cleanup: Binary flag denoting whether removing auxiliary files at the
+        end is enabled.
     :return: The path to the minimal test case.
     """
     # Get the parameters in a dictionary so that they can be pretty-printed
@@ -288,23 +301,26 @@ def reduce(hdd_tree,
         hdd_tree = transform.skip_whitespace(hdd_tree)
         log_tree('Tree after skipping whitespace tokens', hdd_tree)
 
+
     # Start reduce and save result to a file named the same like the original.
-    out_file = join(out, basename(input))
     tests_workdir = join(out, 'tests')
     if not isdir(tests_workdir):
         makedirs(tests_workdir)
+    out_src = hddmin(hdd_tree,
+                     reduce_class,
+                     reduce_config,
+                     tester_class,
+                     tester_config,
+                     basename(input),
+                     tests_workdir,
+                     hdd_star=hdd_star,
+                     cache=cache_class() if cache_class else None,
+                     unparse_with_whitespace=unparse_with_whitespace,
+                     granularity=granularity,
+                     shuffle=shuffle, onepass=onepass, counter=counter, no_sort_before_sample=no_sort_before_sample, use_ddmin_in_probdd=use_ddmin_in_probdd, complement_only_in_probdd=complement_only_in_probdd, use_counter_in_probdd=use_counter_in_probdd, start_from_n=start_from_n)
+    out_file = join(out, basename(input))
     with codecs.open(out_file, 'w', encoding=encoding, errors='ignore') as f:
-        f.write(hddmin(hdd_tree,
-                       reduce_class,
-                       reduce_config,
-                       tester_class,
-                       tester_config,
-                       basename(input),
-                       tests_workdir,
-                       hdd_star=hdd_star,
-                       cache=cache_class() if cache_class else None,
-                       unparse_with_whitespace=unparse_with_whitespace,
-                       granularity=granularity))
+        f.write(out_src)
     logger.info('Result is saved to %s.', out_file)
 
     if cleanup:
@@ -366,6 +382,20 @@ def execute():
     srcml_grp.add_argument('--srcml:language', dest='srcml_language', metavar='LANG', choices=['C', 'C++', 'C#', 'Java'],
                            help='language of the input (%(choices)s; default: %(default)s)')
 
+    # Ddmin settings
+    arg_parser.add_argument('--dd', metavar='NAME', choices=['ddmin', 'probdd', 'fastdd', 'simplifiedprobdd'], default='ddmin',
+                            help='DD variant to run (%(choices)s; default: %(default)s)')
+    arg_parser.add_argument('--shuffle', default=False, action='store_true', help='random shuffle the element list or not')
+    arg_parser.add_argument('--seed', metavar='NUMBER', type=int, default=round(time.time() * 1000), help='the seed for random generator')
+    arg_parser.add_argument('--onepass', default=False, action='store_true', help='do not reset index to 0 when a partition is deleted')
+    arg_parser.add_argument('--counter', metavar='NUMBER', type=float, default=0, help='replace probability increase with counter in probdd')
+    arg_parser.add_argument('--no-sort-before-sample', default=False, action='store_true', help='disable sorting by probability before sampling in probdd')
+    arg_parser.add_argument('--use-ddmin-in-probdd', default=False, action='store_true', help='use the ddmin\'s partition approach in probdd')
+    arg_parser.add_argument('--use-counter-in-probdd', default=False, action='store_true', help='replace the probability with counter in probdd, --counter can help to tune the initialize partition size')
+    arg_parser.add_argument('--complement-only-in-probdd', default=False, action='store_true', help='keep the complement of a partition, do not attempt to remove it')
+    arg_parser.add_argument('--id', metavar='NUMBER', type=int, default=0, help='just used for identify each trail')
+    arg_parser.add_argument('--start-from-n', metavar='NUMBER', type=int, default=None, help='partition size start from a specified number, instead of half of the total size')
+    
     args = arg_parser.parse_args()
     process_args(arg_parser, args)
 
@@ -385,7 +415,11 @@ def execute():
     elif args.builder == 'srcml':
         hdd_tree = build_with_srcml(input=args.input, src=args.src, language=args.srcml_language)
         unparse_with_whitespace = False
+   
+    if (args.shuffle):
+        random.seed(args.seed)
 
+    tstart = time.time()
     reduce(hdd_tree=hdd_tree,
            reduce_class=args.reduce_class, reduce_config=args.reduce_config,
            tester_class=args.tester_class, tester_config=args.tester_config,
@@ -394,4 +428,5 @@ def execute():
            flatten_recursion=args.flatten_recursion, squeeze_tree=args.squeeze_tree,
            skip_unremovable=args.skip_unremovable, skip_whitespace=args.skip_whitespace,
            unparse_with_whitespace=unparse_with_whitespace, granularity=args.granularity,
-           cache_class=args.cache, cleanup=args.cleanup)
+           cache_class=args.cache, cleanup=args.cleanup, shuffle=args.shuffle, onepass=args.onepass, counter=args.counter, no_sort_before_sample=args.no_sort_before_sample, use_ddmin_in_probdd=args.use_ddmin_in_probdd, complement_only_in_probdd=args.complement_only_in_probdd, use_counter_in_probdd=args.use_counter_in_probdd, start_from_n=args.start_from_n)
+    print("execution time: " + str(time.time() - tstart) + "s")

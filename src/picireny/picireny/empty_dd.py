@@ -7,7 +7,7 @@
 
 import logging
 
-from picire import AbstractDD, ConfigCache
+from picire import AbstractDD
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ class EmptyDD(AbstractDD):
 
         :param config: The initial configuration that will be reduced.
         :param n: The number of sets that the config is initially split to
-                  (unused, available for API compatibility with other DD variants).
+            (unused, available for API compatibility with other DD variants).
         :return: 1-minimal failing configuration.
         """
         assert len(config) == 1
@@ -51,7 +51,7 @@ class EmptyDD(AbstractDD):
         logger.info('Run: trying 0.')
 
         outcome = self._lookup_cache(emptyset, config_id) or self._test_config(emptyset, config_id)
-        if outcome == self.FAIL:
+        if outcome == self.PASS:
             logger.info('Reduced to 0 units.')
             logger.debug('New config: %r.', emptyset)
 

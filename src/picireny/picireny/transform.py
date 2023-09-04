@@ -33,7 +33,7 @@ def remove_empty_nodes(node):
                 # a grammar may contain lambda rules (with nothing on the
                 # right-hand side, or with an empty alternative), or rules that
                 # produce EOF only (which is removed in the branch above)
-                if len(child.children) != 0:
+                if child.children:
                     non_empty_children.append(child)
 
         node.children[:] = non_empty_children
@@ -45,12 +45,12 @@ def flatten_recursion(node):
     """
     Heuristics to flatten left or right-recursion. E.g., given a rule
         rule : a | rule b
-    and a HDD tree built with it from an input, rewrite the resulting HDD
-    tree as if it was built using
+    and a HDD tree built with it from an input, rewrite the resulting HDD tree
+    as if it was built using
         rule : a b*
     This allows HDD to potentially completely remove the recurring blocks
-    (instead of replacing them with their minimal replacement, which is
-    usually not "").
+    (instead of replacing them with their minimal replacement, which is usually
+    not "").
 
     :param node: The root of the tree to be transformed.
     :return: The root of the transformed tree.
@@ -97,15 +97,18 @@ def flatten_recursion(node):
 
 def squeeze_tree(node):
     """
-    Compress single line chains in the HDD tree whose minimal replacements are the
-    same and hence they would result in redundant checks during the minimization.
+    Compress single line chains in the HDD tree whose minimal replacements are
+    the same and hence they would result in redundant checks during the
+    minimization.
 
     :param node: The root of the tree to be transformed.
     :return: The root of the transformed tree.
     """
     if isinstance(node, HDDRule):
         for i, child in enumerate(node.children):
-            node.children[i].replace_with(squeeze_tree(child))
+            squeezed_child = squeeze_tree(child)
+            if child != squeezed_child:
+                node.children[i].replace_with(squeezed_child)
 
         if len(node.children) == 1 and node.children[0].replace == node.replace:
             return node.children[0]
