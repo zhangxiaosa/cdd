@@ -1133,12 +1133,12 @@ static void
 transparent_crc_bytes (char *ptr, int nbytes, char* vname, int flag)
 {
     int i;
-    for (i=0; i<nbytes; i++) {
-        crc32_byte(ptr[i]);
-    }
- if (flag) {
-    printf("...checksum after hashing %s : %lX\n", vname, crc32_context ^ 0xFFFFFFFFUL);
- }
+                              
+                           
+     
+            
+                                                                                        
+  
 }
 static long __undefined;
 
@@ -1544,199 +1544,199 @@ inline static int8_t func_11(uint8_t p_12)
     uint64_t l_2130 = 8UL;
     int32_t l_2174 = 0xC0369A03L;
     int i, j;
-    if ((safe_rshift_func_int8_t_s_u(((g_1293[3][0] = (((l_1835 > l_1835) <= p_12) < l_1835)) , (((safe_lshift_func_int16_t_s_u((0x9049D157ABB000DCLL && (safe_add_func_int8_t_s_s(((((((g_284 <= ((safe_sub_func_int8_t_s_s(((((l_1842 = g_1756) <= p_12) < (safe_lshift_func_uint16_t_u_u(((safe_sub_func_uint16_t_u_u((l_1849 = ((safe_lshift_func_uint16_t_u_s(l_1835, p_12)) != 0UL)), g_991)) , g_224), p_12))) != l_1835), 252UL)) | l_1835)) >= 0x0B07D658L) && 0x48L) ^ 6UL) < g_332) && g_162[2][4][0]), 1UL))), g_977)) >= 0x265773EF595CBFEALL) , g_312)), l_1835)))
-    {
-        return p_12;
-    }
-    else
-    {
-        uint16_t l_1860 = 4UL;
-        uint16_t l_1863 = 1UL;
-        int32_t l_1883 = 0x60F38B19L;
-        int32_t l_1885[1];
-        int8_t l_2159 = 0L;
-        uint16_t l_2185 = 65534UL;
-        int i;
-safe_sub_func_uint32_t_u_u((l_1864[2][4] = ((l_1842 || ((g_329[1] == (((p_12 ^ (safe_add_func_uint64_t_u_u((g_1293[3][0] = (safe_lshift_func_int16_t_s_s(p_12, g_1501))), p_12))) ^ 4294967294UL) , 4L)) || 0x3072L)) ^ (-4L))), p_12);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+     
+                    
+     
+        
+     
+                              
+                              
+                                     
+                          
+                           
+                                  
+              
+                                                                                                                                                                                                                                       
 
-safe_add_func_uint16_t_u_u(g_1589, 7);
-
-
+                                      
 
 
 
 
 
-safe_sub_func_int16_t_s_s((0x0E7447E3892391BELL || 0xC8DD589E83D4860CLL), 0x6B9EL);
-safe_rshift_func_int16_t_s_s(p_12, 9);
-
-safe_add_func_int32_t_s_s((((safe_add_func_int8_t_s_s(((0xCFL & g_777) < g_459), p_12)) | l_1849) | (-8L)), 0L);
-safe_rshift_func_int8_t_s_s(g_381, g_253);
-safe_sub_func_uint16_t_u_u(g_170, 5);
 
 
-g_301 += 1;
+                                                                                   
+                                      
+
+                                                                                                                
+                                          
+                                     
 
 
-
-safe_sub_func_uint16_t_u_u(65535UL, (-1L));
-safe_sub_func_uint32_t_u_u(g_224, 0xA7BB40B2L);
+           
 
 
 
-safe_unary_minus_func_int8_t_s(g_180);
-
-{
-        uint16_t l_1860 = 4UL;
-        uint16_t l_1863 = 1UL;
-        int32_t l_1883 = 0x60F38B19L;
-        int32_t l_1885[1];
-        int8_t l_2159 = 0L;
-        uint16_t l_2185 = 65534UL;
-        int i;
-        for (i = 0; i < 1; i++)
-            l_1885[i] = 0x42BD9F1EL;
-        if ((((safe_rshift_func_uint8_t_u_s(((safe_sub_func_int64_t_s_s((safe_rshift_func_uint8_t_u_u((safe_lshift_func_uint16_t_u_s(((l_1842 = l_1860) <= (safe_mod_func_int16_t_s_s(l_1863, 0x2FE0L))), (l_1860 > 0x9AL))), ((l_1849 == (l_1864[1][0] = l_1863)) == (+(safe_rshift_func_int16_t_s_u(p_12, g_1039)))))), g_1293[3][0])) > g_810), p_12)) && 0L) > g_1147))
-        {
-            int16_t l_1884 = 0x752FL;
-            int32_t l_1898 = 0xB322CD89L;
-            int32_t l_1904 = 0x16301C87L;
-            int64_t l_1961 = 0x7543567F478F8BE7LL;
-            int32_t l_2088 = 0L;
-            int8_t l_2098 = 0x0FL;
-            for (g_139 = (-1); (g_139 > 25); g_139 = safe_add_func_uint32_t_u_u(g_139, 3))
-            {
-                uint32_t l_1882 = 0x4F7BD357L;
-                int32_t l_1905 = 0x484CB44CL;
-                int32_t l_1920 = 0x5D27A41CL;
-                for (g_301 = 0; (g_301 >= 13); ++g_301)
-                {
-                    uint64_t l_1888 = 0UL;
-                    int32_t l_1906 = 0xA82334B6L;
-                    l_1885[0] = ((((g_175[0][0] == 247UL) <= (g_361 == (g_836 = (safe_rshift_func_int8_t_s_u(0x00L, 3))))) > ((~(((l_1883 = (((safe_add_func_uint64_t_u_u((((p_12 < (p_12 , ((-6L) > (g_1756 = (safe_sub_func_uint64_t_u_u((safe_lshift_func_int16_t_s_s((safe_unary_minus_func_int64_t_s(g_170)), 13)), (((p_12 & g_1434) < 9UL) && (-1L)))))))) > l_1882) ^ p_12), 0xB5C5899EE7524D24LL)) && 0x4D75E836L) && g_75)) < (-1L)) > l_1884)) || 0UL)) <= 0x6A96L);
-                    l_1906 = (l_1905 = (safe_add_func_int64_t_s_s((((l_1888 | l_1864[1][0]) , 255UL) > (safe_mod_func_uint8_t_u_u((safe_rshift_func_int16_t_s_s(g_1118[0], 12)), g_139))), ((!((l_1904 = (safe_rshift_func_uint8_t_u_s((((l_1898 = 0xCA454B1DDBF166A8LL) | (l_1864[1][0] != ((l_1885[0] = g_301) > (((((safe_lshift_func_uint16_t_u_u((safe_mod_func_uint16_t_u_u(l_1863, l_1884)), 14)) >= l_1903) >= l_1883) , l_1864[1][1]) , 6L)))) < p_12), p_12))) && l_1864[1][0])) >= l_1888))));
-                    l_1920 = (safe_lshift_func_int8_t_s_u((p_12 , (safe_mod_func_uint8_t_u_u((l_1842 = (((((safe_add_func_int32_t_s_s((safe_sub_func_int16_t_s_s((safe_sub_func_uint8_t_u_u(((((l_1882 > p_12) , l_1917) & 0xEC904534L) || g_977), (((0xD9L >= (l_1906 = p_12)) , ((safe_rshift_func_uint8_t_u_u((((-7L) <= 0xECL) || 65528UL), 4)) >= l_1905)) , g_224))), p_12)), g_57)) ^ l_1884) >= 0xB955L) & p_12) > 1UL)), 0x95L))), 0));
-                }
-                g_381 = l_1885[0];
-                for (g_170 = (-26); (g_170 != (-6)); g_170 = safe_add_func_int32_t_s_s(g_170, 8))
-                {
-                    int16_t l_1923[3][8][7] = {{{6L,0x1F79L,0xB939L,6L,6L,0x85F6L,(-1L)},{0L,0x5BA4L,0xB939L,0xA57EL,(-1L),0xF91AL,0xF91AL},{0x5BA4L,(-1L),0x6608L,(-1L),0x5BA4L,0x04FFL,0x9A4AL},{0x318CL,(-6L),0x85F6L,0x9A4AL,0xBAACL,0xCB6FL,0x636AL},{0xB939L,0x636AL,9L,0xA57EL,0x636AL,0xBAACL,(-6L)},{0x318CL,0x9A4AL,0x0F4DL,0x4BBCL,(-1L),(-6L),(-1L)},{0x5BA4L,0xF91AL,0x1F79L,0x275CL,0xBAACL,0L,0x5BA4L},{0L,(-1L),0xA57EL,0xBAACL,(-4L),0L,0x1F79L}},{{6L,(-1L),(-6L),0x9A4AL,0x9A4AL,(-6L),(-1L)},{(-1L),(-6L),0x5A36L,1L,6L,0xBAACL,(-1L)},{0x8F83L,(-1L),0xB939L,0x85F6L,0xF91AL,0x6608L,(-6L)},{0x1F79L,0xBAACL,0x318CL,6L,0xCB6FL,0x9A4AL,0xB939L},{0xB939L,(-6L),0x08F4L,0x8F83L,7L,0x0F4DL,0x8F83L},{0x215EL,0L,0x6608L,0xA1E0L,0x8F83L,0L,0x04FFL},{0x8F83L,0L,0x636AL,(-6L),0L,0x318CL,0L},{9L,(-6L),(-6L),9L,(-1L),0x215EL,0xCB6FL}},{{(-10L),0xBAACL,0xA1E0L,0x08F4L,0x85F6L,(-10L),0x0F4DL},{0xBAACL,0xCB6FL,0x636AL,0x8F83L,0xB939L,0x9A4AL,0xCB6FL},{0xA57EL,0x04FFL,0x215EL,0x85F6L,0xA1E0L,0L,0L},{5L,0xF91AL,0x54F2L,0x08F4L,0xF91AL,(-6L),0x04FFL},{9L,0x85F6L,0x318CL,0xA57EL,0xF91AL,0xE764L,0x8F83L},{0xB939L,0x0F4DL,0xA1E0L,0xDDDAL,0xA1E0L,0x0F4DL,0xB939L},{(-10L),0x8F83L,0x92BFL,0xA1E0L,0xB939L,7L,(-6L)},{0x5A36L,0L,0xE764L,0xCB6FL,0x85F6L,0xE764L,0L}}};
-                    int16_t l_1954 = 0xF5A2L;
-                    int32_t l_1969 = 0x8A518A59L;
-                    int i, j, k;
-                    for (g_552 = 0; (g_552 <= 3); g_552 += 1)
-                    {
-                        int i;
-                        l_1923[0][7][6] = g_1735[g_552];
-                        g_381 = (g_161 >= ((l_1849 <= 0UL) && (safe_add_func_int8_t_s_s((safe_mod_func_uint64_t_u_u((safe_sub_func_uint16_t_u_u((((safe_rshift_func_int8_t_s_s((0x63DA4CD192DDA58ELL != l_1923[0][7][6]), (((p_12 ^ ((safe_add_func_int32_t_s_s((((safe_add_func_int8_t_s_s(((0xCFL & g_777) < g_459), p_12)) | l_1849) | (-8L)), 0L)) != g_139)) == 2L) >= l_1904))) > l_1860) ^ p_12), l_1898)), 0xB9E6DB22738977A6LL)), p_12))));
-                        l_1920 = (g_923 = ((g_164 & ((safe_add_func_int16_t_s_s((((safe_mod_func_int16_t_s_s(((g_75 , ((((safe_add_func_int8_t_s_s((~(safe_sub_func_uint64_t_u_u((+(safe_rshift_func_int16_t_s_u((0xA463L != 0xC86EL), ((g_923 < (((safe_mul_func_uint8_t_u_u(g_1735[g_552], (l_1923[2][4][2] >= l_1905))) && (0xB76C3D28L & l_1898)) & g_923)) || (-1L))))), p_12))), l_1923[0][1][2])) ^ l_1923[0][7][6]) && l_1954) == 0xEEL)) >= 4UL), 1UL)) ^ 0UL) > p_12), p_12)) , p_12)) != l_1860));
-                    }
-                    l_1864[0][3] = (((((0xA7L != g_175[0][0]) < ((g_1717[1] & g_810) && (safe_lshift_func_int8_t_s_s((safe_rshift_func_int16_t_s_s(p_12, 15)), 5)))) , (l_1882 ^ g_1039)) == (0UL >= (((((safe_lshift_func_int16_t_s_u((((((0xA7C8L && g_836) ^ p_12) || 0x2D82A409L) == l_1961) == p_12), g_177)) & p_12) || g_284) && p_12) && 5L))) > 0xF3B5L);
-                    g_810 = (((l_1898 = g_162[2][1][0]) >= ((l_1883 = (safe_rshift_func_uint16_t_u_s((0x05B37687L & (0x8272L && (g_1701[0] > 8L))), (((l_1970[7][3] = (((safe_add_func_int64_t_s_s(l_1905, (p_12 & (p_12 <= (safe_sub_func_uint16_t_u_u((l_1969 = (!((l_1885[0] = l_1961) <= 0x3AL))), g_281)))))) , 0xE7EACC6AA4D88E93LL) && g_175[0][0])) > g_462) != g_164)))) || 0UL)) && 1L);
-                    g_923 = 9L;
-                }
-            }
-            if ((((l_1885[0] == (((((l_1898 > ((safe_lshift_func_uint16_t_u_u(((g_1735[2] = ((safe_rshift_func_int16_t_s_u(g_459, ((l_1904 = l_1904) && l_1883))) <= ((safe_sub_func_int32_t_s_s(g_361, (65534UL || ((((safe_add_func_int64_t_s_s((((((-9L) < 1L) != p_12) < p_12) == g_139), g_1735[3])) < g_1293[5][1]) , l_1885[0]) < g_1147)))) & 5L))) >= g_329[0]), l_1864[1][0])) >= (-6L))) <= l_1849) && 0x42L) >= p_12) > p_12)) | p_12) >= l_1898))
-            {
-                uint32_t l_1997 = 0x03C6C79EL;
-                int32_t l_1998[7] = {(-1L),8L,8L,(-1L),8L,8L,(-1L)};
-                int i;
-                if (((((safe_sub_func_uint32_t_u_u((((0x6958CDAAE2819A2ELL || 0x1E41E926CACE1CCALL) , (safe_add_func_int32_t_s_s(((((safe_sub_func_uint64_t_u_u((((((l_1898 = (safe_sub_func_int16_t_s_s((~((p_12 | (safe_mod_func_int16_t_s_s(((((18446744073709551615UL < ((1UL <= (((((1UL | ((g_1284[0] = ((g_106 = l_1898) ^ (l_1997 = (g_462 = (safe_sub_func_uint32_t_u_u((safe_mod_func_uint64_t_u_u(((~(((g_381 & l_1849) <= g_1284[0]) <= g_923)) > 1L), p_12)), p_12)))))) != (-6L))) == 7L) > l_1860) & g_281) && g_1735[1])) == 4294967292UL)) , 1L) > g_1039) > p_12), p_12))) <= l_1860)), p_12))) & 0xE2C095C0L) ^ l_1970[7][3]) != p_12) < g_1735[2]), g_329[1])) , g_777) != 0x411082D0L) != 1UL), p_12))) < l_1998[2]), 0xF1417ED4L)) < p_12) , 0x9D33L) < g_332))
-                {
-                    uint32_t l_2012 = 0xE37D7E1CL;
-                    int32_t l_2013 = 0x6CCB5A23L;
-                    int32_t l_2014 = 1L;
-                    uint32_t l_2030 = 1UL;
-                    l_2014 = (safe_lshift_func_uint16_t_u_u(((safe_rshift_func_int8_t_s_s((safe_sub_func_uint64_t_u_u(g_1701[4], ((255UL ^ (((((+(safe_add_func_int32_t_s_s((l_1849 = (((l_1998[2] = (g_552 = l_1970[7][3])) > (safe_rshift_func_uint8_t_u_s(g_329[1], (0xF8DFEB9DL >= (((safe_rshift_func_uint8_t_u_u((((l_2012 != ((((l_1883 = 65535UL) | (p_12 == (l_1885[0] < l_2012))) > l_1997) > p_12)) , g_175[0][0]) ^ p_12), p_12)) >= 0UL) <= l_1835))))) | (-5L))), 0x68D13FB3L))) < 0x4F29424D52197588LL) & 0x8F2CE4E1L) < p_12) < l_1917)) >= l_1885[0]))), 5)) & l_2013), 10));
-                    l_2030 = ((g_1293[3][0] < (((g_175[0][0] = ((!((l_1998[4] = p_12) , (((((((((((safe_rshift_func_int8_t_s_u(((safe_rshift_func_uint16_t_u_s((l_1885[0] = (((safe_mod_func_int64_t_s_s(l_1917, (g_57 , 1L))) < (((safe_mod_func_uint8_t_u_u(((safe_lshift_func_uint16_t_u_u(g_1284[0], 3)) == ((l_1842 = 0x4099FCCCL) , (safe_rshift_func_int16_t_s_s((g_977 = (safe_mod_func_int8_t_s_s(0x67L, 0xF1L))), p_12)))), l_1970[7][3])) < 6UL) < 0xF4A4L)) || l_2012)), 12)) || 0x14F4L), 1)) , 4294967289UL) < 0xB1E20FFDL) && l_1898) > g_332) | p_12) ^ g_75) > l_1998[1]) != 0x04L) ^ (-9L)) ^ 0UL))) > p_12)) | p_12) , p_12)) && g_106);
-                }
-                else
-                {
-                    int8_t l_2043 = (-5L);
-                    uint16_t l_2099[4][3][7] = {{{0x4905L,0x266FL,0x686AL,0x686AL,0x266FL,0x4905L,0x08D4L},{0x5E77L,0x266FL,0x76E6L,0xC0B6L,0x266FL,1UL,0x75EEL},{0x5E77L,1UL,0x686AL,0xC0B6L,1UL,0x4905L,0x75EEL}},{{0x4905L,0x266FL,0x686AL,0x686AL,0x266FL,0x4905L,0x08D4L},{0x5E77L,0x266FL,0x76E6L,0xC0B6L,0x266FL,1UL,0x75EEL},{0x5E77L,1UL,0x686AL,0xC0B6L,1UL,0x4905L,0x75EEL}},{{0x4905L,0x266FL,0x686AL,0x686AL,0x266FL,0x4905L,0x08D4L},{0x5E77L,0x266FL,0x76E6L,0xC0B6L,0x266FL,1UL,0x75EEL},{0x5E77L,1UL,0x686AL,0xC0B6L,1UL,0x4905L,0x75EEL}},{{0x4905L,0x266FL,0x686AL,0x686AL,0x266FL,0x4905L,0x08D4L},{0x5E77L,0x266FL,0x76E6L,0xC0B6L,0x266FL,1UL,0x75EEL},{0x5E77L,1UL,0x686AL,0xC0B6L,1UL,0x4905L,0x75EEL}}};
-                    int i, j, k;
-                    for (g_144 = 0; (g_144 == 22); g_144 = safe_add_func_int16_t_s_s(g_144, 8))
-                    {
-                        l_1885[0] = (safe_mod_func_uint8_t_u_u(g_224, (safe_rshift_func_int16_t_s_u((safe_add_func_int32_t_s_s((-1L), (((safe_sub_func_uint8_t_u_u((((l_2043 = (safe_add_func_int16_t_s_s(l_1884, 0x4A96L))) , (safe_add_func_uint32_t_u_u(((g_175[0][0] = (safe_rshift_func_int8_t_s_s((g_75 = l_1961), (safe_add_func_int8_t_s_s((-1L), ((p_12 && (safe_rshift_func_uint16_t_u_s((((0x738BF81FL ^ ((g_1717[3] ^ g_1118[0]) && 6L)) && 65535UL) == 0xD9L), 2))) < l_2043)))))) >= g_1701[1]), 2L))) && l_2043), l_1860)) & l_1997) >= l_1998[2]))), 8))));
-                        return p_12;
-                    }
-                    for (g_301 = 0; (g_301 <= 2); g_301 += 1)
-                    {
-                        int64_t l_2054 = (-4L);
-                        int32_t l_2071[6][7] = {{0xD3403C41L,0x2D9F4264L,0x975CCF2FL,0x2D9F4264L,0xD3403C41L,0xD3403C41L,0xACFB9A36L},{0x975CCF2FL,0xD3403C41L,0x975CCF2FL,0xACFB9A36L,0xACFB9A36L,0x975CCF2FL,0xD3403C41L},{0xACFB9A36L,0xD3403C41L,9L,9L,0xD3403C41L,0xACFB9A36L,0xD3403C41L},{0x975CCF2FL,0xACFB9A36L,0xACFB9A36L,0x975CCF2FL,0xD3403C41L,0x975CCF2FL,0xACFB9A36L},{0x2D9F4264L,0x2D9F4264L,0xACFB9A36L,9L,0xACFB9A36L,0x2D9F4264L,0x2D9F4264L},{0x2D9F4264L,0xACFB9A36L,9L,0xACFB9A36L,0x2D9F4264L,0x2D9F4264L,0xACFB9A36L}};
-                        int i, j;
-                        l_1998[2] = (safe_sub_func_int64_t_s_s(((g_1701[0] < (l_2054 = 0xFCL)) || ((g_175[0][1] = (safe_rshift_func_uint8_t_u_s(((((safe_mod_func_uint16_t_u_u(l_1835, ((18446744073709551615UL ^ (((safe_lshift_func_int8_t_s_s((safe_mod_func_int16_t_s_s(0x1F7BL, g_2063[1][6])), (((l_2071[1][5] = (((safe_rshift_func_int8_t_s_s(((safe_sub_func_uint8_t_u_u(((+((safe_sub_func_uint8_t_u_u(l_1998[5], (((g_777 < ((((((p_12 < g_144) ^ g_312) ^ 8UL) >= g_1589) <= l_1885[0]) == g_1717[0])) , l_2054) != l_1860))) , g_991)) == p_12), l_1898)) , g_991), g_75)) | g_1701[2]) > 1L)) & 0x45L) > g_57))) < 0x651A5EDAB9B228E2LL) == 0x978E6F20L)) || 0x9AE39C1C8155FE18LL))) != p_12) ^ l_1864[1][0]) , l_1835), 0))) && p_12)), p_12));
-                        g_810 = (((safe_add_func_int8_t_s_s((((safe_rshift_func_int8_t_s_u(0L, 4)) || g_923) >= (safe_mod_func_int64_t_s_s((l_1885[0] = (((l_1842 = (l_1864[1][2] = ((safe_mod_func_int64_t_s_s((safe_rshift_func_int16_t_s_s((g_2063[1][6] != ((safe_mod_func_uint8_t_u_u(1UL, (p_12 = (safe_sub_func_uint8_t_u_u((safe_rshift_func_int16_t_s_u((((g_462 | (l_2054 && l_1998[2])) > 0x1700L) , l_1884), l_1961)), g_1717[2]))))) < g_175[0][0])), l_2043)), l_2088)) == l_1970[7][3]))) , (-1L)) > 0xA5C9282930A53716LL)), (-2L)))), g_1589)) , p_12) , p_12);
-                        l_2099[0][2][5] = (((0x19L >= (((g_777 >= (((g_923 = (safe_sub_func_uint16_t_u_u(65535UL, 2L))) , (l_1885[0] > (safe_sub_func_uint16_t_u_u((!((safe_sub_func_int32_t_s_s((l_1864[1][0] = g_164), (p_12 , (((~(((~g_1434) | 0xE2CA3A0FL) || g_4)) > g_1147) > 1L)))) ^ p_12)), p_12)))) | l_2098)) && p_12) == (-1L))) != g_877) > 250UL);
-                        g_810 = g_4;
-                    }
-                }
-                for (l_1842 = 0; (l_1842 >= 19); l_1842 = safe_add_func_uint32_t_u_u(l_1842, 5))
-                {
-                    uint32_t l_2115 = 0xF38EF585L;
-                    int32_t l_2123 = 0L;
-                    int32_t l_2124 = 0x696DA47DL;
-                    l_2124 = (safe_lshift_func_int8_t_s_u(((((((safe_lshift_func_uint8_t_u_s((((((p_12 && ((safe_rshift_func_int8_t_s_s(l_2088, 5)) == (p_12 != ((g_923 = l_1835) != ((((l_1998[2] = ((l_2123 = ((!(safe_lshift_func_int16_t_s_s(((safe_mod_func_uint32_t_u_u(((safe_mod_func_int8_t_s_s((-3L), p_12)) & ((((l_2115 ^ ((safe_sub_func_int8_t_s_s(p_12, ((safe_rshift_func_int8_t_s_u((g_281 = ((((safe_sub_func_int32_t_s_s(l_1998[2], 4294967291UL)) > 0x73E0L) , l_2115) < l_2098)), g_284)) >= 0xE52E3BEDL))) | g_253)) > l_2122[2][2]) > (-3L)) != g_329[0])), p_12)) | l_1885[0]), 0))) != 0x4BL)) | 0xCA28L)) || 0x152EL) , g_162[4][1][0]) == 18446744073709551615UL))))) | g_253) >= 0xF901189BEDD87DFALL) , 65535UL) | g_3), p_12)) & 0xCAED07D3273747C7LL) & p_12) == p_12) >= p_12) & p_12), 0));
-                }
-                l_1842 = (((((safe_add_func_uint8_t_u_u((((l_2088 > p_12) , g_991) > ((((g_170 < 65535UL) || (l_2127 , ((safe_sub_func_uint16_t_u_u((g_175[0][0] = ((l_1864[1][0] = 18446744073709551615UL) != l_2130)), (((g_1735[1] = l_1904) >= g_1118[0]) , l_1885[0]))) || l_1864[1][2]))) >= 0UL) >= g_253)), l_1917)) , g_1118[0]) < l_1863) | l_1998[2]) == g_1756);
-            }
-            else
-            {
-                for (g_1039 = 0; (g_1039 >= (-3)); g_1039 = safe_sub_func_uint8_t_u_u(g_1039, 7))
-                {
-                    int32_t l_2133 = (-2L);
-                    l_1885[0] = 1L;
-                    l_2133 = g_1589;
-                }
-                g_810 = 1L;
-            }
-        }
-        else
-        {
-            int32_t l_2151 = 0x971B2752L;
-            uint16_t l_2156 = 0x2E9DL;
-            int32_t l_2157[6];
-            int i;
-            for (i = 0; i < 6; i++)
-                l_2157[i] = 0x50304BC7L;
-            l_2151 = (((safe_sub_func_int32_t_s_s((safe_mod_func_uint16_t_u_u(((safe_rshift_func_int16_t_s_u((((((safe_mod_func_uint8_t_u_u(((safe_lshift_func_int8_t_s_s(((((safe_unary_minus_func_uint64_t_u((safe_rshift_func_int16_t_s_s(p_12, 9)))) ^ (((safe_sub_func_int32_t_s_s(g_2063[1][6], 0UL)) > (safe_lshift_func_uint16_t_u_u((p_12 ^ (l_2151 ^ ((safe_add_func_int64_t_s_s(((0x73B2D50718B118B6LL > (safe_add_func_int32_t_s_s((l_2156 = g_301), (p_12 ^ (((l_2157[3] = g_462) & p_12) != l_1885[0]))))) , l_2151), g_1293[3][0])) <= (-1L)))), p_12))) < p_12)) && g_1701[2]) , (-1L)), g_301)) == g_1284[0]), g_977)) <= g_4) > 0UL) == l_1885[0]) == g_2158), l_2159)) < p_12), g_180)), 0x52AEE8B1L)) ^ 0x1A34F29B12B1BF54LL) || 1L);
-        }
-        l_1842 = (safe_unary_minus_func_int64_t_s((safe_rshift_func_int8_t_s_s((g_2063[1][6] = 1L), 3))));
-        l_1885[0] = l_1864[0][3];
-        l_1883 = (safe_lshift_func_int8_t_s_s(((l_1885[0] = (safe_sub_func_int16_t_s_s((safe_lshift_func_uint16_t_u_u(g_1701[0], (safe_lshift_func_uint8_t_u_s((~(safe_lshift_func_uint8_t_u_u((p_12 <= (l_2174 | ((l_2185 = ((safe_sub_func_int32_t_s_s((g_810 = (18446744073709551615UL >= (safe_add_func_int8_t_s_s((g_281 | (safe_sub_func_uint32_t_u_u((l_1864[2][4] = ((l_1842 || ((g_329[1] == (((p_12 ^ (safe_add_func_uint64_t_u_u((g_1293[3][0] = (safe_lshift_func_int16_t_s_s(p_12, g_1501))), p_12))) ^ 4294967294UL) , 4L)) || 0x3072L)) ^ (-4L))), p_12))), g_253)))), g_170)) , p_12)) & 0x0EDDB7A2L))), 1))), p_12)))), l_1885[0]))) || p_12), p_12));
-    }
-{
-            int16_t l_1884 = 0x752FL;
-            int32_t l_1898 = 0xB322CD89L;
-            int32_t l_1904 = 0x16301C87L;
-            int64_t l_1961 = 0x7543567F478F8BE7LL;
-            int32_t l_2088 = 0L;
-            int8_t l_2098 = 0x0FL;
-
-
-        }
+                                           
+                                               
 
 
 
-{
-                    int32_t l_809 = (-1L);
+                                      
+
+ 
+                              
+                              
+                                     
+                          
+                           
+                                  
+              
+                               
+                                    
+                                                                                                                                                                                                                                                                                                                                                                           
+         
+                                     
+                                         
+                                         
+                                                  
+                                
+                                  
+                                                                                          
+             
+                                              
+                                             
+                                             
+                                                       
+                 
+                                          
+                                                 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                 
+                                  
+                                                                                                 
+                 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                             
+                                                 
+                                
+                                                             
+                     
+                              
+                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                     
+                                                                                                                                                                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                                                                                                                                  
+                               
+                 
+             
+                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+             
+                                              
+                                                                    
+                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                 
+                                                  
+                                                 
+                                        
+                                          
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+                 
+                    
+                 
+                                          
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+                                
+                                                                                               
+                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+                                    
+                     
+                                                             
+                     
+                                               
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+                                 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                                                                                                                 
+                                    
+                     
+                 
+                                                                                                
+                 
+                                                  
+                                        
+                                                 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                 
+                                                                                                                                                                                                                                                                                                                                                                            
+             
+                
+             
+                                                                                                 
+                 
+                                           
+                                   
+                                    
+                 
+                           
+             
+         
+            
+         
+                                         
+                                      
+                              
+                  
+                                   
+                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+         
+                                                                                                          
+                                 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+     
+ 
+                                     
+                                         
+                                         
+                                                  
+                                
+                                  
+
+
+         
 
 
 
-
-
-safe_rshift_func_int16_t_s_s(p_12, 9);
+ 
+                                          
 
 
 
 
 
-safe_rshift_func_uint8_t_u_u(0xA9L, 2);
+                                      
 
 
 
-                }
-    }
+
+
+                                       
+
+
+
+                 
+     
     return g_810;
 }
 
@@ -2360,14 +2360,14 @@ safe_lshift_func_int16_t_s_u(1L, (g_923 > ((+((g_836 < (g_175[0][0] = (((-1L) !=
 inline static int32_t func_45(int32_t p_46, uint8_t p_47, uint32_t p_48, const int16_t p_49, int16_t p_50)
 {
     int8_t l_1128 = (-4L);
-    for (g_170 = (-5); (g_170 != (-13)); g_170 = safe_sub_func_uint16_t_u_u(g_170, 8))
-    {
-        return g_180;
-    }
+                                                                                      
+     
+                     
+     
 
 
-{
-                    }
+ 
+                     
 
     return g_991;
 }
@@ -2663,14 +2663,14 @@ static int16_t func_71(int32_t p_72, int64_t p_73)
     uint32_t l_100 = 4294967295UL;
     int32_t l_101[8] = {0x54EB9293L,0x86057917L,0x54EB9293L,0x54EB9293L,0x86057917L,0x54EB9293L,0x54EB9293L,0x86057917L};
     int i;
-    for (i = 0; i < 7; i++)
-        l_92[i] = 0x8AD0AF09L;
-    l_92[5] = (((l_74 || (g_75 = l_74)) >= ((safe_lshift_func_uint8_t_u_s((p_73 | (safe_lshift_func_int16_t_s_u(l_74, (p_73 >= (safe_unary_minus_func_uint64_t_u(((safe_lshift_func_uint16_t_u_u((safe_sub_func_uint32_t_u_u(g_3, (safe_lshift_func_int8_t_s_u((((0x49L != ((l_91 = (safe_mod_func_uint64_t_u_u((0x9E8DF01DL || (safe_add_func_uint64_t_u_u((g_57 > l_74), p_73))), g_3))) <= l_74)) | g_57) & g_4), 7)))), p_73)) | g_3))))))), g_4)) != p_72)) <= 0xC3860FE7L);
-    l_101[3] = (((g_3 & (safe_add_func_int16_t_s_s((safe_add_func_uint8_t_u_u(p_73, (l_91 = ((g_75 = (l_92[1] = p_73)) , (l_92[5] ^ 1UL))))), ((((safe_add_func_int8_t_s_s((((p_72 | (0x6AL >= (l_99 = (g_3 , g_3)))) , l_74) , l_99), 3UL)) < l_100) > 0x5931L) & 6L)))) , g_3) | g_4);
-    for (l_91 = 14; (l_91 < 6); l_91--)
-    {
-        return p_72;
-    }
+                           
+                              
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+                                                                                                                                                                                                                                                                                        
+                                       
+     
+                    
+     
     return l_101[5];
 }
 
