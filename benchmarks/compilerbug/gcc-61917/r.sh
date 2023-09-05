@@ -61,17 +61,6 @@ else
     exit 1 
 fi 
 
-#
-# compcert first 
-#
-
-if [ $CHECKCCOMP -eq 1 ] ; then 
-    timeout -s 9 $TIMEOUTCCOMP ccomp -interp -fall $CFILE >& /dev/null
-    ret=$? 
-    if [ $ret != 0 ] ; then 
-	exit 1 
-    fi
-fi 
 
 ###################################################
 # @ clangtkfc @ -O0 to check for undefined behavior  

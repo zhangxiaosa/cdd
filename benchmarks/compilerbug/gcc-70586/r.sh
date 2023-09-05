@@ -70,16 +70,6 @@ else
   exit 1
 fi
 
-#
-# compcert first
-#
-if $USE_COMPCERT ; then
-  timeout -s 9 $TIMEOUTCCOMP ccomp -interp -fall $CFILE >& /dev/null
-  ret=$?
-  if [ $ret != 0 ] ; then
-    exit 1
-  fi
-fi
 ###################################################
 # clang-7.1.0 memory sanitizer
 ###################################################

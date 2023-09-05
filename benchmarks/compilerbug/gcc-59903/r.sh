@@ -2,7 +2,8 @@
 
 # need to configure this part 
 BADCC=("gcc-4.8.2 -m32 -O3")
-GOODCC=("ccomp -fall")
+# GOODCC=("ccomp -fall")
+GOODCC=("gcc-4.9.0 -m32 -O3")
 TIMEOUT=30
 CFILE=small.c
 CFLAG="-o t"

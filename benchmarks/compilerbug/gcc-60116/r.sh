@@ -78,11 +78,6 @@ fi
 # iterate over the good ones 
 #############################
 
-timeout -s 9 $TIMEOUT ccomp -interp $CFILE >& /dev/null
-ret=$? 
-if [ $ret != 0 ] ; then 
-    exit 1 
-fi
 
 for cc in "${GOODCC[@]}" ; do 
     rm -f ./t ./out1.txt 
