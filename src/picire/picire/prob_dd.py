@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class ProbDD(AbstractProbDD):
 
     def __init__(self, test, cache=None, id_prefix=(), split=config_splitters.zeller,
-                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward, shuffle=False, onepass=False, counter=0, no_sort_before_sample=False, use_ddmin_in_probdd=False, complement_only_in_probdd=False, use_counter_in_probdd=False, start_from_n=0):
+                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward, onepass=False, start_from_n=0):
         """
         Initialize a ProbDD object.
         :param test: A callable tester object.
@@ -33,7 +33,7 @@ class ProbDD(AbstractProbDD):
             provides config indices in an arbitrary order.
         """
         cache = cache or ConfigCache()
-        AbstractProbDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, shuffle=shuffle, counter=counter, no_sort_before_sample=no_sort_before_sample, use_ddmin_in_probdd=use_ddmin_in_probdd, complement_only_in_probdd=complement_only_in_probdd, use_counter_in_probdd=use_counter_in_probdd, start_from_n=start_from_n)
+        AbstractProbDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, start_from_n=start_from_n)
 
     def _processElementToPreserve(self,toBePreserve):
         tmp = []

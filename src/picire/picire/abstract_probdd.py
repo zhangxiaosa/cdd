@@ -25,7 +25,7 @@ class AbstractProbDD(object):
     PASS = 'PASS'
     FAIL = 'FAIL'
 
-    def __init__(self, test, split, cache=None, id_prefix=(), shuffle=False, onepass=False, counter=0, no_sort_before_sample=False, use_ddmin_in_probdd=False, complement_only_in_probdd=False, use_counter_in_probdd=False, start_from_n=0):
+    def __init__(self, test, split, cache=None, id_prefix=(), onepass=False, start_from_n=0):
         """
         Initialise an abstract DD class. Not to be called directly, only by
         super calls in subclass initializers.
@@ -46,14 +46,8 @@ class AbstractProbDD(object):
         self.threshold = 0.8
         self.variance = 0.001
         self.passconfig = []
-        self.shuffle = shuffle
-        self.counter = counter
         self.previous_position = 0
-        self.no_sort_before_sample =no_sort_before_sample
-        self.use_ddmin_in_probdd = use_ddmin_in_probdd
-        self.use_counter_in_probdd = use_counter_in_probdd
         self.onepass = onepass
-        self.complement_only_in_probdd = complement_only_in_probdd
 
     def __call__(self, config):
         """
@@ -69,9 +63,6 @@ class AbstractProbDD(object):
         self.next_size = True
         for c in config:
             self.p[c] = self.initialP 
-            # randomly disturb the original order
-            if (self.shuffle):
-                self.p[c] = self.p[c] + (random.random() - 0.5) * self.variance
         
         self.p_backup = copy.deepcopy(self.p)
         run = 0
@@ -81,70 +72,44 @@ class AbstractProbDD(object):
             logger.info('\tConfig size: %d', len(self.passconfig))
             
             # select a subsequence for testing
-            if (self.no_sort_before_sample):
-                deleteconfig = self.sample_sequentially()
-            elif (self.use_counter_in_probdd):
-                deleteconfig = self.sample_counter()
-            elif (self.use_ddmin_in_probdd):
-                deleteconfig = self.sample_dd()
-            else:
-                deleteconfig = self.sample()
-            
-            if (self.complement_only_in_probdd):
-                test_target = ["sublist"]
-            else:
-                test_target = ["complement", "sublist"]
+            deleteconfig = self.sample()
 
-            for target_to_be_removed in test_target:
-                # deleteconfig is the subset to be deleted
-                if (target_to_be_removed == "sublist"):
-                    config2test = self._minus(self.passconfig, deleteconfig)
-                    self.printIdx(deleteconfig, "Try deleting")
-                else:
-                    config2test = deleteconfig
-                    self.printIdx(deleteconfig, "Try deleting(complement of)")
-                config_id = ('r%d' % run, )
-                if(len(config2test) == len(self.passconfig)):
-                    continue
-    
-                outcome = None
-                if (type(self._cache) is ContentCache):
-                    outcome = self._lookup_history(config2test)
-                if outcome is None:
-                    outcome = self._test_config(config2test,config_id)
-                # FAIL means current variant cannot satisify the property
-                if outcome == self.FAIL:
-                    # logger.info("test failed\n")
-                    self.old_p = copy.deepcopy(self.p)
-                    for key in self.old_p.keys():
-                        if key not in config2test and self.old_p[key] != 0 and self.old_p[key] != 1:
-                            # replace delta with a constant value to simplify it.
-                            # generally, counter can be 0.1, 0.2, ...
-                            if (self.counter != 0):
-                                delta = self.counter
-                            else:
-                                delta = (self.computeRatio(deleteconfig, self.old_p) - 1) * self.old_p[key]
-                            self.p[key] = self.p[key] + delta
-                    self.testHistory.append(deleteconfig)
-                    if len(deleteconfig) == 1:
-                        #logger.info(str(deleteconfig[0]) + " must preserve\n")
-                        self.p[deleteconfig[0]] = 1
-                else:
-                    # logger.info("test passed\n")
-                    for key in self.p.keys():
-                        if key not in config2test:
-                            self.p[key] = 0
-                    deleteconfig = self._minus(self.passconfig, config2test)
-                    self._process(deleteconfig,self.PASS)
-                    # print successfully deleted idx
-                    self.printIdx(deleteconfig, "Deleted")
-                    self.passconfig = config2test
-                    if (not self.onepass):
-                        self.index = 0
-                    if (target_to_be_removed == "complement"):
-                        self.next_size = True
-                        self.index = 0
-                    continue
+            config2test = self._minus(self.passconfig, deleteconfig)
+            self.printIdx(deleteconfig, "Try deleting")
+            config_id = ('r%d' % run, )
+            if(len(config2test) == len(self.passconfig)):
+                continue
+
+            outcome = None
+            if (type(self._cache) is ContentCache):
+                outcome = self._lookup_history(config2test)
+            if outcome is None:
+                outcome = self._test_config(config2test, config_id)
+            # FAIL means current variant cannot satisify the property
+            if outcome == self.FAIL:
+                # logger.info("test failed\n")
+                self.old_p = copy.deepcopy(self.p)
+                for key in self.old_p.keys():
+                    if key not in config2test and self.old_p[key] != 0 and self.old_p[key] != 1:
+                        delta = (self.computeRatio(deleteconfig, self.old_p) - 1) * self.old_p[key]
+                        self.p[key] = self.p[key] + delta
+                self.testHistory.append(deleteconfig)
+                if len(deleteconfig) == 1:
+                    #logger.info(str(deleteconfig[0]) + " must preserve\n")
+                    self.p[deleteconfig[0]] = 1
+            else:
+                # logger.info("test passed\n")
+                for key in self.p.keys():
+                    if key not in config2test:
+                        self.p[key] = 0
+                deleteconfig = self._minus(self.passconfig, config2test)
+                self._process(deleteconfig,self.PASS)
+                # print successfully deleted idx
+                self.printIdx(deleteconfig, "Deleted")
+                self.passconfig = config2test
+                if (not self.onepass):
+                    self.index = 0
+                continue
             
             run += 1
 
@@ -305,11 +270,6 @@ class AbstractProbDD(object):
         return config2test
 
     def _test_done(self):
-        if (self.use_ddmin_in_probdd):
-            if (self.partition_size == 0):
-                return True
-            else:
-                return False
        
         alldecided = True
         tmp = list(set(self.p.values()))

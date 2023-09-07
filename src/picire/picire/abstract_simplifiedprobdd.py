@@ -25,7 +25,7 @@ class AbstractSimplifiedProbDD(object):
     PASS = 'PASS'
     FAIL = 'FAIL'
 
-    def __init__(self, test, split, cache=None, id_prefix=(), shuffle=False, onepass=False, counter=0, no_sort_before_sample=False):
+    def __init__(self, test, split, cache=None, id_prefix=(), onepass=False):
         """
         Initialise an abstract DD class. Not to be called directly, only by
         super calls in subclass initializers.
@@ -42,7 +42,6 @@ class AbstractSimplifiedProbDD(object):
         self.memory = {}
         self.testHistory = []
         self.passconfig = []
-        self.shuffle = shuffle
 
     def __call__(self, config):
         """

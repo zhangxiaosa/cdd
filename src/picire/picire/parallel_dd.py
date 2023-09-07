@@ -20,7 +20,7 @@ class ParallelDD(AbstractParallelDD):
 
     def __init__(self, test, cache=None, id_prefix=(), split=config_splitters.zeller,
                  proc_num=multiprocessing.cpu_count(), max_utilization=100,
-                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward, shuffle=False, counter=0, no_sort_before_sample=False):
+                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward):
         """
         Initialize a ParallelDD object.
 
@@ -37,7 +37,7 @@ class ParallelDD(AbstractParallelDD):
         :param complement_iterator: Reference to a generator function that
             provides config indices in an arbitrary order.
         """
-        AbstractParallelDD.__init__(self, test, split, proc_num, max_utilization, cache=cache, id_prefix=id_prefix, shuffle=shuffle)
+        AbstractParallelDD.__init__(self, test, split, proc_num, max_utilization, cache=cache, id_prefix=id_prefix)
 
         self._subset_iterator = subset_iterator
         self._complement_iterator = complement_iterator

@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def hddmin(hdd_tree, reduce_class, reduce_config, tester_class, tester_config, test_name, work_dir,
-           hdd_star=True, cache=None, config_filter=None, unparse_with_whitespace=True, granularity=2, shuffle=False, onepass=False, counter=False, no_sort_before_sample=False, use_ddmin_in_probdd=False, complement_only_in_probdd=False, use_counter_in_probdd=False, start_from_n=None):
+           hdd_star=True, cache=None, config_filter=None, unparse_with_whitespace=True, granularity=2, onepass=False, start_from_n=None):
     """
     Run the hierarchical delta debugging reduce algorithm.
 
@@ -84,7 +84,9 @@ def hddmin(hdd_tree, reduce_class, reduce_config, tester_class, tester_config, t
                                 test_pattern=join(work_dir, 'iter_%d' % iter_cnt, 'level_%d' % level, '%s', test_name),
                                 **tester_config)
             id_prefix = ('i%d' % iter_cnt, 'l%d' % level)
-            dd = reduce_class(test, cache=cache, id_prefix=id_prefix, shuffle=shuffle, onepass=onepass, counter=counter, no_sort_before_sample=no_sort_before_sample, use_ddmin_in_probdd=use_ddmin_in_probdd, complement_only_in_probdd=complement_only_in_probdd, use_counter_in_probdd=use_counter_in_probdd, start_from_n=start_from_n, **reduce_config)
+            dd = reduce_class(test, cache=cache, id_prefix=id_prefix, 
+                              onepass=onepass, start_from_n=start_from_n, 
+                              **reduce_config)
             c = dd(level_ids)
             #if len(c) == 1:
             #    dd = EmptyDD(test, cache=cache, id_prefix=id_prefix)

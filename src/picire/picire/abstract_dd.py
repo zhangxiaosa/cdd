@@ -28,7 +28,7 @@ class AbstractDD(object):
     PASS = 'PASS'
     FAIL = 'FAIL'
 
-    def __init__(self, test, split, cache=None, id_prefix=(), shuffle=False, onepass=False, counter=0, no_sort_before_sample=False, start_from_n=None):
+    def __init__(self, test, split, cache=None, id_prefix=(), onepass=False, start_from_n=None):
         """
         Initialise an abstract DD class. Not to be called directly, only by
         super calls in subclass initializers.
@@ -42,7 +42,6 @@ class AbstractDD(object):
         self._split = split
         self._cache = cache or OutcomeCache()
         self._id_prefix = id_prefix
-        self.shuffle = shuffle
         self.onepass = onepass
         self.start_from_n = start_from_n
         self.delete_history = []
@@ -59,8 +58,6 @@ class AbstractDD(object):
         self.original_config = config[:]
         self.original_config_size = len(self.original_config)
         self.original_config_idx = list(range(self.original_config_size))
-        if (self.shuffle):
-            random.shuffle(self.original_config_idx)
         current_config_idx = self.original_config_idx[:]
         if (self.start_from_n):
             subsets = split_list(self.original_config_idx, self.start_from_n)

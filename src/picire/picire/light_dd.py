@@ -21,7 +21,7 @@ class LightDD(AbstractDD):
     """
 
     def __init__(self, test, cache=None, id_prefix=(), split=config_splitters.zeller,
-                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward, shuffle=False, onepass=False, counter=0, no_sort_before_sample=False, use_ddmin_in_probdd=False, complement_only_in_probdd=False, use_counter_in_probdd=False, start_from_n=None):
+                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward, onepass=False, start_from_n=None):
         """
         Initialize a LightDD object.
 
@@ -38,7 +38,7 @@ class LightDD(AbstractDD):
         """
         cache = cache or ConfigCache()
 
-        AbstractDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, shuffle=shuffle, onepass=onepass, start_from_n=start_from_n)
+        AbstractDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, onepass=onepass, start_from_n=start_from_n)
 
         self._subset_iterator = subset_iterator
         self._complement_iterator = complement_iterator

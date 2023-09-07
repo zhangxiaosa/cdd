@@ -242,7 +242,7 @@ def reduce(hdd_tree,
            flatten_recursion=False, squeeze_tree=True,
            skip_unremovable=True, skip_whitespace=False,
            unparse_with_whitespace=True, granularity=2,
-           cache_class=None, cleanup=True, shuffle=False, onepass=False, counter=False, no_sort_before_sample=True, use_ddmin_in_probdd=False, complement_only_in_probdd=False, use_counter_in_probdd=False, start_from_n=None):
+           cache_class=None, cleanup=True, onepass=False, start_from_n=None):
     """
     Execute tree reduction part of picireny as if invoked from command line,
     however, control its behaviour not via command line arguments but function
@@ -317,7 +317,7 @@ def reduce(hdd_tree,
                      cache=cache_class() if cache_class else None,
                      unparse_with_whitespace=unparse_with_whitespace,
                      granularity=granularity,
-                     shuffle=shuffle, onepass=onepass, counter=counter, no_sort_before_sample=no_sort_before_sample, use_ddmin_in_probdd=use_ddmin_in_probdd, complement_only_in_probdd=complement_only_in_probdd, use_counter_in_probdd=use_counter_in_probdd, start_from_n=start_from_n)
+                     onepass=onepass, start_from_n=start_from_n)
     out_file = join(out, basename(input))
     with codecs.open(out_file, 'w', encoding=encoding, errors='ignore') as f:
         f.write(out_src)
@@ -385,14 +385,7 @@ def execute():
     # Ddmin settings
     arg_parser.add_argument('--dd', metavar='NAME', choices=['ddmin', 'probdd', 'fastdd', 'simplifiedprobdd'], default='ddmin',
                             help='DD variant to run (%(choices)s; default: %(default)s)')
-    arg_parser.add_argument('--shuffle', default=False, action='store_true', help='random shuffle the element list or not')
-    arg_parser.add_argument('--seed', metavar='NUMBER', type=int, default=round(time.time() * 1000), help='the seed for random generator')
     arg_parser.add_argument('--onepass', default=False, action='store_true', help='do not reset index to 0 when a partition is deleted')
-    arg_parser.add_argument('--counter', metavar='NUMBER', type=float, default=0, help='replace probability increase with counter in probdd')
-    arg_parser.add_argument('--no-sort-before-sample', default=False, action='store_true', help='disable sorting by probability before sampling in probdd')
-    arg_parser.add_argument('--use-ddmin-in-probdd', default=False, action='store_true', help='use the ddmin\'s partition approach in probdd')
-    arg_parser.add_argument('--use-counter-in-probdd', default=False, action='store_true', help='replace the probability with counter in probdd, --counter can help to tune the initialize partition size')
-    arg_parser.add_argument('--complement-only-in-probdd', default=False, action='store_true', help='keep the complement of a partition, do not attempt to remove it')
     arg_parser.add_argument('--id', metavar='NUMBER', type=int, default=0, help='just used for identify each trail')
     arg_parser.add_argument('--start-from-n', metavar='NUMBER', type=int, default=None, help='partition size start from a specified number, instead of half of the total size')
     
@@ -416,8 +409,6 @@ def execute():
         hdd_tree = build_with_srcml(input=args.input, src=args.src, language=args.srcml_language)
         unparse_with_whitespace = False
    
-    if (args.shuffle):
-        random.seed(args.seed)
 
     tstart = time.time()
     reduce(hdd_tree=hdd_tree,
@@ -428,5 +419,5 @@ def execute():
            flatten_recursion=args.flatten_recursion, squeeze_tree=args.squeeze_tree,
            skip_unremovable=args.skip_unremovable, skip_whitespace=args.skip_whitespace,
            unparse_with_whitespace=unparse_with_whitespace, granularity=args.granularity,
-           cache_class=args.cache, cleanup=args.cleanup, shuffle=args.shuffle, onepass=args.onepass, counter=args.counter, no_sort_before_sample=args.no_sort_before_sample, use_ddmin_in_probdd=args.use_ddmin_in_probdd, complement_only_in_probdd=args.complement_only_in_probdd, use_counter_in_probdd=args.use_counter_in_probdd, start_from_n=args.start_from_n)
+           cache_class=args.cache, cleanup=args.cleanup, onepass=args.onepass, start_from_n=args.start_from_n)
     print("execution time: " + str(time.time() - tstart) + "s")
