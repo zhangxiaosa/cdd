@@ -7,9 +7,17 @@
 
 from os.path import dirname, join
 from setuptools import setup, find_packages
+import subprocess
+
 
 with open(join(dirname(__file__), 'picireny/VERSION'), 'rb') as f:
     version = f.read().decode('ascii').strip()
+    try:
+        git_version = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode('ascii').strip()
+        if git_version:
+            version = f"{version}-{git_version}"
+    except subprocess.CalledProcessError:
+        pass
 
 
 setup(
