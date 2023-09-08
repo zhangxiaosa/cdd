@@ -20,7 +20,46 @@ trap handle_interrupt INT
 
 root=$(pwd)
 benchmark_path=${root}/benchmarks/compilerbug
-args=$1
+
+
+# init arguments
+args_for_picireny=""
+benchmarks=('clang-22382' 'clang-22704' 'clang-23309' 'clang-23353' 'clang-25900' 'clang-26760' 'clang-27137' 'clang-27747' 'clang-31259' 'gcc-59903' 'gcc-60116' 'gcc-61383' 'gcc-61917' 'gcc-64990' 'gcc-65383' 'gcc-66186' 'gcc-66375' 'gcc-70127' 'gcc-70586' 'gcc-71626')
+cpu=1
+
+# --args_for_picireny is manddatory
+if [ $# -eq 0 ]; then
+  echo "Usage: $0 --args_for_picireny STRING [--benchmark benchmark_name] [--cpu CPU_COUNT]"
+  exit 1
+fi
+
+# parse the command line
+while (( "$#" )); do
+  case "$1" in
+    --args)
+      args_for_picireny=$2
+      shift 2
+      ;;
+    --benchmark)
+      benchmarks=($2)
+      shift 2
+      ;;
+    --cpu)
+      cpu=$2
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
+
+# check whether --args_for_picireny is set
+if [ -z "$args_for_picireny" ]; then
+  echo "The --args_for_picireny option is mandatory."
+  exit 1
+fi
 
 # output folder
 out_folder_name=$(date +"%Y%m%d%H%M%S")
@@ -39,34 +78,33 @@ else
   echo "No git version available."
 fi
 
-# save the version and args
+# save the version and args_for_picireny
 config_path=${out_path}/config.txt
 echo "${version}" > ${config_path}
-echo -e "\n" >> ${config_path}
-echo -e "$0 ${args}" >> ${config_path}
+echo -e "$0 \"${args_for_picireny}\"" >> ${config_path}
 
 log_path="init"
 data_path="init"
 
-# all cases
- for target in 'clang-22382' 'clang-22704' 'clang-23309' 'clang-23353' 'clang-25900' 'clang-26760' 'clang-27137' 'clang-27747' 'clang-31259' 'gcc-59903' 'gcc-60116' 'gcc-61383' 'gcc-61917' 'gcc-64990' 'gcc-65383' 'gcc-66186' 'gcc-66375' 'gcc-70127' 'gcc-70586' 'gcc-71626';
+# all benchmarks
+for benchmark in "${benchmarks[@]}"; do
 do
 
     # init log and data path
-    log_path=${out_path}/log_${target}.txt
-    data_path=${out_path}/result_${target}
+    log_path=${out_path}/log_${benchmark}.txt
+    data_path=${out_path}/result_${benchmark}
 
     if [ -d ${log_path} ] || [ -f ${data_path} ]; then
-	    echo "already done ${target}"
+	    echo "already done ${benchmark}"
       continue
     fi	    
-    echo "running $target"
+    echo "running $benchmark"
 
     # create tmp folder
     work_path=`mktemp -d -p ${out_path}`
-    echo "created tmp folder ${work_path} for ${target}"
-    cp ${benchmark_path}/$target/r.sh $work_path
-    cp ${benchmark_path}/$target/small.c $work_path/small.c
+    echo "created tmp folder ${work_path} for ${benchmark}"
+    cp ${benchmark_path}/$benchmark/r.sh $work_path
+    cp ${benchmark_path}/$benchmark/small.c $work_path/small.c
     cp ${benchmark_path}/C.g4 $work_path
     cd $work_path
 
