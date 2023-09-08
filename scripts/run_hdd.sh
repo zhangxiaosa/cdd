@@ -25,11 +25,11 @@ benchmark_path=${root}/benchmarks/compilerbug
 # init arguments
 args_for_picireny=""
 benchmarks=('clang-22382' 'clang-22704' 'clang-23309' 'clang-23353' 'clang-25900' 'clang-26760' 'clang-27137' 'clang-27747' 'clang-31259' 'gcc-59903' 'gcc-60116' 'gcc-61383' 'gcc-61917' 'gcc-64990' 'gcc-65383' 'gcc-66186' 'gcc-66375' 'gcc-70127' 'gcc-70586' 'gcc-71626')
-cpu=1
+max_jobs=1
 
 # --args_for_picireny is manddatory
 if [ $# -eq 0 ]; then
-  echo "Usage: $0 --args_for_picireny STRING [--benchmark benchmark_name] [--cpu CPU_COUNT]"
+  echo "Usage: $0 --args_for_picireny STRING [--benchmark benchmark_name] [--max_jobs MAX_JOBS_COUNT]"
   exit 1
 fi
 
@@ -44,8 +44,8 @@ while (( "$#" )); do
       benchmarks=($2)
       shift 2
       ;;
-    --cpu)
-      cpu=$2
+    --max_jobs)
+      max_jobs=$2
       shift 2
       ;;
     *)
@@ -83,34 +83,47 @@ config_path=${out_path}/config.txt
 echo "${version}" > ${config_path}
 echo -e "$0 \"${args_for_picireny}\"" >> ${config_path}
 
-log_path="init"
-data_path="init"
+# init the task counter
+running_jobs=0
 
 # all benchmarks
 for benchmark in "${benchmarks[@]}"; do
-    # init log and data path
-    log_path=${out_path}/log_${benchmark}.txt
-    data_path=${out_path}/result_${benchmark}
+    # If the maximum number of concurrent tasks has been reached, wait for one of the tasks to complete.
+    while [ $running_jobs -ge $max_jobs ]; do
+        wait -n
+        ((running_jobs--))
+    done
 
-    if [ -d ${log_path} ] || [ -f ${data_path} ]; then
-	    echo "already done ${benchmark}"
-      continue
-    fi	    
-    echo "running $benchmark"
+    {
+        # init log and data path
+        log_path=${out_path}/log_${benchmark}.txt
+        data_path=${out_path}/result_${benchmark}
 
-    # create tmp folder
-    work_path=`mktemp -d -p ${out_path}`
-    echo "created tmp folder ${work_path} for ${benchmark}"
-    cp ${benchmark_path}/$benchmark/r.sh $work_path
-    cp ${benchmark_path}/$benchmark/small.c $work_path/small.c
-    cp ${benchmark_path}/C.g4 $work_path
-    cd $work_path
+        if [ -d ${log_path} ] || [ -f ${data_path} ]; then
+            echo "already done ${benchmark}"
+            continue
+        fi	    
+        echo "running $benchmark"
 
-    # record picireny version and run the benchmark
-    picireny --version > ${log_path}
-    picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --disable-cleanup --cache none --sys-recursion-limit 10000000 $1 >> ${log_path} 2>&1
-    # save result, cleanup
-    mv small.c.* ${data_path}
-    cd ${root}
-    cleanup ${work_path}
+        # create tmp folder
+        work_path=`mktemp -d -p ${out_path}`
+        echo "created tmp folder ${work_path} for ${benchmark}"
+        cp ${benchmark_path}/$benchmark/r.sh $work_path
+        cp ${benchmark_path}/$benchmark/small.c $work_path/small.c
+        cp ${benchmark_path}/C.g4 $work_path
+        cd $work_path
+
+        # record picireny version and run the benchmark
+        picireny --version > ${log_path}
+        picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --disable-cleanup --cache none --sys-recursion-limit 10000000 $1 >> ${log_path} 2>&1
+        # save result, cleanup
+        mv small.c.* ${data_path}
+        cd ${root}
+        cleanup ${work_path}
+    } &
+
+    ((running_jobs++))
 done
+
+# wait for the last few tasks to complete
+wait
