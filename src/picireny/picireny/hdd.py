@@ -45,7 +45,6 @@ def hddmin(hdd_tree, reduce_class, reduce_config, tester_class, tester_config, t
     :return: The reduced test case (1-tree-minimal if hdd_star is True and
         config_filter is None).
     """
-    print("enter picireny/hdd.py:hddmin()")
 
     def collect_level_nodes(level):
         def _collect_level_nodes(node, current_level):
