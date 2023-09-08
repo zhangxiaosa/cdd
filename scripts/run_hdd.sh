@@ -88,8 +88,6 @@ data_path="init"
 
 # all benchmarks
 for benchmark in "${benchmarks[@]}"; do
-do
-
     # init log and data path
     log_path=${out_path}/log_${benchmark}.txt
     data_path=${out_path}/result_${benchmark}
