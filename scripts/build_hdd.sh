@@ -6,3 +6,4 @@ cd ${root}/src/picire
 pip install .
 cd ${root}/src/picireny
 pip install .
+cd ${root}
