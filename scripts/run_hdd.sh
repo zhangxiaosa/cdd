@@ -21,6 +21,8 @@ trap handle_interrupt INT
 root=$(pwd)
 benchmark_path=${root}/benchmarks/compilerbug
 
+${root}/scripts/build_hdd.sh
+
 # output folder
 out_folder_name=$(date +"%Y%m%d%H%M%S")
 out_path="${root}/results/${out_folder_name}"
