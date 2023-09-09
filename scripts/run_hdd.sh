@@ -82,10 +82,15 @@ fi
 config_path=${out_path}/config.txt
 echo "${version}" > ${config_path}
 
-printf "%q " "$0" >> ${config_path}
+echo -n "$0 " >> ${config_path}
 for arg in "$@"; do
-  printf "%q " "$arg"
+  if [[ $arg == --* ]]; then
+    echo -n "$arg "
+  else
+    echo -n "\"$arg\" "
+  fi
 done >> ${config_path}
+echo "" >> ${config_path}
 
 # init the task counter
 running_jobs=0
