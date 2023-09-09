@@ -328,6 +328,7 @@ def reduce(hdd_tree,
 
 
 def execute():
+    print("enter execute")
     """
     The main entry point of picireny.
     """
@@ -389,6 +390,8 @@ def execute():
     
     args = arg_parser.parse_args()
     process_args(arg_parser, args)
+    print(args.reduce_config)
+    exit()
 
     logging.basicConfig(format='%(message)s')
     logger.setLevel(args.log_level)
