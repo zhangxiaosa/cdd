@@ -316,7 +316,6 @@ def reduce(hdd_tree,
                      hdd_star=hdd_star,
                      cache=cache_class() if cache_class else None,
                      unparse_with_whitespace=unparse_with_whitespace,
-                     granularity=granularity,
                      onepass=onepass, start_from_n=start_from_n)
     out_file = join(out, basename(input))
     with codecs.open(out_file, 'w', encoding=encoding, errors='ignore') as f:

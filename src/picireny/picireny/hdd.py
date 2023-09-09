@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def hddmin(hdd_tree, reduce_class, reduce_config, tester_class, tester_config, test_name, work_dir,
-           hdd_star=True, cache=None, config_filter=None, unparse_with_whitespace=True, granularity=2, onepass=False, start_from_n=None):
+           hdd_star=True, cache=None, config_filter=None, unparse_with_whitespace=True, onepass=False, start_from_n=None):
     """
     Run the hierarchical delta debugging reduce algorithm.
 
