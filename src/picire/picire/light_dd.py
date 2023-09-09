@@ -36,6 +36,7 @@ class LightDD(AbstractDD):
         :param complement_iterator: Reference to a generator function that
             provides config indices in an arbitrary order.
         """
+        print("enter init of light_dd")
         print(subset_iterator)
         exit()
         cache = cache or ConfigCache()
