@@ -21,7 +21,8 @@ class LightDD(AbstractDD):
     """
 
     def __init__(self, test, cache=None, id_prefix=(), onepass=False, start_from_n=None,
-                 **kwargs):
+                 split=config_splitters.zeller,
+                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward):
         """
         Initialize a LightDD object.
 
