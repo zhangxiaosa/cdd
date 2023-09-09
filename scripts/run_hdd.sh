@@ -44,7 +44,7 @@ echo "${version}" > ${config_path}
 
 echo -n "$0 " >> ${config_path}
 for arg in "$@"; do
-  if [[ $arg == --* ]]; then
+  if [[ $arg == --args_for_picireny || $arg == --benchmark || $arg == --max_jobs ]]; then
     echo -n "$arg "
   else
     echo -n "\"$arg\" "
