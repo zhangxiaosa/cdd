@@ -21,13 +21,44 @@ trap handle_interrupt INT
 root=$(pwd)
 benchmark_path=${root}/benchmarks/compilerbug
 
+# output folder
+out_folder_name=$(date +"%Y%m%d%H%M%S")
+out_path="${root}/results/${out_folder_name}"
+echo "out_path is ${out_path}"
+if [ ! -d "$out_path" ]; then
+    mkdir -p $out_path
+fi
+
+# check the git version
+echo "Checking the current git version."
+version="Current git version: $(git rev-parse --short HEAD)."
+if [ $? -eq 0 ]; then
+  echo "${version}"
+else
+  echo "No git version available."
+fi
+
+# save the version and args_for_picireny
+config_path=${out_path}/config.txt
+echo "${version}" > ${config_path}
+
+echo -n "$0 " >> ${config_path}
+for arg in "$@"; do
+  if [[ $arg == --* ]]; then
+    echo -n "$arg "
+  else
+    echo -n "\"$arg\" "
+  fi
+done >> ${config_path}
+echo "" >> ${config_path}
+
 
 # init arguments
 args_for_picireny=""
 benchmarks=('clang-22382' 'clang-22704' 'clang-23309' 'clang-23353' 'clang-25900' 'clang-26760' 'clang-27137' 'clang-27747' 'clang-31259' 'gcc-59903' 'gcc-60116' 'gcc-61383' 'gcc-61917' 'gcc-64990' 'gcc-65383' 'gcc-66186' 'gcc-66375' 'gcc-70127' 'gcc-70586' 'gcc-71626')
 max_jobs=1
 
-# --args_for_picireny is manddatory
+# --args_for_picireny is mandatory
 if [ $# -eq 0 ]; then
   echo "Usage: $0 --args_for_picireny STRING [--benchmark benchmark_name] [--max_jobs MAX_JOBS_COUNT]"
   exit 1
@@ -60,37 +91,6 @@ if [ -z "$args_for_picireny" ]; then
   echo "The --args_for_picireny option is mandatory."
   exit 1
 fi
-
-# output folder
-out_folder_name=$(date +"%Y%m%d%H%M%S")
-out_path="${root}/results/${out_folder_name}"
-echo "out_path is ${out_path}"
-if [ ! -d "$out_path" ]; then
-    mkdir -p $out_path
-fi
-
-# check the git version
-echo "Checking the current git version."
-version="Current git version: $(git rev-parse --short HEAD)."
-if [ $? -eq 0 ]; then
-  echo "${version}"
-else
-  echo "No git version available."
-fi
-
-# save the version and args_for_picireny
-config_path=${out_path}/config.txt
-echo "${version}" > ${config_path}
-
-echo -n "$0 " >> ${config_path}
-for arg in "$@"; do
-  if [[ $arg == --* ]]; then
-    echo -n "$arg "
-  else
-    echo -n "\"$arg\" "
-  fi
-done >> ${config_path}
-echo "" >> ${config_path}
 
 # init the task counter
 running_jobs=0
