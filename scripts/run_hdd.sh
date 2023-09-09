@@ -36,7 +36,7 @@ fi
 # parse the command line
 while (( "$#" )); do
   case "$1" in
-    --args)
+    --args_for_picireny)
       args_for_picireny=$2
       shift 2
       ;;
