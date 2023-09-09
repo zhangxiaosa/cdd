@@ -271,7 +271,6 @@ def reduce(hdd_tree,
         ddmin.
     :param unparse_with_whitespace: Unparse by adding whitespace between
         nonadjacent nodes.
-    :param granularity: Initial granularity.
     :param cache_class: Reference to the cache class to use.
     :param cleanup: Binary flag denoting whether removing auxiliary files at the
         end is enabled.
@@ -417,6 +416,6 @@ def execute():
            hddmin=args.hddmin, hdd_star=args.hdd_star,
            flatten_recursion=args.flatten_recursion, squeeze_tree=args.squeeze_tree,
            skip_unremovable=args.skip_unremovable, skip_whitespace=args.skip_whitespace,
-           unparse_with_whitespace=unparse_with_whitespace, granularity=args.granularity,
+           unparse_with_whitespace=unparse_with_whitespace,
            cache_class=args.cache, cleanup=args.cleanup, onepass=args.onepass, start_from_n=args.start_from_n)
     print("execution time: " + str(time.time() - tstart) + "s")

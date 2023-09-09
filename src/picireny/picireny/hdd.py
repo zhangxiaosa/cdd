@@ -41,7 +41,6 @@ def hddmin(hdd_tree, reduce_class, reduce_config, tester_class, tester_config, t
         hddmin selectively.
     :param unparse_with_whitespace: Build test case by adding whitespace between
         nonadjacent tree nodes during unparsing.
-    :param granularity: Initial granularity.
     :return: The reduced test case (1-tree-minimal if hdd_star is True and
         config_filter is None).
     """
