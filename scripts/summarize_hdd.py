@@ -13,13 +13,19 @@ RESULT_PATH = sys.argv[1]
 def get_time_from_log(log_file):
     with open(log_file, 'r') as fopen:
         lines = fopen.readlines()
-    time_line = lines[-1]
-    return time_line.strip().split(":")[-1].strip().rstrip('s')
+    line_of_time = lines[-1]
+    match = re.search(r'execution time:\s*(\d+)(?:\.\d+)?', line_of_time)
+    if match:
+        # keep the integer part and remove the decimal part
+        return match.group(1)
+    else:
+        return None
 
 def get_token_num(file):
     cmd = "~/demystifying_probdd/build/bin/counter %s" % file
     proc = os.popen(cmd)
     output = proc.read()
+
     match = re.search(r'original tokens:\s*(\d+)', output)
     if match:
         return match.group(1)
@@ -66,4 +72,4 @@ with open('summary.csv', 'w', newline='') as csvfile:
             print("%s: small.c not available" % target)
             row.extend([None, None, None, None])
 
-        CSV_WRITER.writerow(row)  # Write the complete row to CSV
+        CSV_WRITER.writerow(row)
