@@ -81,7 +81,11 @@ fi
 # save the version and args_for_picireny
 config_path=${out_path}/config.txt
 echo "${version}" > ${config_path}
-echo -e "$0 \"${args_for_picireny}\"" >> ${config_path}
+
+printf "%q " "$0" >> ${config_path}
+for arg in "$@"; do
+  printf "%q " "$arg"
+done >> ${config_path}
 
 # init the task counter
 running_jobs=0
