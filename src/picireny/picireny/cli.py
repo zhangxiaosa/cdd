@@ -241,7 +241,7 @@ def reduce(hdd_tree,
            input, encoding, out, hddmin, hdd_star=True,
            flatten_recursion=False, squeeze_tree=True,
            skip_unremovable=True, skip_whitespace=False,
-           unparse_with_whitespace=True, granularity=2,
+           unparse_with_whitespace=True,
            cache_class=None, cleanup=True, onepass=False, start_from_n=None):
     """
     Execute tree reduction part of picireny as if invoked from command line,
