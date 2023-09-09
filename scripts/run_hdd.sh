@@ -138,3 +138,5 @@ done
 
 # wait for the last few tasks to complete
 wait
+
+python summarize_hdd.py ${out_path}
