@@ -7,7 +7,6 @@ def delete_non_c_files(path):
             if not file.endswith('.c'):
                 file_to_remove = os.path.join(root, file)
                 os.remove(file_to_remove)
-                print(f"Removed: {file_to_remove}")
 
 BENCHMARK_LIST = ['clang-22382', 'clang-22704', 'clang-23309', 'clang-23353',
                   'clang-25900', 'clang-26760', 'clang-27137', 'clang-27747',
