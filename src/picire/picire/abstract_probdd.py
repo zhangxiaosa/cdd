@@ -106,8 +106,6 @@ class AbstractProbDD(object):
                 # print successfully deleted idx
                 self.printIdx(deleteconfig, "Deleted")
                 self.passconfig = config2test
-                if (not self.onepass):
-                    self.index = 0
                 continue
             
             run += 1
@@ -285,9 +283,10 @@ class AbstractProbDD(object):
         return True
 
     def _lookup_history(self, config):
-        if self.memory.has_key(str(config)):
+        if str(config) in self.memory:
             return self.memory[str(config)]
         return None
+
 
     def _lookup_cache(self, config, config_id):
         """

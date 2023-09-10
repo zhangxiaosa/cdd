@@ -19,7 +19,7 @@ class ProbDD(AbstractProbDD):
 
     def __init__(self, test, cache=None, id_prefix=(), onepass=False, start_from_n=None,
                  split=config_splitters.zeller,
-                 subset_first=True, subset_iterator=config_iterators.forward, 
+                 subset_first=True, subset_iterator=config_iterators.forward,
                  complement_iterator=config_iterators.forward):
         """
         Initialize a ProbDD object.
