@@ -25,7 +25,7 @@ class AbstractProbDD(object):
     PASS = 'PASS'
     FAIL = 'FAIL'
 
-    def __init__(self, test, split, cache=None, id_prefix=(), onepass=False, start_from_n=0):
+    def __init__(self, test, split, cache=None, id_prefix=()):
         """
         Initialise an abstract DD class. Not to be called directly, only by
         super calls in subclass initializers.
@@ -47,7 +47,6 @@ class AbstractProbDD(object):
         self.variance = 0.001
         self.passconfig = []
         self.previous_position = 0
-        self.onepass = onepass
 
     def __call__(self, config):
         """
