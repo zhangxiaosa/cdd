@@ -44,7 +44,7 @@ def file_count(path, extension):
         count += sum(f.endswith(extension) for f in files)
     return count
 
-with open('summary.csv', 'w', newline='') as csvfile:
+with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
     CSV_WRITER = csv.writer(csvfile)
     CSV_WRITER.writerow(["target", "time", "token num", "iteration", "test num"])
 
