@@ -1,6 +1,6 @@
 #!/bin/bash
-export CC=clang-8
-export CHISEL_BENCHMARK_HOME=/benchmarks/chisel-bench
+export CC=clang-7
+export CHISEL_BENCHMARK_HOME=/home/coq/demystifying_probdd/benchmarks/debloating
 export NAME=chown-8.2
 export BENCHMARK_DIR=$CHISEL_BENCHMARK_HOME/$NAME/
 export SRC=./$NAME.c
