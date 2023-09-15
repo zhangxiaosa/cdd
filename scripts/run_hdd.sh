@@ -25,7 +25,7 @@ ${root}/scripts/build_hdd.sh
 
 # output folder
 out_folder_name=$(date +"%Y%m%d%H%M%S")
-out_path="${root}/results/${out_folder_name}"
+out_path="${root}/results/hdd/${out_folder_name}"
 echo "out_path is ${out_path}"
 if [ ! -d "$out_path" ]; then
     mkdir -p $out_path
