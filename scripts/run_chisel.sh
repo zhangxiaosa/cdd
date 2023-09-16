@@ -19,7 +19,7 @@ function handle_interrupt(){
 trap handle_interrupt INT
 
 root=$(pwd)
-benchmark_path=${root}/benchmarks/debloat
+benchmark_path=${root}/benchmarks/debloating
 
 ${root}/scripts/build_chisel.sh
 
@@ -123,7 +123,7 @@ for benchmark in "${benchmarks[@]}"; do
         cd $work_path
         mkdir ./output_dir
 
-        /home/coq/demystifying_probdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ./test.sh ./${benchmark}.c
+        /home/coq/demystifying_probdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ${args_for_chisel} ./test.sh ./${benchmark}.c
 
         # save result, cleanup
         mv ./output_dir/full_log.txt ${log_path} 
