@@ -107,7 +107,7 @@ for benchmark in "${benchmarks[@]}"; do
 
     {
         # init log and data path
-        log_path=${out_path}/log_${benchmark}.txt
+        log_path=${out_path}/${benchmark}_log.txt
         data_path=${out_path}/${benchmark}.c
 
         if [ -f ${log_path} ] || [ -f ${data_path} ]; then
