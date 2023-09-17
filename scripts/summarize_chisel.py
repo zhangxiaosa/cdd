@@ -43,15 +43,6 @@ def get_token_num(file):
     else:
         return None
 
-def get_test_num(res_path):
-    return file_count(res_path, "small.c")
-
-def file_count(path, extension):
-    count = 0
-    for _, _, files in os.walk(path):
-        count += sum(f.endswith(extension) for f in files)
-    return count
-
 with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
     CSV_WRITER = csv.writer(csvfile)
     CSV_WRITER.writerow(["target", "time", "token num", "test num"])
@@ -62,7 +53,7 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
         log_file_path = os.path.join(RESULT_PATH, "%s_log.txt" % target)
         if not os.path.isfile(final_program_path) or not os.path.isfile(log_file_path):
             print("%s is not available" % target)
-            row.extend([None, None, None, None])
+            row.extend([None, None, None])
             CSV_WRITER.writerow(row)  # Write only target if not available
             continue
 
