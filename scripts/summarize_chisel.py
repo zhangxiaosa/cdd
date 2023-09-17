@@ -61,7 +61,7 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
         time = get_time_from_log(log_file_path)
         test_num = get_test_num_from_log(log_file_path)
 
-        print("target: %s: time: %s, token num: %s, test num: %d"
+        print("target: %s: time: %s, token num: %s, test num: %s"
               % (target, time, token_num, test_num))
         row.extend([time, token_num, test_num])
 
