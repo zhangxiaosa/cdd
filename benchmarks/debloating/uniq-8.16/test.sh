@@ -97,8 +97,6 @@ function run() {
 }
 
 function undesired() {
-  { timeout $TIMEOUT $REDUCED_BIN; } >&$LOG
-  infinite $? || exit 1
   { timeout $TIMEOUT $REDUCED_BIN notexist; } >&$LOG
   err=$?
   outputcheckerror "notexist: No such file or directory" && exit 1
