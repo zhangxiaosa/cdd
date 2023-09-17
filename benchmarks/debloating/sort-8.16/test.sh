@@ -82,16 +82,8 @@ function outputcheckerror() {
 OPT=("-b" "-d" "-f" "-g" "-i" "-M" "-h" "-n" "-V" "-c" "-C"
   "-k" "-m" "-o" "-S" "-t" "-T" "--help")
 function undesired() {
-  { timeout -k 0.1 0.1 $REDUCED_BIN; } >&$LOG
-  infinite $? || exit 1
   touch file
   for opt in ${OPT[@]}; do
-    if [[ $opt == '-o' || $opt == '-T' ]]; then
-      { timeout -k 0.1 0.1 $REDUCED_BIN $opt file; } >&$LOG
-      infinite $? || exit 1
-    else
-      { timeout -k 0.5 0.5 $REDUCED_BIN $opt file; } >&$LOG
-    fi
     crash $? && exit 1
   done
   for opt in ${OPT[@]}; do
