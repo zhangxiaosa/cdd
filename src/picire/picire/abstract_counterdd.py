@@ -137,10 +137,7 @@ class AbstractCounterDD(object):
         config2test = []
         size_0 = 9
         self.counter = collections.OrderedDict(sorted(self.counter.items(), key=lambda item:item[1]))
-        counter_min = sys.maxsize
-        for counter in self.counter.items():
-            if counter < counter_min:
-                counter_min = counter
+        counter_min = min(self.counter.values())
         size_current = size_0 * pow((1 - pow(math.e, -1)), counter_min)
         size_current = min(size_current, len(self.counter))
 
