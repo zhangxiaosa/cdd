@@ -23,6 +23,7 @@ from .combined_iterator import CombinedIterator
 from .combined_parallel_dd import CombinedParallelDD
 from .light_dd import LightDD
 from .prob_dd import ProbDD
+from .counter_dd import CounterDD
 from .simplifiedprob_dd import SimplifiedProbDD
 from .fast_dd import FastDD
 from .parallel_dd import ParallelDD
@@ -143,6 +144,8 @@ def process_args(parser, args):
             args.reduce_class = FastDD
         elif (args.dd == 'simplifiedprobdd'):
             args.reduce_class = SimplifiedProbDD
+        elif (args.dd == 'counterdd'):
+            args.reduce_class = CounterDD
         
         args.reduce_config['subset_iterator'] = subset_iterator
         args.reduce_config['complement_iterator'] = complement_iterator
