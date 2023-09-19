@@ -123,8 +123,9 @@ class AbstractCounterDD(object):
         size_0 = 9
         self.counter = collections.OrderedDict(sorted(self.counter.items(), key=lambda item:item[1]))
         counter_min = min(self.counter.values())
-        size_current = size_0 * pow((1 - pow(math.e, -1)), counter_min)
+        size_current = math.floor(size_0 * pow((1 - pow(math.e, -1)), counter_min))
         size_current = min(size_current, len(self.counter))
+        size_current = max(size_current, 1)
 
         keylist = list(self.counter.keys())
         i = 0
@@ -133,6 +134,7 @@ class AbstractCounterDD(object):
             if self.counter[keylist[i]] == sys.maxsize:
                 continue
             config2test.append(keylist[i])
+            i = i + 1
         logger.info("\tSelected deletion size: " + str(len(config2test)))
         return config2test
 
