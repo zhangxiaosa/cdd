@@ -87,8 +87,8 @@ class AbstractCounterDD(object):
                     self.counter[deleteconfig[0]] = sys.maxsize
             else:
                 for key in self.counter.keys():
-                    if key not in config2test:
-                        self.counter[key] = 0
+                    if key in deleteconfig:
+                        self.counter[key] = sys.maxsize
                 deleteconfig = self._minus(self.passconfig, config2test)
                 self._process(deleteconfig, self.PASS)
                 # print successfully deleted idx
