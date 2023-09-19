@@ -381,7 +381,7 @@ def execute():
                            help='language of the input (%(choices)s; default: %(default)s)')
 
     # Ddmin settings
-    arg_parser.add_argument('--dd', metavar='NAME', choices=['ddmin', 'probdd', 'fastdd', 'simplifiedprobdd'], default='ddmin',
+    arg_parser.add_argument('--dd', metavar='NAME', choices=['ddmin', 'probdd', 'fastdd', 'simplifiedprobdd', 'counterdd'], default='ddmin',
                             help='DD variant to run (%(choices)s; default: %(default)s)')
     arg_parser.add_argument('--onepass', default=False, action='store_true', help='do not reset index to 0 when a partition is deleted')
     arg_parser.add_argument('--id', metavar='NUMBER', type=int, default=0, help='just used for identify each trail')
