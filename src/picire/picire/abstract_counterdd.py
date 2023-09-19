@@ -118,22 +118,40 @@ class AbstractCounterDD(object):
     def _process(self, config, outcome):
         raise NotImplementedError()
     
+    def compute_size(self, counter):
+        size_0 = 9
+        size = math.floor(size_0 * pow((1 - pow(math.e, -1)), counter))
+        size = min(size, len(self.counter))
+        size = max(size, 1)
+        return size
+    
     def sample(self):
         config2test = []
-        size_0 = 9
         self.counter = collections.OrderedDict(sorted(self.counter.items(), key=lambda item:item[1]))
         counter_min = min(self.counter.values())
-        size_current = math.floor(size_0 * pow((1 - pow(math.e, -1)), counter_min))
-        size_current = min(size_current, len(self.counter))
-        size_current = max(size_current, 1)
+        size_current = self.compute_size(counter_min)
+        size_next = self.compute_size(counter_min + 1)
 
         keylist = list(self.counter.keys())
+
         i = 0
+        num_element_with_counter_min = 0
         while i < size_current:
             # if counter == sys.maxsize, skip the element
-            if self.counter[keylist[i]] == sys.maxsize:
-                continue
-            config2test.append(keylist[i])
+            if self.counter[keylist[i]] is not sys.maxsize:
+                num_element_with_counter_min = num_element_with_counter_min + 1
+            i = i + 1
+
+        i = 0
+        if num_element_with_counter_min >= size_current:
+            size_this_time = size_current
+        else:
+            size_this_time = size_next
+
+        while i < size_this_time:
+            # if counter == sys.maxsize, skip the element
+            if self.counter[keylist[i]] is not sys.maxsize:
+                config2test.append(keylist[i])
             i = i + 1
         logger.info("\tSelected deletion size: " + str(len(config2test)))
         return config2test
