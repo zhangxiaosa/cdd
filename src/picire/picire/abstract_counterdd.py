@@ -138,7 +138,7 @@ class AbstractCounterDD(object):
         num_element_with_counter_min = 0
         while i < size_current:
             # if counter == sys.maxsize, skip the element
-            if self.counter[keylist[i]] is not sys.maxsize:
+            if self.counter[keylist[i]] is not sys.maxsize and self.counter[keylist[i]] is counter_min:
                 num_element_with_counter_min = num_element_with_counter_min + 1
             i = i + 1
 
