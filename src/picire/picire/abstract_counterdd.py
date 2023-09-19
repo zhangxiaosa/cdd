@@ -112,26 +112,11 @@ class AbstractCounterDD(object):
         indices.sort()
         logger.info("\t%s: %r" % (info, indices))
 
-    def computeRatio(self, deleteconfig, p):
-        res = 0
-        tmplog = 1
-        for delc in deleteconfig:
-            if p[delc] > 0 and p[delc] < 1:
-                tmplog *= (1 - p[delc])
-        if (tmplog == 1):
-            res = 1
-        else:
-            res = 1 / (1 - tmplog)
-        return res
-
     def _processElementToPreserve(toBePreserve):
         raise NotImplementedError()
 
     def _process(self, config, outcome):
         raise NotImplementedError()
-
-    def f(self,x):
-        return min(x,1)
     
     def sample(self):
         config2test = []
@@ -144,7 +129,7 @@ class AbstractCounterDD(object):
         keylist = list(self.counter.keys())
         i = 0
         while i < size_current:
-            # if counter == inf, skip the element
+            # if counter == sys.maxsize, skip the element
             if self.counter[keylist[i]] == sys.maxsize:
                 continue
             config2test.append(keylist[i])
