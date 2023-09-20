@@ -46,7 +46,7 @@ class CounterDD(AbstractCounterDD):
                 tmp.append(history)
         self.testHistory = tmp
         for elm in toBePreserve:
-            self.counter[elm] = 1
+            self.counter[elm] = -1
 
     def _process(self,config,outcome):
         tmp=[]

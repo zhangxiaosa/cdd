@@ -68,8 +68,6 @@ class AbstractCounterDD(object):
             config2test = self._minus(self.passconfig, deleteconfig)
             self.printIdx(deleteconfig, "Try deleting")
             config_id = ('r%d' % run, )
-            if(len(config2test) == len(self.passconfig)):
-                continue
 
             outcome = None
             if (type(self._cache) is ContentCache):
@@ -84,17 +82,14 @@ class AbstractCounterDD(object):
                 self.testHistory.append(deleteconfig)
                 if len(deleteconfig) == 1:
                     # assign the counter to maxsize and never consider this element
-                    self.counter[deleteconfig[0]] = sys.maxsize
+                    self.counter[deleteconfig[0]] = -1
             else:
                 for key in self.counter.keys():
                     if key in deleteconfig:
-                        self.counter[key] = sys.maxsize
-                deleteconfig = self._minus(self.passconfig, config2test)
-                self._process(deleteconfig, self.PASS)
+                        self.counter[key] = -1
                 # print successfully deleted idx
                 self.printIdx(deleteconfig, "Deleted")
                 self.passconfig = config2test
-                continue
             
             run += 1
 
@@ -128,33 +123,47 @@ class AbstractCounterDD(object):
     def count_available_element(self):
         num_available_element = 0
         for counter in self.counter.values():
-            if counter is not sys.maxsize:
+            if counter is not -1:
                 num_available_element = num_available_element + 1
         return num_available_element
     
     def increase_all_counters(self):
         for key in self.counter.keys():
-            self.counter[key] = self.counter[key] + 1
+            if self.counter[key] is not -1:
+                self.counter[key] = self.counter[key] + 1
+
+    def find_min_counter(self):
+        current_min = sys.maxsize
+        for key in self.counter.keys():
+            if self.counter[key] is not -1 and self.counter[key] < current_min:
+                current_min = self.counter[key]
+        return current_min
     
     def sample(self):
         config2test = []
         self.counter = collections.OrderedDict(sorted(self.counter.items(), key=lambda item:item[1]))
         keylist = list(self.counter.keys())
 
-        counter_min = min(self.counter.values())
+        counter_min = self.find_min_counter()
         size_current = self.compute_size(counter_min)
         num_available_element = self.count_available_element()
-
-        while size_current > num_available_element:
+        
+        while size_current >= num_available_element:
             self.increase_all_counters()
+            counter_min = self.find_min_counter()
             size_current = self.compute_size(counter_min)
+            if size_current == 1:
+                break
 
         i = 0
-        while i < size_current:
-            # if counter == sys.maxsize, skip the element
-            if self.counter[keylist[i]] is not sys.maxsize:
-                config2test.append(keylist[i])
+        for key in keylist:
+            # if counter == -1, skip the element
+            if self.counter[key] is -1:
+                continue
+            config2test.append(key)
             i = i + 1
+            if i >= size_current:
+                break
 
         logger.info("\tSelected deletion size: " + str(len(config2test)))
         return config2test
@@ -162,7 +171,7 @@ class AbstractCounterDD(object):
     def _test_done(self):
         all_decided = True
         for value in self.counter.values():
-            if value != sys.maxsize:
+            if value != -1:
                 all_decided = False
         if all_decided:
             logger.info("Iteration needs to stop because all elements are decided.")
