@@ -127,7 +127,7 @@ class AbstractCounterDD(object):
     
     def count_available_element(self):
         num_available_element = 0
-        for _, counter in self.counter.items():
+        for counter in self.counter.values():
             if counter is not sys.maxsize:
                 num_available_element = num_available_element + 1
         return num_available_element
@@ -161,8 +161,7 @@ class AbstractCounterDD(object):
 
     def _test_done(self):
         all_decided = True
-        all_values = list(set(self.counter.values()))
-        for value in all_values:
+        for value in self.counter.values():
             if value != sys.maxsize:
                 all_decided = False
         if all_decided:
