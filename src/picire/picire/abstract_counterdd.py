@@ -119,40 +119,43 @@ class AbstractCounterDD(object):
         raise NotImplementedError()
     
     def compute_size(self, counter):
-        size_0 = 9
+        size_0 = 10
         size = math.floor(size_0 * pow((1 - pow(math.e, -1)), counter))
         size = min(size, len(self.counter))
         size = max(size, 1)
         return size
     
+    def count_available_element(self):
+        num_available_element = 0
+        for _, counter in self.counter.items():
+            if counter is not sys.maxsize:
+                num_available_element = num_available_element + 1
+        return num_available_element
+    
+    def increase_all_counters(self):
+        for key, _ in self.counter.keys():
+            self.counter[key] = self.counter[key] + 1
+    
     def sample(self):
         config2test = []
         self.counter = collections.OrderedDict(sorted(self.counter.items(), key=lambda item:item[1]))
-        counter_min = min(self.counter.values())
-        size_current = self.compute_size(counter_min)
-        size_next = self.compute_size(counter_min + 1)
-
         keylist = list(self.counter.keys())
 
+        counter_min = min(self.counter.values())
+        size_current = self.compute_size(counter_min)
+        num_available_element = self.count_available_element()
+
+        while size_current > num_available_element:
+            self.increase_all_counters()
+            size_current = self.compute_size(counter_min)
+
         i = 0
-        num_element_with_counter_min = 0
         while i < size_current:
-            # if counter == sys.maxsize, skip the element
-            if self.counter[keylist[i]] is not sys.maxsize and self.counter[keylist[i]] is counter_min:
-                num_element_with_counter_min = num_element_with_counter_min + 1
-            i = i + 1
-
-        i = 0
-        if num_element_with_counter_min >= size_current:
-            size_this_time = size_current
-        else:
-            size_this_time = size_next
-
-        while i < size_this_time:
             # if counter == sys.maxsize, skip the element
             if self.counter[keylist[i]] is not sys.maxsize:
                 config2test.append(keylist[i])
             i = i + 1
+
         logger.info("\tSelected deletion size: " + str(len(config2test)))
         return config2test
 
