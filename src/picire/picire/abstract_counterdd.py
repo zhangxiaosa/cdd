@@ -133,7 +133,7 @@ class AbstractCounterDD(object):
         return num_available_element
     
     def increase_all_counters(self):
-        for key, _ in self.counter.keys():
+        for key in self.counter.keys():
             self.counter[key] = self.counter[key] + 1
     
     def sample(self):
