@@ -33,7 +33,7 @@ function clean() {
 }
 
 function desired() {
-  if [[ $1 == "-fsanitize=leak" ]]; then # ignore leak sanitizer
+  if [[ $1 == "-fsanitize=leak" || $1 == "-fsanitize=address" ]]; then # ignore leak sanitizer and address sanitizer
     return 0
   fi
   cp $REDUCED_BIN tar
