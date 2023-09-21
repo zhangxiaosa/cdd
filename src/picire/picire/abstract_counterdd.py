@@ -114,8 +114,11 @@ class AbstractCounterDD(object):
         raise NotImplementedError()
     
     def compute_size(self, counter):
-        size_0 = 10
-        size = math.floor(size_0 * pow((1 - pow(math.e, -1)), counter))
+        size = 10
+        i = 0
+        while i < counter:
+            size = math.floor(size * (1 - pow(math.e, -1)))
+            i = i + 1
         size = min(size, len(self.counter))
         size = max(size, 1)
         return size
