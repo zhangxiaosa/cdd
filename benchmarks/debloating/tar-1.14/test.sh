@@ -17,6 +17,7 @@ function clean() {
   chmod 777 -Rf f* b*
   rm -rf $BIN f* b*
   find . -not -path "./optional*" -not -path "./afl_crash*" \
+    -not -path "./output_dir*" \
     -not -path "./reducer-out*" \
     -not -path "./chisel-out*" \
     -not -path "./lib*" \
