@@ -242,7 +242,8 @@ def reduce(hdd_tree,
            flatten_recursion=False, squeeze_tree=True,
            skip_unremovable=True, skip_whitespace=False,
            unparse_with_whitespace=True,
-           cache_class=None, cleanup=True, onepass=False, start_from_n=None):
+           cache_class=None, cleanup=True, onepass=False, start_from_n=None,
+           init_probability=0.1):
     """
     Execute tree reduction part of picireny as if invoked from command line,
     however, control its behaviour not via command line arguments but function
@@ -315,7 +316,8 @@ def reduce(hdd_tree,
                      hdd_star=hdd_star,
                      cache=cache_class() if cache_class else None,
                      unparse_with_whitespace=unparse_with_whitespace,
-                     onepass=onepass, start_from_n=start_from_n)
+                     onepass=onepass, start_from_n=start_from_n,
+                     init_probability=init_probability)
     out_file = join(out, basename(input))
     with codecs.open(out_file, 'w', encoding=encoding, errors='ignore') as f:
         f.write(out_src)
@@ -386,6 +388,7 @@ def execute():
     arg_parser.add_argument('--onepass', default=False, action='store_true', help='do not reset index to 0 when a partition is deleted')
     arg_parser.add_argument('--id', metavar='NUMBER', type=int, default=0, help='just used for identify each trail')
     arg_parser.add_argument('--start-from-n', metavar='NUMBER', type=int, default=None, help='partition size start from a specified number, instead of half of the total size')
+    arg_parser.add_argument('--init-probability', metavar='NUMBER', type=float, default=0.1, help='provide the initial probability for probdd, default value is 0.1')
     
     args = arg_parser.parse_args()
     process_args(arg_parser, args)
@@ -417,5 +420,6 @@ def execute():
            flatten_recursion=args.flatten_recursion, squeeze_tree=args.squeeze_tree,
            skip_unremovable=args.skip_unremovable, skip_whitespace=args.skip_whitespace,
            unparse_with_whitespace=unparse_with_whitespace,
-           cache_class=args.cache, cleanup=args.cleanup, onepass=args.onepass, start_from_n=args.start_from_n)
+           cache_class=args.cache, cleanup=args.cleanup, onepass=args.onepass, start_from_n=args.start_from_n,
+           init_probability=args.init_probability)
     print("execution time: " + str(time.time() - tstart) + "s")

@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 class ProbDD(AbstractProbDD):
 
     def __init__(self, test, cache=None, id_prefix=(), onepass=False, start_from_n=None,
+                 init_probability=0.1,
                  split=config_splitters.zeller,
                  subset_first=True, subset_iterator=config_iterators.forward,
                  complement_iterator=config_iterators.forward):
@@ -35,7 +36,7 @@ class ProbDD(AbstractProbDD):
             provides config indices in an arbitrary order.
         """
         cache = cache or ConfigCache()
-        AbstractProbDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix)
+        AbstractProbDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, init_probability=init_probability)
 
     def _processElementToPreserve(self,toBePreserve):
         tmp = []
