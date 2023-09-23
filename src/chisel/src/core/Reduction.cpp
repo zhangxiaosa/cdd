@@ -396,7 +396,7 @@ DDElementSet Reduction::doProbDD(DDElementVector &Decls) {
   std::map< std::vector<int>, std::map< int, double > > recordDelta; 
   int len=Decls.size();
   float delta=0.1;
-  float initialP=0.1;
+  float initialP=OptionManager::InitProbability;
   float threshold=0.8;
   bool restrictionToOne=false;
   

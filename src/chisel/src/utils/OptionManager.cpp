@@ -89,6 +89,7 @@ bool OptionManager::XRef = false;
 bool OptionManager::ComplementOnly = false;
 bool OptionManager::Onepass = false;
 int OptionManager::StartFromN = 0;
+float OptionManager::InitProbability = 0.1;
 std::string OptionManager::Algorithm = "chiseldd";
 
 void OptionManager::handleOptions(int argc, char *argv[]) {
@@ -175,6 +176,9 @@ void OptionManager::handleOptions(int argc, char *argv[]) {
       break;
     case 'E':
       OptionManager::StartFromN = std::stoi(std::string(optarg));
+      break;
+    case 'I':
+      OptionManager::InitProbability = std::stof(std::string(optarg));
       break;
 
     default:

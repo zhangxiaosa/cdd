@@ -32,6 +32,7 @@ public:
   static bool ComplementOnly;
   static bool Onepass;
   static int StartFromN;
+  static float InitProbability;
 
   static void showUsage();
   static void handleOptions(int argc, char *argv[]);
