@@ -62,6 +62,7 @@ static struct option long_options[] = {
     {"complement_only", no_argument, 0, 'A'},
     {"onepass", no_argument, 0, 'B'},
     {"start_from_n", required_argument, 0, 'E'},
+    {"init_probability", required_argument, 0, 'I'},
     {0, 0, 0, 0}};
 
 static const char *optstring = "ho:t:sDdglcLGCpvSXaiABE";
