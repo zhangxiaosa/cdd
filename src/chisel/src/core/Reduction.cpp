@@ -19,6 +19,7 @@
 #include <string>
 #include <filesystem>
 #include <unordered_set>
+#include <cmath>
 
 std::string generate_random_string(size_t length) {
     static const std::string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -272,6 +273,77 @@ std::vector<int> sample(std::vector<float>& p) {
   return res;
 }
 
+int count_available_element(std::vector<int>& counters) {
+    int num_available_element = 0;
+    for (int counter : counters) {
+        if (counter != -1) {
+            num_available_element = num_available_element + 1;
+        }
+    }
+    return num_available_element;
+}
+
+int increase_all_counters(std::vector<int>& counters) {
+    for (size_t i = 0; i < counters.size; i++) {
+      if (counters[i] != -1) {
+        counters[i] = counters[i] + 1;
+      }
+    }
+}
+
+int find_min_counter(std::vector<int>& counters) {
+  int current_min = 10000;
+  for (int counter : counters) {
+    if (counter < current_min) {
+      current_min = counter;
+    }
+  }
+  return current_min;
+}
+
+int compute_size(int counter, float init_probability) {
+    int size = round(-1 / log(1 - init_probability));
+    int i = 0;
+    while (i < counter) {
+        size = floor(size * (1 - exp(-1)));
+        i = i + 1
+    }
+    size = std::min(size, static_cast<int>(counter));
+    size = std::max(size, 1);
+    return size;
+}
+
+std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probability) {
+  std::vector<int> res;
+  std::vector<int> idx = sort_index(counters);
+  int counter_min = find_min_counter(counters);
+  int size_current = compute_size(counter_min, init_probability);
+  int num_available_element = count_available_element(counters);
+
+  while (size_current >= num_available_element) {
+    increase_all_counters();
+    counter_min = find_min_counter();
+    size_current = compute_size(counter_min);
+    if (size_current == 1) {
+      break;
+    }
+  }
+
+  int i = 0;
+  for(int counter: counters) {
+    if (counter == -1) {
+      continue;
+    }
+    res.push_back(idx[i]);
+    i = i + 1;
+    if (i >= size_current) {
+      break;
+    }
+  }
+  
+  std::stable_sort(res.begin(), res.end());
+  return res;
+}
 
 std::vector<int> pickProgram(std::vector<float>& p,bool restrictionToOne,float threshold) {
   float probability;
@@ -340,6 +412,37 @@ void Reduction::refine(bool status,std::vector<int>& index,std::vector<float>& p
         if(sz==1){ //can't delete
           waitList.push_back(cha[0]);
           p[cha[0]]=-(1<<20);//can't delete
+        }
+        else{
+          cache.push_back(cha);
+        }
+        mp1.erase(history++);
+      }
+      else
+        history++;
+    }
+    int sz=cache.size();
+    for(int i=0;i<sz;++i){
+      mp1[cache[i]]=false;
+    }
+  }
+  else{
+    waitList.push_back(index[0]);
+  }
+}
+
+void Reduction::refine_counter(bool status,std::vector<int>& index,std::vector<float>& counters){
+  std::vector<int> waitList;
+  if(status==true){
+    std::vector<std::vector<int>> cache;
+    for(auto history=mp1.begin(); history!=mp1.end();){
+      std::vector<int> tmp=history->first;
+      if(intersect(index,tmp)){
+        std::vector<int> cha=minus(tmp,index);
+        int sz=cha.size();
+        if(sz==1){ //can't delete
+          waitList.push_back(cha[0]);
+          counters[cha[0]]=-1;//can't delete
         }
         else{
           cache.push_back(cha);
@@ -464,6 +567,79 @@ DDElementSet Reduction::doProbDD(DDElementVector &Decls) {
     }
 
     if (checkStop(p,threshold))
+      break;
+  }
+  return Removed;
+}
+
+// algorithm of ProbDD
+DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
+  spdlog::get("Logger")->info("Running CounterDD - Size: {}", Decls.size());
+  mp1.clear();
+  DDElementSet Removed;
+  std::map< std::vector<int>, std::map< int, double > > recordDelta; 
+  int len=Decls.size();
+  float delta=0.1;
+  float initialP=OptionManager::InitProbability;
+  
+  std::vector<float> counters(len, 0);
+  std::vector<int> index;
+  DDElementVector program;
+  int configSize = len;
+
+  while (true) {
+    spdlog::get("Logger")->info("Config size: {}", configSize);
+    // select a subsequence for testing
+    index=sample_by_counter(counters, initialP);
+    program.clear();
+    spdlog::get("Logger")->info("Selected deletion size: {}", index.size());
+
+    // print out indices to be deleted
+    std::string indicesToBeRemoved = indices2string(index);
+    spdlog::get("Logger")->info("Try deleting: {}", indicesToBeRemoved);
+
+    for (int i: index) {
+      program.push_back(Decls[i]);
+    }
+
+    bool status;
+    if(mp1.find(index)!=mp1.end()){
+        status=mp1[index];
+    }
+    else{
+      if(isInvalidChunk(program)){
+          status=false;
+      }
+      else{
+          status = test(program);
+      }
+    }
+
+    if (status) { // safely delete and update the model
+      spdlog::get("Logger")->info("Deleted: {}", indicesToBeRemoved);
+      configSize -= index.size();
+      auto TargetSet = toSet(program);
+      Removed.insert(TargetSet.begin(), TargetSet.end());
+      for(int i: index) {
+          counters[i]= -1;
+      }
+      refine_counter(status,index,counters);
+    }
+    else { //can't delete and update the model
+      // std::cout << std::setprecision(10) << "Increase ratio: " << incRatio << std::endl;
+      for (int i : index) {
+        counters[i] += 1;
+      }
+
+      if(index.size()==1){
+        counters[index[0]]=-1;
+      } 
+      if(!OptionManager::NoCache) {
+        mp1[index]=status;
+      }
+    }
+
+    if (checkStop(counters,threshold))
       break;
   }
   return Removed;
@@ -806,6 +982,9 @@ DDElementSet Reduction::doDeltaDebugging(DDElementVector &Decls) {
   DDElementSet removed;
   if (OptionManager::Algorithm.compare("probdd") == 0) {
     removed = doProbDD(Decls);
+  }  
+  else if (OptionManager::Algorithm.compare("counterdd") == 0) {
+    removed = doCounterDD(Decls);
   }
   else if (OptionManager::Algorithm.compare("chiseldd") == 0) {
     removed = doChiselDD(Decls);
