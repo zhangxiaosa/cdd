@@ -317,8 +317,6 @@ int compute_size_by_counter(int counter, float init_probability) {
         std::cout << "next size: " << size << std::endl;
         i = i + 1;
     }
-    size = std::min(size, static_cast<int>(counter));
-    std::cout << "size after min: " << size << std::endl;
     size = std::max(size, 1);
     std::cout << "size after max: " << size << std::endl;
     return size;
