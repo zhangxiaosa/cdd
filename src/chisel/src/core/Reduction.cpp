@@ -357,8 +357,8 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
   for (size_t i = 0; i < counters.size(); i++) {
     spdlog::get("Logger")->info("k: {}", k);
     spdlog::get("Logger")->info("idx[k]: {}", idx[k]);
-    if (counters[idx[k]] != -1) {
-      res.push_back(idx[k]);
+    if (counters[idx[i]] != -1) {
+      res.push_back(idx[i]);
       k++;
     }
     if (k >= size_current) {
