@@ -236,6 +236,13 @@ std::vector<int> sort_index(std::vector<float>& p) {
   return idx;
 }
 
+std::vector<int> sort_index_counter(std::vector<int>& counters) {
+  std::vector<int> idx(counters.size());
+  iota(idx.begin(),idx.end(),0);
+  stable_sort(idx.begin(),idx.end(),[&counters](int i1, int i2) {return counters[i1] < counters[i2];});
+  return idx;
+}
+
 std::vector<int> sample(std::vector<float>& p) {
   std::vector<int> res;
   std::vector<int> idx = sort_index(p);
@@ -284,7 +291,7 @@ int count_available_element(std::vector<int>& counters) {
 }
 
 int increase_all_counters(std::vector<int>& counters) {
-    for (size_t i = 0; i < counters.size; i++) {
+    for (size_t i = 0; i < counters.size(); i++) {
       if (counters[i] != -1) {
         counters[i] = counters[i] + 1;
       }
@@ -306,7 +313,7 @@ int compute_size(int counter, float init_probability) {
     int i = 0;
     while (i < counter) {
         size = floor(size * (1 - exp(-1)));
-        i = i + 1
+        i = i + 1;
     }
     size = std::min(size, static_cast<int>(counter));
     size = std::max(size, 1);
