@@ -322,14 +322,14 @@ int compute_size(int counter, float init_probability) {
 
 std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probability) {
   std::vector<int> res;
-  std::vector<int> idx = sort_index(counters);
+  std::vector<int> idx = sort_index_counter(counters);
   int counter_min = find_min_counter(counters);
   int size_current = compute_size(counter_min, init_probability);
   int num_available_element = count_available_element(counters);
 
   while (size_current >= num_available_element) {
-    increase_all_counters();
-    counter_min = find_min_counter();
+    increase_all_counters(counters);
+    counter_min = find_min_counter(counters);
     size_current = compute_size(counter_min, init_probability);
     if (size_current == 1) {
       break;
