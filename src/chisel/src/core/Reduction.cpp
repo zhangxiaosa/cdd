@@ -343,7 +343,12 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
   spdlog::get("Logger")->info("final size_current: {}", size_current);
 
   int k = 0;
-  spdlog::get("Logger")->info("counters: {}", counters);
+  spdlog::get("Logger")->info("counters: ");
+  for (size_t i = 0; i < counters.size(); i++)
+  {
+    spdlog::get("Logger")->info("{}", counters[i]);
+  }
+  
   for (size_t i = 0; i < counters.size(); i++) {
     if (counters[idx[k]] != -1) {
       res.push_back(idx[k]);
