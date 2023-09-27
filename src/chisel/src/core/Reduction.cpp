@@ -308,7 +308,7 @@ int find_min_counter(std::vector<int>& counters) {
   return current_min;
 }
 
-int compute_size(int counter, float init_probability) {
+int compute_size_by_counter(int counter, float init_probability) {
     int size = round(-1 / log(1 - init_probability));
     int i = 0;
     while (i < counter) {
@@ -324,13 +324,15 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
   std::vector<int> res;
   std::vector<int> idx = sort_index_counter(counters);
   int counter_min = find_min_counter(counters);
-  int size_current = compute_size(counter_min, init_probability);
+  std::cout << "counter_min: " << counter_min << std::endl;
+  int size_current = compute_size_by_counter(counter_min, init_probability);
+  std::cout << "size_current: " << size_current << std::endl;
   int num_available_element = count_available_element(counters);
 
   while (size_current >= num_available_element) {
     increase_all_counters(counters);
     counter_min = find_min_counter(counters);
-    size_current = compute_size(counter_min, init_probability);
+    size_current = compute_size_by_counter(counter_min, init_probability);
     if (size_current == 1) {
       break;
     }
