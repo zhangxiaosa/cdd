@@ -592,7 +592,7 @@ DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
   float delta=0.1;
   float initialP=OptionManager::InitProbability;
   
-  std::vector<float> counters(len, 0);
+  std::vector<int> counters(len, 0);
   std::vector<int> index;
   DDElementVector program;
   int configSize = len;

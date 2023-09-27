@@ -16,6 +16,7 @@ public:
   Reduction() {}
   ~Reduction() {}
   void refine(bool status,std::vector<int>& index,std::vector<float>& p,float alpha);
+  void refine_counter(bool status,std::vector<int>& index,std::vector<int>& counters);
 
 protected:
   virtual void Initialize(clang::ASTContext &Ctx);
