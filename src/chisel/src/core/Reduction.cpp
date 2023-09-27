@@ -260,22 +260,17 @@ std::vector<int> sample(std::vector<float>& p) {
     for ( int j = k ; j < i ; j ++ )
       tmp *= (1-p[idx[i]]);
     tmp *= (i - k + 1); 
-    // std::cout << "prob: " << p[idx[i]] << "; tmp: " << tmp << "; last: " << last << std::endl;
     if (tmp < last)
       break;
     last = tmp;
     tmp = 1;
   }
-  // std::cout << i << std::endl;
-  // std::cout << k << std::endl;
+
   while(i > k) {
     i--;
     res.push_back(idx[i]);
   }
-  // std::cout << "selected index prob:" << std::endl;
-  // for ( int cn = 0; cn < res.size(); cn++)
-  //   std::cout << p[res[cn]] << ",";
-  // std::cout << std::endl;
+
   std::stable_sort(res.begin(), res.end());
   return res;
 }
@@ -289,17 +284,6 @@ int count_available_element(std::vector<int>& counters) {
     }
     return num_available_element;
 }
-
-// int increase_all_counters(std::vector<int>& counters) {
-//     std::cout << "counters.size(): " << counters.size() << std::endl;
-//     int element_num = counters.size();
-//     for (int i = 0; i < element_num; i++) {
-//       std::cout << "i: " << i << std::endl;
-//       if (counters[i] != -1) {
-//         counters[i] = counters[i] + 1;
-//       }
-//     }
-// }
 
 int increase_all_counters(std::vector<int>& counters) {
     std::cout << "counters.size(): " << counters.size() << std::endl;
@@ -323,28 +307,21 @@ int find_min_counter(std::vector<int>& counters) {
 
 int compute_size_by_counter(int counter, float init_probability) {
     int size = round(-1.0 / log(1 - init_probability));
-    spdlog::get("Logger")->info("init size: {}", size);
     int i = 0;
     while (i < counter) {
         size = floor(size * (1 - exp(-1)));
-        spdlog::get("Logger")->info("next size: {}", size);
         i = i + 1;
     }
     size = std::max(size, 1);
-    spdlog::get("Logger")->info("size after max: {}", size);
     return size;
 }
 
 std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probability) {
-  spdlog::get("Logger")->info("enter sample by counter");
   std::vector<int> res;
   std::vector<int> idx = sort_index_counter(counters);
   int counter_min = find_min_counter(counters);
-  spdlog::get("Logger")->info("counter_min: {}", counter_min);
   int size_current = compute_size_by_counter(counter_min, init_probability);
-  spdlog::get("Logger")->info("size_current: {}", size_current);
   int num_available_element = count_available_element(counters);
-  spdlog::get("Logger")->info("num_available_element: {}", num_available_element);
 
   while (size_current >= num_available_element) {
     increase_all_counters(counters);
@@ -354,25 +331,10 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
       break;
     }
   }
-  spdlog::get("Logger")->info("final size_current: {}", size_current);
 
   int k = 0;
-  // spdlog::get("Logger")->info("counters: ");
-  // for (size_t i = 0; i < counters.size(); i++)
-  // {
-  //   spdlog::get("Logger")->info("i: {}", i);
-  //   spdlog::get("Logger")->info("counter: {}", counters[i]);
-  // }
-  // spdlog::get("Logger")->info("idx: ");
-  // for (size_t i = 0; i < idx.size(); i++)
-  // {
-  //   spdlog::get("Logger")->info("i: {}", i);
-  //   spdlog::get("Logger")->info("idx: {}", idx[i]);
-  // }
   
   for (size_t i = 0; i < counters.size(); i++) {
-    // spdlog::get("Logger")->info("k: {}", k);
-    // spdlog::get("Logger")->info("idx: {}", idx[k]);
     if (counters[idx[i]] != -1) {
       res.push_back(idx[i]);
       k++;
@@ -381,16 +343,8 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
       break;
     }
   }
-
-  // spdlog::get("Logger")->info("seleted idx: ");
-  // for (int idx: res)
-  // {
-  //   spdlog::get("Logger")->info("{} ", idx);
-  // }
-  // spdlog::get("Logger")->info("\n");
   
   std::stable_sort(res.begin(), res.end());
-  spdlog::get("Logger")->info("exit sample by counter");
   return res;
 }
 
@@ -440,7 +394,6 @@ bool checkStop(std::vector<float>& p,float threshold) {
 }
 
 bool checkStopCounter(std::vector<int>& counters) {
-  spdlog::get("Logger")->info("enter check stop counter");
   int len=counters.size();
   for(int i=0;i<len;++i){
     if(counters[i] != -1)
@@ -524,21 +477,13 @@ void Reduction::refine_counter(bool status,std::vector<int>& index,std::vector<i
 
 double computeRatio(std::vector<int> removed, std::vector<float> prob) {
   if (removed.size() == 0) return 1;
-  // for (int i =0;i<prob.size();i++) std::cout << std::setprecision(5) << prob[i] << ",";
-  // std::cout << std::endl;
-  // for (int i =0;i<removed.size();i++) std::cout << removed[i] << ",";
-  // std::cout << std::endl;
   double res = 0;
   double tmplog = 1;
   for (int i = 0 ; i < removed.size() ; i ++ ){
-    //tmplog += log(1-prob[removed[i]]);
     if (prob[removed[i]] > 0 and prob[removed[i]] < 1)
       tmplog *= (1-prob[removed[i]]);
   }
-  // std::cout << std::setprecision(20) << "tmplog: " << tmplog << std::endl;
-  //res = 1 / (1 - exp(tmplog));
   res = 1 / (1 - tmplog);
-  // std::cout << std::setprecision(20) << "res: " << res << std::endl;
   return res;
 }
 
@@ -563,7 +508,6 @@ DDElementSet Reduction::doProbDD(DDElementVector &Decls) {
   float threshold=0.8;
   bool restrictionToOne=false;
   
-  // printf("In probDD,Configure:initialP=%f,threshold=%f\n",initialP,threshold);
   std::vector<float> p(len,initialP);
   std::vector<int> index;
   DDElementVector program;
@@ -610,11 +554,9 @@ DDElementSet Reduction::doProbDD(DDElementVector &Decls) {
     else { //can't delete and update the model
       double incRatio = computeRatio(index, p);
       std::map< int, double > incdelta;
-      // std::cout << std::setprecision(10) << "Increase ratio: " << incRatio << std::endl;
       for (int i : index) {
         double delta = (incRatio - 1) * p[i];
         incdelta[i] = delta;
-        // std::cout << std::setprecision(10) << "prob = "  << p[i] << ". By theory, increase delta: " << delta << std::endl;
         p[i] += delta;
       }
 
@@ -643,19 +585,6 @@ DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
   float initialP=OptionManager::InitProbability;
   
   std::vector<int> counters(len, 0);
-  
-  // debugging
-  // if (counters.size() > 200) {
-  //   for (size_t i = 0; i < counters.size(); i++) {
-  //     if (i != 9 && i != 10) {
-  //       counters[i] = -1;
-  //     }  
-  //   }
-  // }
-  
-
-
-  // debugging
 
   std::vector<int> index;
   DDElementVector program;
@@ -700,7 +629,6 @@ DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
       refine_counter(status,index,counters);
     }
     else { //can't delete and update the model
-      // std::cout << std::setprecision(10) << "Increase ratio: " << incRatio << std::endl;
       for (int i : index) {
         counters[i] += 1;
       }
