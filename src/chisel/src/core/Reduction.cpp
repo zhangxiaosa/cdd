@@ -310,15 +310,15 @@ int find_min_counter(std::vector<int>& counters) {
 
 int compute_size_by_counter(int counter, float init_probability) {
     int size = round(-1.0 / log(1 - init_probability));
-    std::cout << "init size: " << size << std::endl;
+    spdlog::get("Logger")->info("init size: {}", size);
     int i = 0;
     while (i < counter) {
         size = floor(size * (1 - exp(-1)));
-        std::cout << "next size: " << size << std::endl;
+        spdlog::get("Logger")->info("next size: {}", size);
         i = i + 1;
     }
     size = std::max(size, 1);
-    std::cout << "size after max: " << size << std::endl;
+    spdlog::get("Logger")->info("size after max: {}", size);
     return size;
 }
 
@@ -326,11 +326,11 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
   std::vector<int> res;
   std::vector<int> idx = sort_index_counter(counters);
   int counter_min = find_min_counter(counters);
-  std::cout << "counter_min: " << counter_min << std::endl;
+  spdlog::get("Logger")->info("counter_min: {}", counter_min);
   int size_current = compute_size_by_counter(counter_min, init_probability);
-  std::cout << "size_current: " << size_current << std::endl;
+  spdlog::get("Logger")->info("size_current: {}", size_current);
   int num_available_element = count_available_element(counters);
-  std::cout << "num_available_element: " << num_available_element << std::endl;
+  spdlog::get("Logger")->info("num_available_element: {}", num_available_element);
 
   while (size_current >= num_available_element) {
     increase_all_counters(counters);
@@ -340,7 +340,7 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
       break;
     }
   }
-  std::cout << "final size_current: " << size_current << std::endl;
+  spdlog::get("Logger")->info("final size_current: {}", size_current);
 
   int k = 0;
   for (size_t i = 0; i < counters.size(); i++) {
@@ -353,12 +353,12 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
     }
   }
 
-  std::cout << "seleted idx: ";
+  spdlog::get("Logger")->info("seleted idx: ");
   for (int idx: res)
   {
-    std::cout << idx << " ";
+    spdlog::get("Logger")->info("{} ", idx);
   }
-  std::cout << std::endl;
+  spdlog::get("Logger")->info("\n");
   
   std::stable_sort(res.begin(), res.end());
   return res;
