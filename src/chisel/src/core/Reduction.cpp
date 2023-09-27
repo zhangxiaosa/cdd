@@ -323,7 +323,7 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
   while (size_current >= num_available_element) {
     increase_all_counters();
     counter_min = find_min_counter();
-    size_current = compute_size(counter_min);
+    size_current = compute_size(counter_min, init_probability);
     if (size_current == 1) {
       break;
     }
@@ -441,7 +441,7 @@ void Reduction::refine(bool status,std::vector<int>& index,std::vector<float>& p
   }
 }
 
-void Reduction::refine_counter(bool status,std::vector<int>& index,std::vector<float>& counters){
+void Reduction::refine_counter(bool status,std::vector<int>& index,std::vector<int>& counters){
   std::vector<int> waitList;
   if(status==true){
     std::vector<std::vector<int>> cache;
