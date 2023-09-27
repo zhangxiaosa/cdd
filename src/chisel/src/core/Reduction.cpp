@@ -390,7 +390,7 @@ bool checkStop(std::vector<float>& p,float threshold) {
   return true;
 }
 
-bool checkStopCounter(std::vector<float>& counters) {
+bool checkStopCounter(std::vector<int>& counters) {
   int len=counters.size();
   for(int i=0;i<len;++i){
     if(counters[i] != -1)
