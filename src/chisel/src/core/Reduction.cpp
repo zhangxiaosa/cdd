@@ -343,20 +343,22 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
   spdlog::get("Logger")->info("final size_current: {}", size_current);
 
   int k = 0;
-  // spdlog::get("Logger")->info("counters: ");
-  // for (size_t i = 0; i < counters.size(); i++)
-  // {
-  //   spdlog::get("Logger")->info("{}", counters[i]);
-  // }
-  // spdlog::get("Logger")->info("idx: ");
-  // for (size_t i = 0; i < idx.size(); i++)
-  // {
-  //   spdlog::get("Logger")->info("idx[i]: {}", idx[i]);
-  // }
+  spdlog::get("Logger")->info("counters: ");
+  for (size_t i = 0; i < counters.size(); i++)
+  {
+    spdlog::get("Logger")->info("i: {}", i);
+    spdlog::get("Logger")->info("counter: {}", counters[i]);
+  }
+  spdlog::get("Logger")->info("idx: ");
+  for (size_t i = 0; i < idx.size(); i++)
+  {
+    spdlog::get("Logger")->info("i: {}", i);
+    spdlog::get("Logger")->info("idx: {}", idx[i]);
+  }
   
   for (size_t i = 0; i < counters.size(); i++) {
-    // spdlog::get("Logger")->info("k: {}", k);
-    // spdlog::get("Logger")->info("idx[k]: {}", idx[k]);
+    spdlog::get("Logger")->info("k: {}", k);
+    spdlog::get("Logger")->info("idx: {}", idx[k]);
     if (counters[idx[i]] != -1) {
       res.push_back(idx[i]);
       k++;
@@ -484,7 +486,7 @@ void Reduction::refine_counter(bool status,std::vector<int>& index,std::vector<i
         int sz=cha.size();
         if(sz==1){ //can't delete
           waitList.push_back(cha[0]);
-          counters[cha[0]]=-1;//can't delete
+          counters[cha[0]] = -1;//can't delete
         }
         else{
           cache.push_back(cha);
@@ -674,7 +676,7 @@ DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
       }
 
       if(index.size()==1){
-        counters[index[0]]=-1;
+        counters[index[0]] = -1;
       }
       if(!OptionManager::NoCache) {
         mp1[index]=status;
