@@ -286,7 +286,6 @@ int count_available_element(std::vector<int>& counters) {
 }
 
 int increase_all_counters(std::vector<int>& counters) {
-    std::cout << "counters.size(): " << counters.size() << std::endl;
     for (auto it = counters.begin(); it != counters.end(); ++it) {
         if (*it != -1) {
             *it = *it + 1;
