@@ -323,6 +323,7 @@ int compute_size_by_counter(int counter, float init_probability) {
 }
 
 std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probability) {
+  spdlog::get("Logger")->info("enter sample by counter");
   std::vector<int> res;
   std::vector<int> idx = sort_index_counter(counters);
   int counter_min = find_min_counter(counters);
@@ -376,6 +377,7 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
   spdlog::get("Logger")->info("\n");
   
   std::stable_sort(res.begin(), res.end());
+  spdlog::get("Logger")->info("exit sample by counter");
   return res;
 }
 
@@ -425,6 +427,7 @@ bool checkStop(std::vector<float>& p,float threshold) {
 }
 
 bool checkStopCounter(std::vector<int>& counters) {
+  spdlog::get("Logger")->info("enter check stop counter");
   int len=counters.size();
   for(int i=0;i<len;++i){
     if(counters[i] != -1)
