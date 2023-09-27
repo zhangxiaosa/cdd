@@ -632,13 +632,13 @@ DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
   std::vector<int> counters(len, 0);
   
   // debugging
-  // if (counters.size() > 200) {
-  //   for (size_t i = 0; i < counters.size(); i++) {
-  //     if (i != 9 && i != 10) {
-  //       counters[i] = -1;
-  //     }  
-  //   }
-  // }
+  if (counters.size() > 200) {
+    for (size_t i = 0; i < counters.size(); i++) {
+      if (i != 9 && i != 10) {
+        counters[i] = -1;
+      }  
+    }
+  }
   
 
 
