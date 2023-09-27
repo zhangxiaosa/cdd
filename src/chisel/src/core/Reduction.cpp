@@ -330,6 +330,7 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
   int size_current = compute_size_by_counter(counter_min, init_probability);
   std::cout << "size_current: " << size_current << std::endl;
   int num_available_element = count_available_element(counters);
+  std::cout << "num_available_element: " << num_available_element << std::endl;
 
   while (size_current >= num_available_element) {
     increase_all_counters(counters);
@@ -339,18 +340,25 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
       break;
     }
   }
+  std::cout << "final size_current: " << size_current << std::endl;
 
-  int i = 0;
-  for(int counter: counters) {
-    if (counter == -1) {
-      continue;
+  int k = 0;
+  for (size_t i = 0; i < counters.size(); i++) {
+    if (counters[idx[k]] != -1) {
+      res.push_back(idx[k]);
+      k++;
     }
-    res.push_back(idx[i]);
-    i = i + 1;
-    if (i >= size_current) {
+    if (k >= size_current) {
       break;
     }
   }
+
+  std::cout << "seleted idx: ";
+  for (int idx: res)
+  {
+    std::cout << idx << " ";
+  }
+  std::cout << std::endl;
   
   std::stable_sort(res.begin(), res.end());
   return res;
@@ -654,7 +662,7 @@ DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
 
       if(index.size()==1){
         counters[index[0]]=-1;
-      } 
+      }
       if(!OptionManager::NoCache) {
         mp1[index]=status;
       }
