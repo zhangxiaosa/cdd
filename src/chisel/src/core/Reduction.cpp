@@ -390,6 +390,16 @@ bool checkStop(std::vector<float>& p,float threshold) {
   return true;
 }
 
+bool checkStopCounter(std::vector<float>& counters) {
+  int len=counters.size();
+  for(int i=0;i<len;++i){
+    if(counters[i] != -1)
+      return false;
+  }
+  spdlog::get("Logger")->info("Iteration needs to terminate");
+  return true;
+}
+
 std::vector<int> minus(std::vector<int>& A,std::vector<int>& B){//return A-B
   int len=A.size();
   std::vector<int> ret;
@@ -639,7 +649,7 @@ DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
       }
     }
 
-    if (checkStop(counters,threshold))
+    if (checkStopCounter(counters))
       break;
   }
   return Removed;
