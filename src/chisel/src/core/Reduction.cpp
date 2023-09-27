@@ -357,22 +357,22 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
   spdlog::get("Logger")->info("final size_current: {}", size_current);
 
   int k = 0;
-  spdlog::get("Logger")->info("counters: ");
-  for (size_t i = 0; i < counters.size(); i++)
-  {
-    spdlog::get("Logger")->info("i: {}", i);
-    spdlog::get("Logger")->info("counter: {}", counters[i]);
-  }
-  spdlog::get("Logger")->info("idx: ");
-  for (size_t i = 0; i < idx.size(); i++)
-  {
-    spdlog::get("Logger")->info("i: {}", i);
-    spdlog::get("Logger")->info("idx: {}", idx[i]);
-  }
+  // spdlog::get("Logger")->info("counters: ");
+  // for (size_t i = 0; i < counters.size(); i++)
+  // {
+  //   spdlog::get("Logger")->info("i: {}", i);
+  //   spdlog::get("Logger")->info("counter: {}", counters[i]);
+  // }
+  // spdlog::get("Logger")->info("idx: ");
+  // for (size_t i = 0; i < idx.size(); i++)
+  // {
+  //   spdlog::get("Logger")->info("i: {}", i);
+  //   spdlog::get("Logger")->info("idx: {}", idx[i]);
+  // }
   
   for (size_t i = 0; i < counters.size(); i++) {
-    spdlog::get("Logger")->info("k: {}", k);
-    spdlog::get("Logger")->info("idx: {}", idx[k]);
+    // spdlog::get("Logger")->info("k: {}", k);
+    // spdlog::get("Logger")->info("idx: {}", idx[k]);
     if (counters[idx[i]] != -1) {
       res.push_back(idx[i]);
       k++;
@@ -382,12 +382,12 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
     }
   }
 
-  spdlog::get("Logger")->info("seleted idx: ");
-  for (int idx: res)
-  {
-    spdlog::get("Logger")->info("{} ", idx);
-  }
-  spdlog::get("Logger")->info("\n");
+  // spdlog::get("Logger")->info("seleted idx: ");
+  // for (int idx: res)
+  // {
+  //   spdlog::get("Logger")->info("{} ", idx);
+  // }
+  // spdlog::get("Logger")->info("\n");
   
   std::stable_sort(res.begin(), res.end());
   spdlog::get("Logger")->info("exit sample by counter");
@@ -645,13 +645,13 @@ DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
   std::vector<int> counters(len, 0);
   
   // debugging
-  if (counters.size() > 200) {
-    for (size_t i = 0; i < counters.size(); i++) {
-      if (i != 9 && i != 10) {
-        counters[i] = -1;
-      }  
-    }
-  }
+  // if (counters.size() > 200) {
+  //   for (size_t i = 0; i < counters.size(); i++) {
+  //     if (i != 9 && i != 10) {
+  //       counters[i] = -1;
+  //     }  
+  //   }
+  // }
   
 
 
