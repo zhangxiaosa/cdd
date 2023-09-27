@@ -290,15 +290,25 @@ int count_available_element(std::vector<int>& counters) {
     return num_available_element;
 }
 
+// int increase_all_counters(std::vector<int>& counters) {
+//     std::cout << "counters.size(): " << counters.size() << std::endl;
+//     int element_num = counters.size();
+//     for (int i = 0; i < element_num; i++) {
+//       std::cout << "i: " << i << std::endl;
+//       if (counters[i] != -1) {
+//         counters[i] = counters[i] + 1;
+//       }
+//     }
+// }
+
 int increase_all_counters(std::vector<int>& counters) {
     std::cout << "counters.size(): " << counters.size() << std::endl;
-    int element_num = counters.size();
-    for (int i = 0; i < element_num; i++) {
-      std::cout << "i: " << i << std::endl;
-      if (counters[i] != -1) {
-        counters[i] = counters[i] + 1;
-      }
+    for (auto it = counters.begin(); it != counters.end(); ++it) {
+        if (*it != -1) {
+            *it = *it + 1;
+        }
     }
+    return counters.size();
 }
 
 int find_min_counter(std::vector<int>& counters) {
