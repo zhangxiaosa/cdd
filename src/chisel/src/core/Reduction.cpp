@@ -301,7 +301,7 @@ int increase_all_counters(std::vector<int>& counters) {
 int find_min_counter(std::vector<int>& counters) {
   int current_min = 10000;
   for (int counter : counters) {
-    if (counter < current_min) {
+    if (counter < current_min && counter != -1) {
       current_min = counter;
     }
   }
@@ -309,14 +309,18 @@ int find_min_counter(std::vector<int>& counters) {
 }
 
 int compute_size_by_counter(int counter, float init_probability) {
-    int size = round(-1 / log(1 - init_probability));
+    int size = round(-1.0 / log(1 - init_probability));
+    std::cout << "init size: " << size << std::endl;
     int i = 0;
     while (i < counter) {
         size = floor(size * (1 - exp(-1)));
+        std::cout << "next size: " << size << std::endl;
         i = i + 1;
     }
     size = std::min(size, static_cast<int>(counter));
+    std::cout << "size after min: " << size << std::endl;
     size = std::max(size, 1);
+    std::cout << "size after max: " << size << std::endl;
     return size;
 }
 
