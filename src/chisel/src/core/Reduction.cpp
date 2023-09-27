@@ -343,20 +343,20 @@ std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probab
   spdlog::get("Logger")->info("final size_current: {}", size_current);
 
   int k = 0;
-  spdlog::get("Logger")->info("counters: ");
-  for (size_t i = 0; i < counters.size(); i++)
-  {
-    spdlog::get("Logger")->info("{}", counters[i]);
-  }
-  spdlog::get("Logger")->info("idx: ");
-  for (size_t i = 0; i < idx.size(); i++)
-  {
-    spdlog::get("Logger")->info("idx[i]: {}", idx[i]);
-  }
+  // spdlog::get("Logger")->info("counters: ");
+  // for (size_t i = 0; i < counters.size(); i++)
+  // {
+  //   spdlog::get("Logger")->info("{}", counters[i]);
+  // }
+  // spdlog::get("Logger")->info("idx: ");
+  // for (size_t i = 0; i < idx.size(); i++)
+  // {
+  //   spdlog::get("Logger")->info("idx[i]: {}", idx[i]);
+  // }
   
   for (size_t i = 0; i < counters.size(); i++) {
-    spdlog::get("Logger")->info("k: {}", k);
-    spdlog::get("Logger")->info("idx[k]: {}", idx[k]);
+    // spdlog::get("Logger")->info("k: {}", k);
+    // spdlog::get("Logger")->info("idx[k]: {}", idx[k]);
     if (counters[idx[i]] != -1) {
       res.push_back(idx[i]);
       k++;
