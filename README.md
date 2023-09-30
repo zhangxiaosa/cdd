@@ -25,7 +25,7 @@ To evaluate this artifact, a Linux machine with [docker](https://docs.docker.com
 
    ```bash
    docker pull codesubmission/cdd:latest
-   # This step might takes a while, mainly depending on the network bandwidth. It also takes up much disk space (nearly 100GB)
+   # This step might takes a while, mainly depending on the network bandwidth. It also takes up much disk space (nearly 80GB)
    ```
 
 3. Start a container.
@@ -33,7 +33,7 @@ To evaluate this artifact, a Linux machine with [docker](https://docs.docker.com
    ```bash
    docker container run --cap-add SYS_PTRACE --interactive --tty codesubmission/cdd:latest /bin/bash
    # You should be at /tmp after the above command finishes
-   # Your user name should be `coq` and all the following command are issued in docker
+   # Your user name should be `coq` and all the following command are executed in docker
 
    # the root folder of the project is /home/coq/demystifying_probdd
    cd /home/coq/demystifying_probdd
@@ -65,17 +65,18 @@ cd /home/coq/demystifying_probdd
    ```bash
    cd /home/coq/demystifying_probdd
 
-   # evaluate algorithms on 20 compiler bugs. (around 90 hours)
+   # evaluate algorithms on 20 compiler bugs.
+
    # ddmin on 20 compiler bugs (around 53 hours given single process)
    ./scripts/run_hdd.sh --args_for_picireny "--dd ddmin"
 
    # evaluate Probdd (around 25 hours given single process)
    ./scripts/run_hdd.sh --args_for_picireny "--dd probdd"
 
-   # evaluate CDD (around 21 hours given single process)
+   # evaluate CDD (around 25 hours given single process)
    ./scripts/run_hdd.sh --args_for_picireny "--dd counterdd"
 
-   # To start evaluation on multiple benchmarks, use the flag --max_jobs, for example:
+   # To evaluate on multiple benchmarks concurrently, use the flag --max_jobs, for example:
    ./scripts/run_hdd.sh --args_for_picireny "--dd ddmin" --max_jobs "8"
 
    # To evaluate a specific benchmark, use the flag --benchmark, for example:
