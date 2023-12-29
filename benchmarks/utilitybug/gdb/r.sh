@@ -2,7 +2,7 @@
 
 BIN_PATH="/home/coq/cdd/benchmarks/utilitybug/gdb/gdb-8.1/build/bin/gdb"
 
-TIMEOUT=20
+TIMEOUT=30
 
 timeout -s 9 $TIMEOUT $BIN_PATH < input > out.txt 2>&1
 ret=$?
