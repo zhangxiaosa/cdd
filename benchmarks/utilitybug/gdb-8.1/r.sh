@@ -1,6 +1,6 @@
 #! /bin/bash
 
-BIN_PATH="/home/coq/cdd/benchmarks/utilitybug/gdb/gdb-8.1/build/bin/gdb"
+BIN_PATH="/home/coq/cdd/benchmarks/utilitybug/gdb-8.1/src/build/bin/gdb"
 
 TIMEOUT=30
 
