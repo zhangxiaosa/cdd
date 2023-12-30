@@ -1,6 +1,7 @@
 #! /bin/bash
-
-BIN_PATH="/home/coq/cdd/benchmarks/utilitybug/spell-1.1/src/build/bin/spell"
+UTILITY="spell"
+VERSION="1.1"
+BIN_PATH="/home/coq/cdd/benchmarks/utilitybug/${UTILITY}-${VERSION}/src/build/bin/${UTILITY}"
 
 TIMEOUT=30
 
