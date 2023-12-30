@@ -97,7 +97,9 @@ def create_parser():
      # Ddmin settings
     parser.add_argument('--dd', metavar='NAME', choices=['ddmin', 'probdd', 'fastdd', 'simplifiedprobdd', 'counterdd'], default='ddmin',
                             help='DD variant to run (%(choices)s; default: %(default)s)')
+    parser.add_argument('--onepass', default=False, action='store_true', help='do not reset index to 0 when a partition is deleted')
     parser.add_argument('--id', metavar='NUMBER', type=int, default=0, help='just used for identify each trail')
+    parser.add_argument('--start-from-n', metavar='NUMBER', type=int, default=None, help='partition size start from a specified number, instead of half of the total size')
     parser.add_argument('--init-probability', metavar='NUMBER', type=float, default=0.1, help='provide the initial probability for probdd, default value is 0.1')
     return parser
 
