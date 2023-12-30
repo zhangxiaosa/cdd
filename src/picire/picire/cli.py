@@ -296,7 +296,6 @@ def call(reduce_class, reduce_config,
 
 
 def execute():
-    print("enter cli.py:execute()")
     """
     The main entry point of picire.
     """
@@ -308,6 +307,7 @@ def execute():
     parser.add_argument('--version', action='version', version='%(prog)s {version}'.format(version=__version__))
 
     args = parser.parse_args()
+    print(args)
     process_args(parser, args)
 
     logging.basicConfig(format='%(message)s')
