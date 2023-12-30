@@ -1,5 +1,5 @@
 /* expand-common - common functionality for expand/unexapnd
-   Copyright (C) 1989-2017 Free Software Foundation, Inc.
+   Copyright (C) 1989-2020 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include <config.h>
 
@@ -388,7 +388,7 @@ emit_tab_list_info (void)
 {
   /* suppress syntax check for emit_mandatory_arg_note() */
   fputs (_("\
-  -t, --tabs=LIST  use comma separated list of tab positions\n\
+  -t, --tabs=LIST  use comma separated list of tab positions.\n\
 "), stdout);
   fputs (_("\
                      The last specified position can be prefixed with '/'\n\

@@ -1,5 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 1989-2017 Free Software Foundation, Inc.
+   Copyright (C) 1989-2020 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
@@ -194,7 +194,7 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %e   day of month, space padded; same as %_d\n\
 "), stdout);
       fputs (_("\
-  %F   full date; same as %Y-%m-%d\n\
+  %F   full date; like %+4Y-%m-%d\n\
   %g   last two digits of year of ISO week number (see %G)\n\
   %G   year of ISO week number (see %V); normally useful only with %V\n\
 "), stdout);
@@ -218,7 +218,7 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %q   quarter of year (1..4)\n\
   %r   locale's 12-hour clock time (e.g., 11:11:04 PM)\n\
   %R   24-hour hour and minute; same as %H:%M\n\
-  %s   seconds since 1970-01-01 00:00:00 UTC\n\
+  %s   seconds since the Epoch (1970-01-01 00:00 UTC)\n\
 "), stdout);
       fputs (_("\
   %S   second (00..60)\n\
@@ -253,6 +253,7 @@ The following optional flags may follow '%':\n\
   -  (hyphen) do not pad the field\n\
   _  (underscore) pad with spaces\n\
   0  (zero) pad with zeros\n\
+  +  pad with zeros, and put '+' before future years with >4 digits\n\
   ^  use upper case if possible\n\
   #  use opposite case if possible\n\
 "), stdout);
@@ -266,7 +267,7 @@ O to use the locale's alternate numeric symbols if available.\n\
       fputs (_("\
 \n\
 Examples:\n\
-Convert seconds since the epoch (1970-01-01 UTC) to a date\n\
+Convert seconds since the Epoch (1970-01-01 UTC) to a date\n\
   $ date --date='@2147483647'\n\
 \n\
 Show the time on the west coast of the US (use tzselect(1) to find TZ)\n\
