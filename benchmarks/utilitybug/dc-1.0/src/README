@@ -1,15 +1,29 @@
-This is GNU bc version 1.03.
+GNU bc version 1.07:
 
-Changes from 1.02
+Extra configuration options:
 
-	minor bug fixes in bc.
+	--with-readline tells bc to use the readline package that allows
+	  for editing input lines when run interactive.
 
-	addition of Ken Pizzini's dc program that uses the GNU bc 
-	arbitrary precision arithmetic routines.
+	--with-editline tells bc to use the BSD editline package that
+	  allows for editing input lines when run interactive.
 
-Changes from 1.01
-	
-	minor bug fixes.
+Extra make steps:
+
+	The simple make compiles a version of bc with fixed parameters
+	for the recursive multiplication algorithm.  The fixed parameter
+	is the number of digits where a sequential algorithm is used
+	instead of the recursive algorithm.  It is set to a value that
+	is known good on a couple of machines. (Sparc Ultra 10, Pentium
+	II, 450.)  I'm calling this point the crossover point.
+
+	To make a version of bc with a custom crossover point for your
+	machine, do the following steps:
+
+		make timetest
+		make
+
+	The timetest step takes a minimum of 10 minutes to complete.
 
 
 -------- Original comp.sources.reviewed README --------
@@ -69,3 +83,4 @@ an executable statement unlike the quit (i.e.  "if (1 == 0) quit" will
 halt bc but "if (1 == 0) halt" will not halt bc.), and (h) the
 addition of the special variable "last" that is assigned the value of
 each print as the number is printed.
+-----------------------------------------------------------------------

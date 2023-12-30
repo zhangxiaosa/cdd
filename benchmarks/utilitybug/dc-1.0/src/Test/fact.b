@@ -4,10 +4,7 @@ define f (x) {
   return (f(x-1)*x)
 }
 
-"Here we go"
-for (a=1; a<100; a++) b+=f(a)/a
-"
-"
-"b=";b
+for (a=1; a<600; a++) b=f(a)
+"length(b)= "; length(b)
 quit
 
