@@ -93,6 +93,12 @@ def create_parser():
                         help='working directory (default: input.timestamp)')
     parser.add_argument('--disable-cleanup', dest='cleanup', default=True, action='store_false',
                         help='disable the removal of generated temporary files')
+    
+     # Ddmin settings
+    parser.add_argument('--dd', metavar='NAME', choices=['ddmin', 'probdd', 'fastdd', 'simplifiedprobdd', 'counterdd'], default='ddmin',
+                            help='DD variant to run (%(choices)s; default: %(default)s)')
+    parser.add_argument('--id', metavar='NUMBER', type=int, default=0, help='just used for identify each trail')
+    parser.add_argument('--init-probability', metavar='NUMBER', type=float, default=0.1, help='provide the initial probability for probdd, default value is 0.1')
     return parser
 
 
@@ -205,7 +211,8 @@ def log_args(title, args):
 def call(reduce_class, reduce_config,
          tester_class, tester_config,
          input, src, encoding, out,
-         atom='line', cache_class=None, cleanup=True):
+         atom='line', cache_class=None, cleanup=True, onepass=False, start_from_n=None,
+           init_probability=0.1):
     """
     Execute picire as if invoked from command line, however, control its
     behaviour not via command line arguments but function parameters.
@@ -259,7 +266,9 @@ def call(reduce_class, reduce_config,
     dd = reduce_class(tester_class(test_builder=test_builder,
                                    test_pattern=join(tests_dir, '%s', basename(input)),
                                    **tester_config),
-                      cache=cache,
+                      cache=cache, onepass=onepass, start_from_n=start_from_n, 
+                              init_probability=init_probability,
+                              **reduce_config
                       **reduce_config)
     min_set = dd(list(range(len(content))))
 
@@ -280,7 +289,8 @@ def call(reduce_class, reduce_config,
                         tester_class=tester_class, tester_config=tester_config,
                         input=out_file, src=out_src.encode(encoding=encoding), encoding=encoding, out=out,
                         atom='char',
-                        cache_class=cache_class, cleanup=cleanup)
+                        cache_class=cache_class, cleanup=cleanup, onepass=onepass, start_from_n=start_from_n, 
+                              init_probability=init_probability)
 
     return out_file
 
@@ -313,4 +323,8 @@ def execute():
          out=args.out,
          atom=args.atom,
          cache_class=args.cache,
-         cleanup=args.cleanup)
+         cleanup=args.cleanup,
+         onepass=args.onepass,
+         start_from_n=args.start_from_n,
+         init_probability=args.init_probability
+         )
