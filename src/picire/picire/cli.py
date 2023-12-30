@@ -270,7 +270,6 @@ def call(reduce_class, reduce_config,
                                    **tester_config),
                       cache=cache, onepass=onepass, start_from_n=start_from_n, 
                               init_probability=init_probability,
-                              **reduce_config
                       **reduce_config)
     min_set = dd(list(range(len(content))))
 
