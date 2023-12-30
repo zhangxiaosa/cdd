@@ -20,9 +20,9 @@ class LightDD(AbstractDD):
     Single process version of the Delta Debugging algorithm.
     """
 
-    def __init__(self, test, cache=None, id_prefix=(), onepass=False, start_from_n=None,
+    def __init__(self, test, cache=None, id_prefix=(),
                  split=config_splitters.zeller,
-                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward):
+                 subset_first=True, subset_iterator=config_iterators.forward, complement_iterator=config_iterators.forward, **other_config):
         """
         Initialize a LightDD object.
 
@@ -39,7 +39,7 @@ class LightDD(AbstractDD):
         """
         cache = cache or ConfigCache()
 
-        AbstractDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, onepass=onepass, start_from_n=start_from_n)
+        AbstractDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, other_config=other_config)
 
         self._subset_iterator = subset_iterator
         self._complement_iterator = complement_iterator

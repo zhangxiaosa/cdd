@@ -28,7 +28,7 @@ class AbstractDD(object):
     PASS = 'PASS'
     FAIL = 'FAIL'
 
-    def __init__(self, test, split, cache=None, id_prefix=(), onepass=False, start_from_n=None):
+    def __init__(self, test, split, cache=None, id_prefix=(), other_config={}):
         """
         Initialise an abstract DD class. Not to be called directly, only by
         super calls in subclass initializers.
@@ -42,8 +42,8 @@ class AbstractDD(object):
         self._split = split
         self._cache = cache or OutcomeCache()
         self._id_prefix = id_prefix
-        self.onepass = onepass
-        self.start_from_n = start_from_n
+        self.onepass = other_config["onepass"]
+        self.start_from_n = other_config["start_from_n"]
         self.delete_history = []
 
 

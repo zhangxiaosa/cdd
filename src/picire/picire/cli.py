@@ -173,6 +173,12 @@ def process_args(parser, args):
             args.reduce_config['complement_iterator'] = complement_iterator
             args.reduce_config['subset_first'] = args.subset_first
 
+    # configs about probdd and cdd
+    args.reduce_config['onepass'] = args.onepass
+    args.reduce_config['start_from_n'] = args.start_from_n
+    args.reduce_config['init_probability'] = args.init_probability
+    args.reduce_config['id'] = args.id
+
     args.out = realpath(args.out if args.out else '%s.%s' % (args.input, time.strftime('%Y%m%d_%H%M%S')))
 
 
@@ -213,8 +219,7 @@ def log_args(title, args):
 def call(reduce_class, reduce_config,
          tester_class, tester_config,
          input, src, encoding, out,
-         atom='line', cache_class=None, cleanup=True, onepass=False, start_from_n=None,
-           init_probability=0.1):
+         atom='line', cache_class=None, cleanup=True):
     """
     Execute picire as if invoked from command line, however, control its
     behaviour not via command line arguments but function parameters.
@@ -268,8 +273,7 @@ def call(reduce_class, reduce_config,
     dd = reduce_class(tester_class(test_builder=test_builder,
                                    test_pattern=join(tests_dir, '%s', basename(input)),
                                    **tester_config),
-                      cache=cache, onepass=onepass, start_from_n=start_from_n, 
-                              init_probability=init_probability,
+                      cache=cache,
                       **reduce_config)
     min_set = dd(list(range(len(content))))
 
@@ -290,8 +294,7 @@ def call(reduce_class, reduce_config,
                         tester_class=tester_class, tester_config=tester_config,
                         input=out_file, src=out_src.encode(encoding=encoding), encoding=encoding, out=out,
                         atom='char',
-                        cache_class=cache_class, cleanup=cleanup, onepass=onepass, start_from_n=start_from_n, 
-                              init_probability=init_probability)
+                        cache_class=cache_class, cleanup=cleanup)
 
     return out_file
 
@@ -325,7 +328,4 @@ def execute():
          atom=args.atom,
          cache_class=args.cache,
          cleanup=args.cleanup,
-         onepass=args.onepass,
-         start_from_n=args.start_from_n,
-         init_probability=args.init_probability
          )
