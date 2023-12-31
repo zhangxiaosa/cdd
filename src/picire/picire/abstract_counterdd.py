@@ -88,7 +88,7 @@ class AbstractCounterDD(object):
             
             run += 1
 
-        logger.info("Final size: %d/%d" % (len(self.current_best_config_idx), len(config)))
+        logger.info("Final size: %d/%d" % (self.get_current_config_size(), len(config)))
         logger.info("Execution time at this level: %f s" % (time.time() - tstart))
         return self.map_idx_to_config(self.current_best_config_idx)
     
