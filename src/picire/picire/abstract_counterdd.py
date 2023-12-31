@@ -11,6 +11,7 @@ import time
 import math
 import sys
 import copy
+import utils
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -52,7 +53,8 @@ class AbstractCounterDD(object):
             config_idx_to_delete = self.sample()
             logger.info("%s: marker2" % datetime.now().strftime("%H:%M:%S"))
             logger.info("%s: marker3" % datetime.now().strftime("%H:%M:%S"))
-            # self.printIdx(deleteconfig, "Try deleting")
+            log_to_print = utils.generate_log(config_idx_to_delete, "Try deleting", print_idx=True, threshold=30)
+            logger.info(log_to_print)
             config_log_id = ('r%d' % run, )
 
             outcome = self._test_config(config_idx_to_delete, config_log_id)
@@ -80,6 +82,8 @@ class AbstractCounterDD(object):
                     self.current_best_config_idx[idx] = False
                 # print successfully deleted idx
                 # self.printIdx(deleteconfig, "Deleted")
+                log_to_print = utils.generate_log(config_idx_to_delete, "Deleted", print_idx=True, threshold=30)
+                logger.info(log_to_print)
                 logger.info("%s: marker8" % datetime.now().strftime("%H:%M:%S"))
             
             run += 1
@@ -90,15 +94,6 @@ class AbstractCounterDD(object):
     
     def get_current_config_size(self):
         return sum(value is True for value in self.current_best_config_idx)
-
-
-    def printIdx(self, deleteconfig, info):
-        indices = []
-        for item in deleteconfig:
-            idx = self.original_config.index(item)
-            indices.append(idx)
-        indices.sort()
-        logger.info("\t%s: %r" % (info, indices))
 
     def _processElementToPreserve(toBePreserve):
         raise NotImplementedError()
@@ -115,13 +110,6 @@ class AbstractCounterDD(object):
         size = min(size, len(self.counters))
         size = max(size, 1)
         return size
-    
-    def count_available_element(self):
-        num_available_element = 0
-        for counter in self.counters:
-            if counter is not -1:
-                num_available_element = num_available_element + 1
-        return num_available_element
     
     def increase_all_counters(self):
         for idx in range(len(self.counters)):
@@ -148,9 +136,9 @@ class AbstractCounterDD(object):
 
         counter_min = self.find_min_counter()
         size_current = self.compute_size(counter_min)
-        num_available_element = self.count_available_element()
+        current_config_size = self.get_current_config_size()
         
-        while size_current >= num_available_element:
+        while size_current >= current_config_size:
             self.increase_all_counters()
             counter_min = self.find_min_counter()
             size_current = self.compute_size(counter_min)
