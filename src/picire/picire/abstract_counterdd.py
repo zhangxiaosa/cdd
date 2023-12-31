@@ -124,7 +124,7 @@ class AbstractCounterDD(object):
         return num_available_element
     
     def increase_all_counters(self):
-        for idx in self.counters:
+        for idx in range(len(self.counters)):
             self.counters[idx] = self.counters[idx] + 1
 
     def find_min_counter(self):
