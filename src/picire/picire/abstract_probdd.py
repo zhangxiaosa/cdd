@@ -72,7 +72,7 @@ class AbstractProbDD(object):
             deleteconfig = self.sample()
 
             config2test = self._minus(self.passconfig, deleteconfig)
-            self.printIdx(deleteconfig, "Try deleting")
+            # self.printIdx(deleteconfig, "Try deleting")
             config_id = ('r%d' % run, )
             if(len(config2test) == len(self.passconfig)):
                 continue
@@ -102,7 +102,7 @@ class AbstractProbDD(object):
                 deleteconfig = self._minus(self.passconfig, config2test)
                 self._process(deleteconfig,self.PASS)
                 # print successfully deleted idx
-                self.printIdx(deleteconfig, "Deleted")
+                # self.printIdx(deleteconfig, "Deleted")
                 self.passconfig = config2test
                 continue
             
