@@ -77,6 +77,7 @@ class AbstractCounterDD(object):
             # if the subset can be deleted
             else:
                 logger.info("%s: marker7" % datetime.now().strftime("%H:%M:%S"))
+                logger.info("length of config_idx_to_delete: %d" % len(config_idx_to_delete))
                 for idx in config_idx_to_delete:
                     self.counters[idx] = -1
                     self.current_best_config_idx[idx] = False
@@ -135,6 +136,7 @@ class AbstractCounterDD(object):
         sorted_available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
 
         counter_min = self.find_min_counter()
+        logger.info("counter_min: %d" % counter_min)
         size_current = self.compute_size(counter_min)
         current_config_size = self.get_current_config_size()
         
