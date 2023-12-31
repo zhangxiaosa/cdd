@@ -17,11 +17,10 @@ logger = logging.getLogger(__name__)
 
 class CounterDD(AbstractCounterDD):
 
-    def __init__(self, test, cache=None, id_prefix=(), onepass=False, start_from_n=None,
-                 init_probability=0.1,
+    def __init__(self, test, cache=None, id_prefix=(), 
                  split=config_splitters.zeller,
                  subset_first=True, subset_iterator=config_iterators.forward,
-                 complement_iterator=config_iterators.forward):
+                 complement_iterator=config_iterators.forward, **other_config):
         """
         Initialize a ProbDD object.
         :param test: A callable tester object.
@@ -36,7 +35,7 @@ class CounterDD(AbstractCounterDD):
             provides config indices in an arbitrary order.
         """
         cache = cache or ConfigCache()
-        AbstractCounterDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, init_probability=init_probability)
+        AbstractCounterDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, other_config=other_config)
 
     def _processElementToPreserve(self,toBePreserve):
         tmp = []

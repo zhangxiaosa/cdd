@@ -23,7 +23,7 @@ class AbstractCounterDD(object):
     PASS = 'PASS'
     FAIL = 'FAIL'
 
-    def __init__(self, test, split, cache=None, id_prefix=(), init_probability=0.1):
+    def __init__(self, test, split, cache=None, id_prefix=(), other_config={}):
         """
         Initialise an abstract DD class. Not to be called directly, only by
         super calls in subclass initializers.
@@ -37,7 +37,7 @@ class AbstractCounterDD(object):
         self._cache = cache or OutcomeCache()
         self._id_prefix = id_prefix
         self.counter = collections.OrderedDict()
-        self.init_probability = init_probability
+        self.init_probability = other_config["init_probability"]
         self.memory = {}
         self.testHistory = []
         self.passconfig = []
