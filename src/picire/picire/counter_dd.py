@@ -10,7 +10,6 @@ import logging
 from . import config_iterators
 from . import config_splitters
 from .abstract_counterdd import AbstractCounterDD
-from .outcome_cache import ConfigCache
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +33,7 @@ class CounterDD(AbstractCounterDD):
         :param complement_iterator: Reference to a generator function that
             provides config indices in an arbitrary order.
         """
-        cache = cache or ConfigCache()
-        AbstractCounterDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, other_config=other_config)
+        AbstractCounterDD.__init__(self, test, split, id_prefix=id_prefix, other_config=other_config)
 
     def _processElementToPreserve(self,toBePreserve):
         tmp = []

@@ -8,7 +8,6 @@
 import logging
 import collections
 import time
-from .outcome_cache import OutcomeCache, ContentCache
 import math
 import sys
 from datetime import datetime
@@ -18,25 +17,23 @@ logger = logging.getLogger(__name__)
 
 class AbstractCounterDD(object):
     """
-    Abstract super-class of the parallel and non-parallel DD classes.
+    Abstract super-class of the CDD class.
     """
 
     # Test outcomes.
     PASS = 'PASS'
     FAIL = 'FAIL'
 
-    def __init__(self, test, split, cache=None, id_prefix=(), other_config={}):
+    def __init__(self, test, split, id_prefix=(), other_config={}):
         """
         Initialise an abstract DD class. Not to be called directly, only by
         super calls in subclass initializers.
         :param test: A callable tester object.
         :param split: Splitter method to break a configuration up to n parts.
-        :param cache: Cache object to use.
         :param id_prefix: Tuple to prepend to config IDs during tests.
         """
         self._test = test
         self._split = split
-        self._cache = cache or OutcomeCache()
         self._id_prefix = id_prefix
         self.counter = collections.OrderedDict()
         self.init_probability = other_config["init_probability"]
@@ -74,11 +71,7 @@ class AbstractCounterDD(object):
             # self.printIdx(deleteconfig, "Try deleting")
             config_id = ('r%d' % run, )
 
-            outcome = None
-            if (type(self._cache) is ContentCache):
-                outcome = self._lookup_history(config2test)
-            if outcome is None:
-                outcome = self._test_config(config2test, config_id)
+            outcome = self._test_config(config2test, config_id)
             # FAIL means current variant cannot satisify the property
             logger.info("%s: marker4" % datetime.now().strftime("%H:%M:%S"))
             if outcome == self.FAIL:
@@ -103,8 +96,6 @@ class AbstractCounterDD(object):
             
             run += 1
 
-            if (type(self._cache) is ContentCache):
-                self.memory[str(config2test)] = outcome
         logger.info("Final size: %d/%d" % (len(self.passconfig), len(config)))
         logger.info("Execution time at this level: %f s" % (time.time() - tstart))
         return self.passconfig
@@ -197,38 +188,12 @@ class AbstractCounterDD(object):
             return self.memory[str(config)]
         return None
 
-
-    def _lookup_cache(self, config, config_id):
-        """
-        Perform a cache lookup if caching is enabled.
-        :param config: The configuration we are looking for.
-        :param config_id: The ID describing the configuration (only for debug
-            message).
-        :return: None if outcome is not found for config in cache or if caching
-            is disabled, PASS or FAIL otherwise.
-        """
-        cached_result = self._cache.lookup(config)
-        if cached_result is not None:
-            logger.debug('\t[ %s ]: cache = %r', self._pretty_config_id(self._id_prefix + config_id), cached_result)
-
-        return cached_result
-
     def _test_config(self, config, config_id):
-        """
-        Test a single configuration and save the result in cache.
-        :param config: The current configuration to test.
-        :param config_id: Unique ID that will be used to save tests to easily
-            identifiable directories.
-        :return: PASS or FAIL
-        """
         config_id = self._id_prefix + config_id
 
         logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_id))
         outcome = self._test(config, config_id)
         logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_id), outcome)
-
-        if 'assert' not in config_id:
-            self._cache.add(config, outcome)
 
         return outcome
 
