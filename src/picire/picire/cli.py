@@ -317,6 +317,7 @@ def execute():
     logging.basicConfig(format='%(message)s')
     logger.setLevel(args.log_level)
 
+    tstart = time.time()
     call(reduce_class=args.reduce_class,
          reduce_config=args.reduce_config,
          tester_class=args.tester_class,
@@ -329,3 +330,4 @@ def execute():
          cache_class=args.cache,
          cleanup=args.cleanup,
          )
+    print("execution time: " + str(time.time() - tstart) + "s")

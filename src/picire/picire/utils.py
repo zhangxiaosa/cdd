@@ -1,4 +1,4 @@
-def generate_log(self, config, prefix="", print_idx=False):
+def generate_log(config, prefix="", print_idx=False):
     indices = []
     for item in config:
         indices.append(item)
