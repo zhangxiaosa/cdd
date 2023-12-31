@@ -66,11 +66,11 @@ class AbstractCounterDD(object):
             logger.info('\tConfig size: %d', len(self.passconfig))
             
             # select a subsequence for testing
-            logger.info("%s: marker1" % datetime.now.strftime("%H:%M:%S"))
+            logger.info("%s: marker1" % datetime.now().strftime("%H:%M:%S"))
             deleteconfig = self.sample()
-            logger.info("%s: marker2" % datetime.now.strftime("%H:%M:%S"))
+            logger.info("%s: marker2" % datetime.now().strftime("%H:%M:%S"))
             config2test = self._minus(self.passconfig, deleteconfig)
-            logger.info("%s: marker3" % datetime.now.strftime("%H:%M:%S"))
+            logger.info("%s: marker3" % datetime.now().strftime("%H:%M:%S"))
             # self.printIdx(deleteconfig, "Try deleting")
             config_id = ('r%d' % run, )
 
@@ -80,25 +80,25 @@ class AbstractCounterDD(object):
             if outcome is None:
                 outcome = self._test_config(config2test, config_id)
             # FAIL means current variant cannot satisify the property
-            logger.info("%s: marker4" % datetime.now.strftime("%H:%M:%S"))
+            logger.info("%s: marker4" % datetime.now().strftime("%H:%M:%S"))
             if outcome == self.FAIL:
                 for key in self.counter.keys():
                     if key in deleteconfig:
                         self.counter[key] = self.counter[key] + 1
-                logger.info("%s: marker5" % datetime.now.strftime("%H:%M:%S"))
+                logger.info("%s: marker5" % datetime.now().strftime("%H:%M:%S"))
                 self.testHistory.append(deleteconfig)
-                logger.info("%s: marker6" % datetime.now.strftime("%H:%M:%S"))
+                logger.info("%s: marker6" % datetime.now().strftime("%H:%M:%S"))
                 if len(deleteconfig) == 1:
                     # assign the counter to maxsize and never consider this element
                     self.counter[deleteconfig[0]] = -1
             else:
-                logger.info("%s: marker7" % datetime.now.strftime("%H:%M:%S"))
+                logger.info("%s: marker7" % datetime.now().strftime("%H:%M:%S"))
                 for key in self.counter.keys():
                     if key in deleteconfig:
                         self.counter[key] = -1
                 # print successfully deleted idx
                 # self.printIdx(deleteconfig, "Deleted")
-                logger.info("%s: marker8" % datetime.now.strftime("%H:%M:%S"))
+                logger.info("%s: marker8" % datetime.now().strftime("%H:%M:%S"))
                 self.passconfig = config2test
             
             run += 1
