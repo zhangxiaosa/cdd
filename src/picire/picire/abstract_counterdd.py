@@ -124,9 +124,8 @@ class AbstractCounterDD(object):
         return num_available_element
     
     def increase_all_counters(self):
-        for key in self.counters.keys():
-            if self.counters[key] is not -1:
-                self.counters[key] = self.counters[key] + 1
+        for idx in self.counters:
+            self.counters[idx] = self.counters[idx] + 1
 
     def find_min_counter(self):
         current_min = sys.maxsize
@@ -139,13 +138,13 @@ class AbstractCounterDD(object):
         config_idx_to_delete = []
         
         # filter out those removed elements (counter is -1)
-        available_idx_with_counter = [(index, value) for index, value in enumerate(self.counters) if value != -1]
+        available_idx_with_counter = [(idx, counter) for idx, counter in enumerate(self.counters) if counter != -1]
 
         # sort idx by counter
         sorted_available_idx_with_counter = sorted(available_idx_with_counter, key=lambda x: x[1])
 
         # extract sorted idx
-        sorted_available_idx = [index for index, _ in sorted_available_idx_with_counter]
+        sorted_available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
 
         counter_min = self.find_min_counter()
         size_current = self.compute_size(counter_min)
@@ -202,40 +201,3 @@ class AbstractCounterDD(object):
         logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_log_id), outcome)
 
         return outcome
-
-    @staticmethod
-    def _pretty_config_id(config_id):
-        """
-        Create beautified identifier for the current task from the argument.
-        The argument is typically a tuple in the form of ('rN', 'DM'), where N
-        is the index of the current iteration, D is direction of reduce (either
-        s(ubset) or c(omplement)), and M is the index of the current test in the
-        iteration. Alternatively, argument can also be in the form of
-        (rN, 'assert') for double checking the input at the start of an
-        iteration.
-        :param config_id: Config ID tuple.
-        :return: Concatenating the arguments with slashes, e.g., "rN / DM".
-        """
-        return ' / '.join(str(i) for i in config_id)
-
-    @staticmethod
-    def _minus(c1, c2):
-        """
-        Return a list of all elements of C1 that are not in C2.
-        """
-        c2 = set(c2)
-        return [c for c in c1 if c not in c2]
-    
-    @staticmethod
-    def _aInb(c1,c2):
-        for i in c1:
-            if i not in c2:
-                return False
-        return True
-
-    @staticmethod
-    def _intersect(c1,c2):
-        for i in c1:
-            if i in c2:
-                return True
-        return False
