@@ -201,3 +201,7 @@ class AbstractCounterDD(object):
         logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_log_id), outcome)
 
         return outcome
+
+    @staticmethod
+    def _pretty_config_id(config_id):
+        return ' / '.join(str(i) for i in config_id)
