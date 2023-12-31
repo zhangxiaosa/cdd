@@ -67,7 +67,7 @@ class AbstractCounterDD(object):
             deleteconfig = self.sample()
 
             config2test = self._minus(self.passconfig, deleteconfig)
-            self.printIdx(deleteconfig, "Try deleting")
+            # self.printIdx(deleteconfig, "Try deleting")
             config_id = ('r%d' % run, )
 
             outcome = None
@@ -89,7 +89,7 @@ class AbstractCounterDD(object):
                     if key in deleteconfig:
                         self.counter[key] = -1
                 # print successfully deleted idx
-                self.printIdx(deleteconfig, "Deleted")
+                # self.printIdx(deleteconfig, "Deleted")
                 self.passconfig = config2test
             
             run += 1
