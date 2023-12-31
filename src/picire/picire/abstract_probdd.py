@@ -25,7 +25,7 @@ class AbstractProbDD(object):
     PASS = 'PASS'
     FAIL = 'FAIL'
 
-    def __init__(self, test, split, cache=None, id_prefix=(), init_probability=0.1):
+    def __init__(self, test, split, cache=None, id_prefix=(), other_config={}):
         """
         Initialise an abstract DD class. Not to be called directly, only by
         super calls in subclass initializers.
@@ -41,7 +41,7 @@ class AbstractProbDD(object):
         self.p = collections.OrderedDict()
         self.memory = {}
         self.testHistory = []
-        self.init_probability = init_probability
+        self.init_probability = other_config["init_probability"]
         self.threshold = 0.8
         self.passconfig = []
         self.previous_position = 0
