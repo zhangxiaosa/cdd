@@ -11,7 +11,7 @@ import time
 import math
 import sys
 import copy
-import utils
+from . import utils
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
