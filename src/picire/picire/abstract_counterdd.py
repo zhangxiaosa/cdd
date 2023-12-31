@@ -93,7 +93,7 @@ class AbstractCounterDD(object):
         return self.map_idx_to_config(self.current_best_config_idx)
     
     def get_current_config_size(self):
-        return sum(value is True for value in self.current_best_config_idx)
+        return sum(self.current_best_config_idx)
 
     def _processElementToPreserve(toBePreserve):
         raise NotImplementedError()
