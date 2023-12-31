@@ -137,7 +137,6 @@ class AbstractCounterDD(object):
     
     def sample(self):
         config_idx_to_delete = []
-        self.counters = collections.OrderedDict(sorted(self.counters.items(), key=lambda item:item[1]))
         
         # filter out those removed elements (counter is -1)
         available_idx_with_counter = [(index, value) for index, value in enumerate(self.counters) if value != -1]
