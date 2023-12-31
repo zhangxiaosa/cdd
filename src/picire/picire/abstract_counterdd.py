@@ -114,7 +114,8 @@ class AbstractCounterDD(object):
     
     def increase_all_counters(self):
         for idx in range(len(self.counters)):
-            self.counters[idx] = self.counters[idx] + 1
+            if (self.counters[idx] != -1):
+                self.counters[idx] = self.counters[idx] + 1
 
     def find_min_counter(self):
         current_min = sys.maxsize
