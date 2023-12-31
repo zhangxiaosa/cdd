@@ -91,14 +91,14 @@ class LightDD(AbstractDD):
                     continue
                 else:
                     self.delete_history.append(subsets[i])
-            log_to_print = utils.generate_info_details(subsets[i], "Try deleting(complement of)")
+            log_to_print = utils.generate_log(subsets[i], "Try deleting(complement of)", print_idx=True, threshold=30)
             logger.info(log_to_print)
 
             # Get the outcome either from cache or by testing it.
             outcome = self._lookup_cache(subset, config_id) or self._test_config(subset, config_id)
             if outcome == self.PASS:
                 # Interesting subset is found.
-                log_to_print = utils.generate_info_details(subsets[i], "Deleted(complement of)")
+                log_to_print = utils.generate_log(subsets[i], "Deleted(complement of)", print_idx=True, threshold=30)
                 logger.info(log_to_print)
                 return [subsets[i]], 0
 
@@ -129,14 +129,14 @@ class LightDD(AbstractDD):
                     continue
                 else:
                     self.delete_history.append(subsets[i])
-            log_to_print = utils.generate_info_details(subsets[i], "Try deleting")
+            log_to_print = utils.generate_log(subsets[i], "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)
 
             outcome = self._lookup_cache(complement, config_id) or self._test_config(complement, config_id)
             if outcome == self.PASS:
                 # Interesting complement is found.
                 # In next run, start removing the following subset
-                log_to_print = utils.generate_info_details(subsets[i], "Deleted")
+                log_to_print = utils.generate_log(subsets[i], "Deleted", print_idx=True, threshold=30)
                 logger.info(log_to_print)
                 iterator.reset()
                 return subsets[:i] + subsets[i + 1:], 0
