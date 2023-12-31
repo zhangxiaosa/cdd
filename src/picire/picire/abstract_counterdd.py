@@ -10,6 +10,7 @@ import collections
 import time
 import math
 import sys
+import copy
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -25,80 +26,71 @@ class AbstractCounterDD(object):
     FAIL = 'FAIL'
 
     def __init__(self, test, split, id_prefix=(), other_config={}):
-        """
-        Initialise an abstract DD class. Not to be called directly, only by
-        super calls in subclass initializers.
-        :param test: A callable tester object.
-        :param split: Splitter method to break a configuration up to n parts.
-        :param id_prefix: Tuple to prepend to config IDs during tests.
-        """
         self._test = test
         self._split = split
         self._id_prefix = id_prefix
-        self.counter = collections.OrderedDict()
         self.init_probability = other_config["init_probability"]
-        self.memory = {}
-        self.testHistory = []
-        self.passconfig = []
-        self.initialCounter = 0
 
     def __call__(self, config):
-        """
-        Return a 1-minimal failing subset of the initial configuration.
-        :param config: The initial configuration that will be reduced.
-        :return: 1-minimal failing configuration.
-        """
         
         tstart = time.time()
         self.original_config = config[:]
-        self.index = 0
-        self.next_size = True
-        for c in config:
-            self.counter[c] = self.initialCounter
+
+        # initialize counters
+        self.counters = [0 for i in range(len(config))]
+
+        # initialize current best config idx, all true
+        self.current_best_config_idx = [True for i in range(len(config))]
         
         run = 0
-        self.passconfig = config
         while not self._test_done():
             logger.info('Run #%d', run)
-            logger.info('\tConfig size: %d', len(self.passconfig))
+            logger.info('\tConfig size: %d', self.get_current_config_size())
             
             # select a subsequence for testing
             logger.info("%s: marker1" % datetime.now().strftime("%H:%M:%S"))
-            deleteconfig = self.sample()
+            config_idx_to_delete = self.sample()
             logger.info("%s: marker2" % datetime.now().strftime("%H:%M:%S"))
-            config2test = self._minus(self.passconfig, deleteconfig)
             logger.info("%s: marker3" % datetime.now().strftime("%H:%M:%S"))
             # self.printIdx(deleteconfig, "Try deleting")
-            config_id = ('r%d' % run, )
+            config_log_id = ('r%d' % run, )
 
-            outcome = self._test_config(config2test, config_id)
+            outcome = self._test_config(config_idx_to_delete, config_log_id)
             # FAIL means current variant cannot satisify the property
             logger.info("%s: marker4" % datetime.now().strftime("%H:%M:%S"))
+            
+            # if the subset cannot be deleted
             if outcome == self.FAIL:
-                for key in self.counter.keys():
-                    if key in deleteconfig:
-                        self.counter[key] = self.counter[key] + 1
+                for idx in config_idx_to_delete:
+                    self.counters[idx] = self.counters[idx] + 1
+                # for key in self.counters.keys():
+                #     if key in deleteconfig:
+                #         self.counters[key] = self.counters[key] + 1
                 logger.info("%s: marker5" % datetime.now().strftime("%H:%M:%S"))
-                self.testHistory.append(deleteconfig)
                 logger.info("%s: marker6" % datetime.now().strftime("%H:%M:%S"))
-                if len(deleteconfig) == 1:
+                if len(config_idx_to_delete) == 1:
                     # assign the counter to maxsize and never consider this element
-                    self.counter[deleteconfig[0]] = -1
+                    self.counters[config_idx_to_delete[0]] = -1
+            
+            # if the subset can be deleted
             else:
                 logger.info("%s: marker7" % datetime.now().strftime("%H:%M:%S"))
-                for key in self.counter.keys():
-                    if key in deleteconfig:
-                        self.counter[key] = -1
+                for idx in config_idx_to_delete:
+                    self.counters[idx] = -1
+                    self.current_best_config_idx[idx] = False
                 # print successfully deleted idx
                 # self.printIdx(deleteconfig, "Deleted")
                 logger.info("%s: marker8" % datetime.now().strftime("%H:%M:%S"))
-                self.passconfig = config2test
             
             run += 1
 
-        logger.info("Final size: %d/%d" % (len(self.passconfig), len(config)))
+        logger.info("Final size: %d/%d" % (len(self.current_best_config_idx), len(config)))
         logger.info("Execution time at this level: %f s" % (time.time() - tstart))
-        return self.passconfig
+        return self.map_idx_to_config(self.current_best_config_idx)
+    
+    def get_current_config_size(self):
+        return sum(value is True for value in self.current_best_config_idx)
+
 
     def printIdx(self, deleteconfig, info):
         indices = []
@@ -120,33 +112,41 @@ class AbstractCounterDD(object):
         while i < counter:
             size = math.floor(size * (1 - pow(math.e, -1)))
             i = i + 1
-        size = min(size, len(self.counter))
+        size = min(size, len(self.counters))
         size = max(size, 1)
         return size
     
     def count_available_element(self):
         num_available_element = 0
-        for counter in self.counter.values():
+        for counter in self.counters:
             if counter is not -1:
                 num_available_element = num_available_element + 1
         return num_available_element
     
     def increase_all_counters(self):
-        for key in self.counter.keys():
-            if self.counter[key] is not -1:
-                self.counter[key] = self.counter[key] + 1
+        for key in self.counters.keys():
+            if self.counters[key] is not -1:
+                self.counters[key] = self.counters[key] + 1
 
     def find_min_counter(self):
         current_min = sys.maxsize
-        for key in self.counter.keys():
-            if self.counter[key] is not -1 and self.counter[key] < current_min:
-                current_min = self.counter[key]
+        for counter in self.counters:
+            if counter is not -1 and current_min > counter:
+                current_min = counter
         return current_min
     
     def sample(self):
-        config2test = []
-        self.counter = collections.OrderedDict(sorted(self.counter.items(), key=lambda item:item[1]))
-        keylist = list(self.counter.keys())
+        config_idx_to_delete = []
+        self.counters = collections.OrderedDict(sorted(self.counters.items(), key=lambda item:item[1]))
+        
+        # filter out those removed elements (counter is -1)
+        available_idx_with_counter = [(index, value) for index, value in enumerate(self.counters) if value != -1]
+
+        # sort idx by counter
+        sorted_available_idx_with_counter = sorted(available_idx_with_counter, key=lambda x: x[1])
+
+        # extract sorted idx
+        sorted_available_idx = [index for index, _ in sorted_available_idx_with_counter]
 
         counter_min = self.find_min_counter()
         size_current = self.compute_size(counter_min)
@@ -160,22 +160,19 @@ class AbstractCounterDD(object):
                 break
 
         i = 0
-        for key in keylist:
-            # if counter == -1, skip the element
-            if self.counter[key] is -1:
-                continue
-            config2test.append(key)
+        for key in sorted_available_idx:
+            config_idx_to_delete.append(key)
             i = i + 1
             if i >= size_current:
                 break
 
-        logger.info("\tSelected deletion size: " + str(len(config2test)))
-        return config2test
+        logger.info("\tSelected deletion size: " + str(len(config_idx_to_delete)))
+        return config_idx_to_delete
 
     def _test_done(self):
         all_decided = True
-        for value in self.counter.values():
-            if value != -1:
+        for counter in self.counters:
+            if counter != -1:
                 all_decided = False
         if all_decided:
             logger.info("Iteration needs to stop because all elements are decided.")
@@ -183,17 +180,27 @@ class AbstractCounterDD(object):
         else:
             return False
 
-    def _lookup_history(self, config):
-        if str(config) in self.memory:
-            return self.memory[str(config)]
-        return None
+    def map_idx_to_config(self, config_idx):
+        new_config = []
+        for idx, availability in enumerate(config_idx):
+            if availability is True:
+                new_config.append(self.original_config[idx])
+        
+        return new_config
 
-    def _test_config(self, config, config_id):
-        config_id = self._id_prefix + config_id
+    def _test_config(self, config_idx_to_delete, config_log_id):
+        config_log_id = self._id_prefix + config_log_id
+        logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_log_id))
 
-        logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_id))
-        outcome = self._test(config, config_id)
-        logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_id), outcome)
+        # compute new config idx
+        new_config_idx = copy.deepcopy(self.current_best_config_idx)
+        for idx in config_idx_to_delete:
+            new_config_idx[idx] = False
+
+        new_config = self.map_idx_to_config(new_config_idx)
+        outcome = self._test(new_config, config_log_id)
+
+        logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_log_id), outcome)
 
         return outcome
 
