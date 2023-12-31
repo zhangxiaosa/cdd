@@ -11,6 +11,7 @@ from . import config_iterators
 from . import config_splitters
 from .abstract_dd import AbstractDD
 from .outcome_cache import ConfigCache
+from . import utils
 
 logger = logging.getLogger(__name__)
 
@@ -90,13 +91,15 @@ class LightDD(AbstractDD):
                     continue
                 else:
                     self.delete_history.append(subsets[i])
-            self.print_details(subsets[i], "Try deleting(complement of)")
+            log_to_print = utils.generate_info_details(subsets[i], "Try deleting(complement of)")
+            logger.info(log_to_print)
 
             # Get the outcome either from cache or by testing it.
             outcome = self._lookup_cache(subset, config_id) or self._test_config(subset, config_id)
             if outcome == self.PASS:
                 # Interesting subset is found.
-                self.print_details(subsets[i], "Deleted(complement of)")
+                log_to_print = utils.generate_info_details(subsets[i], "Deleted(complement of)")
+                logger.info(log_to_print)
                 return [subsets[i]], 0
 
         return None, complement_offset
@@ -126,25 +129,17 @@ class LightDD(AbstractDD):
                     continue
                 else:
                     self.delete_history.append(subsets[i])
-            self.print_details(subsets[i], "Try deleting")
+            log_to_print = utils.generate_info_details(subsets[i], "Try deleting")
+            logger.info(log_to_print)
 
             outcome = self._lookup_cache(complement, config_id) or self._test_config(complement, config_id)
             if outcome == self.PASS:
                 # Interesting complement is found.
                 # In next run, start removing the following subset
-                self.print_details(subsets[i], "Deleted")
+                log_to_print = utils.generate_info_details(subsets[i], "Deleted")
+                logger.info(log_to_print)
                 iterator.reset()
                 return subsets[:i] + subsets[i + 1:], 0
 
         return None, complement_offset
 
-    def print_details(self, config, info, print_idx=False):
-        indices = []
-        for item in config:
-            indices.append(item)
-        indices.sort()
-        info_to_print = "\t%s: " % info
-        info_to_print = info_to_print + "%d elements. " % len(indices)
-        if print_idx:
-            info_to_print = info_to_print + "Idx: %r" % indices
-        logger.info(info_to_print)
