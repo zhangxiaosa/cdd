@@ -125,7 +125,7 @@ class AbstractCDD(object):
     def find_min_counter(self):
         current_min = sys.maxsize
         for counter in self.counters:
-            if (counter == -1 and current_min > counter):
+            if (counter != -1 and current_min > counter):
                 current_min = counter
         return current_min
     
