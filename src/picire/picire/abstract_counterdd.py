@@ -32,7 +32,7 @@ class AbstractCounterDD(object):
         self._id_prefix = id_prefix
         self.init_probability = other_config["init_probability"]
         self.dd = other_config["dd"]
-        print("self.dd is %s" % self.dd)
+        self.threshold = 0.8
 
     def __call__(self, config):
         
@@ -40,14 +40,14 @@ class AbstractCounterDD(object):
         self.original_config = config[:]
 
         # initialize based on the specificed sample startegy
-        if self.dd == "cdd":
+        if (self.dd == "cdd"):
             # initialize counters
             self.counters = [0 for _ in range(len(config))]
             self.sample = self.sample_by_counter
             self.update_when_fail = self.update_when_fail_cdd
             self.update_when_success = self.update_when_success_cdd
 
-        elif self.dd == "probdd":
+        elif (self.dd == "probdd"):
             # initialize probabilities
             self.probabilities = [self.init_probability for _ in range(len(config))]
             self.sample = self.sample_by_probability
@@ -75,7 +75,7 @@ class AbstractCounterDD(object):
             # FAIL means current variant cannot satisify the property
             
             # if the subset cannot be deleted
-            if outcome == self.FAIL:
+            if (outcome == self.FAIL):
                 self.update_when_fail()
             
             # if the subset can be deleted
@@ -120,7 +120,7 @@ class AbstractCounterDD(object):
     def find_min_counter(self):
         current_min = sys.maxsize
         for counter in self.counters:
-            if counter == -1 and current_min > counter:
+            if (counter == -1 and current_min > counter):
                 current_min = counter
         return current_min
     
@@ -150,7 +150,7 @@ class AbstractCounterDD(object):
             current_gain = accumulated_probability * current_size
 
             # find out the size with max gain and stop
-            if current_gain < last_gain:
+            if (current_gain < last_gain):
                 break
             last_gain = current_gain
 
@@ -181,25 +181,18 @@ class AbstractCounterDD(object):
             self.increase_all_counters()
             counter_min = self.find_min_counter()
             size_current = self.compute_size(counter_min)
-            if size_current == 1:
+            if (size_current == 1):
                 break
 
         i = 0
         for key in sorted_available_idx:
             config_idx_to_delete.append(key)
             i = i + 1
-            if i >= size_current:
+            if (i >= size_current):
                 break
 
         logger.info("\tSelected deletion size (cdd): " + str(len(config_idx_to_delete)))
         return config_idx_to_delete
-
-    def update_when_fail_cdd(self, config_idx_to_delete):
-        for idx in config_idx_to_delete:
-            self.counters[idx] = self.counters[idx] + 1
-        if len(config_idx_to_delete) == 1:
-            # assign the counter to maxsize and never consider this element
-            self.counters[config_idx_to_delete[0]] = -1
 
     # Given a subset failed to be deleted,
     # compute the ratio to increase the probability of each element in this subset
@@ -212,14 +205,23 @@ class AbstractCounterDD(object):
         ratio = 1 / (1 - accumulated_probability)
         return ratio
 
+    def update_when_fail_cdd(self, config_idx_to_delete):
+        for idx in config_idx_to_delete:
+            self.counters[idx] = self.counters[idx] + 1
+        if (len(config_idx_to_delete) == 1):
+            # assign the counter to maxsize and never consider this element
+            self.counters[config_idx_to_delete[0]] = -1
+
     def update_when_fail_probdd(self, config_idx_to_delete):
         ratio = self.compute_ratio(config_idx_to_delete)
 
         for i in config_idx_to_delete:
             idx = config_idx_to_delete[i]
             self.probabilities[idx] = self.probabilities[idx] * ratio
+            if (self.probabilities[idx] > self.threshold):
+                self.probabilities[idx] = -1
 
-        if len(config_idx_to_delete) == 1:
+        if (len(config_idx_to_delete) == 1):
             # never consider this element
             self.probabilities[config_idx_to_delete[0]] = -1
 
@@ -236,9 +238,9 @@ class AbstractCounterDD(object):
     def _test_done(self):
         all_decided = True
         for counter in self.counters:
-            if counter != -1:
+            if (counter != -1):
                 all_decided = False
-        if all_decided:
+        if (all_decided == True):
             logger.info("Iteration needs to stop because all elements are decided.")
             return True
         else:
@@ -247,7 +249,7 @@ class AbstractCounterDD(object):
     def map_idx_to_config(self, config_idx):
         new_config = []
         for idx, availability in enumerate(config_idx):
-            if availability == True:
+            if (availability == True):
                 new_config.append(self.original_config[idx])
         
         return new_config
