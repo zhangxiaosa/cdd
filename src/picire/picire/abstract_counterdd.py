@@ -158,7 +158,7 @@ class AbstractCounterDD(object):
         for i in range(len(current_size)):
             config_idx_to_delete.append(sorted_available_idx[i])
 
-        logger.info("\tSelected deletion size: " + str(len(config_idx_to_delete)))
+        logger.info("\tSelected deletion size (probdd): " + str(len(config_idx_to_delete)))
         return config_idx_to_delete
 
     # how cdd compute the next subset to delete
@@ -192,7 +192,7 @@ class AbstractCounterDD(object):
             if i >= size_current:
                 break
 
-        logger.info("\tSelected deletion size: " + str(len(config_idx_to_delete)))
+        logger.info("\tSelected deletion size (cdd): " + str(len(config_idx_to_delete)))
         return config_idx_to_delete
 
     def update_when_fail_cdd(self, config_idx_to_delete):
