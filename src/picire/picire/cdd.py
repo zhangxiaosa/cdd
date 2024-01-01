@@ -9,12 +9,12 @@ import logging
 
 from . import config_iterators
 from . import config_splitters
-from .abstract_counterdd import AbstractCounterDD
+from .abstract_cdd import AbstractCDD
 
 logger = logging.getLogger(__name__)
 
 
-class CounterDD(AbstractCounterDD):
+class CDD(AbstractCDD):
 
     def __init__(self, test, cache=None, id_prefix=(), 
                  split=config_splitters.zeller,
@@ -33,7 +33,7 @@ class CounterDD(AbstractCounterDD):
         :param complement_iterator: Reference to a generator function that
             provides config indices in an arbitrary order.
         """
-        AbstractCounterDD.__init__(self, test, split, id_prefix=id_prefix, other_config=other_config)
+        AbstractCDD.__init__(self, test, split, id_prefix=id_prefix, other_config=other_config)
 
     def _processElementToPreserve(self,toBePreserve):
         tmp = []

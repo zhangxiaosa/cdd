@@ -17,7 +17,7 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 
 
-class AbstractCounterDD(object):
+class AbstractCDD(object):
     """
     Abstract super-class of the CDD class.
     """

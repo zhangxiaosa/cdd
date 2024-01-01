@@ -22,8 +22,7 @@ from . import logging
 from .combined_iterator import CombinedIterator
 from .combined_parallel_dd import CombinedParallelDD
 from .light_dd import LightDD
-from .prob_dd import ProbDD
-from .counter_dd import CounterDD
+from .cdd import CDD
 from .simplifiedprob_dd import SimplifiedProbDD
 from .fast_dd import FastDD
 from .parallel_dd import ParallelDD
@@ -95,7 +94,7 @@ def create_parser():
                         help='disable the removal of generated temporary files')
     
      # Ddmin settings
-    parser.add_argument('--dd', metavar='NAME', choices=['ddmin', 'probdd', 'fastdd', 'simplifiedprobdd', 'counterdd'], default='ddmin',
+    parser.add_argument('--dd', metavar='NAME', choices=['ddmin', 'probdd', 'fastdd', 'simplifiedprobdd', 'cdd'], default='ddmin',
                             help='DD variant to run (%(choices)s; default: %(default)s)')
     parser.add_argument('--onepass', default=False, action='store_true', help='do not reset index to 0 when a partition is deleted')
     parser.add_argument('--id', metavar='NUMBER', type=int, default=0, help='just used for identify each trail')
@@ -144,8 +143,8 @@ def process_args(parser, args):
     # Choose the reducer class that will be used and its configuration.
     args.reduce_config = {'split': split_class(n=args.granularity)}
     if not args.parallel:
-        if (args.dd == 'probdd' or args.dd == 'counterdd'):
-            args.reduce_class = CounterDD
+        if (args.dd == 'probdd' or args.dd == 'cdd'):
+            args.reduce_class = CDD
         elif (args.dd == 'ddmin'):
             args.reduce_class = LightDD
         elif (args.dd == 'fastdd'):
