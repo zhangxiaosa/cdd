@@ -31,7 +31,7 @@ class AbstractCounterDD(object):
         self._split = split
         self._id_prefix = id_prefix
         self.init_probability = other_config["init_probability"]
-        self.sample_strategy = other_config["sample_strategy"]
+        self.dd = other_config["dd"]
 
     def __call__(self, config):
         
@@ -39,14 +39,14 @@ class AbstractCounterDD(object):
         self.original_config = config[:]
 
         # initialize based on the specificed sample startegy
-        if self.sample_strategy is "cdd":
+        if self.dd is "cdd":
             # initialize counters
             self.counters = [0 for _ in range(len(config))]
             self.sample = self.sample_by_counter
             self.update_when_fail = self.update_when_fail_cdd
             self.update_when_success = self.update_when_success_cdd
 
-        elif self.sample_strategy is "probdd":
+        elif self.dd is "probdd":
             # initialize probabilities
             self.probabilities = [self.init_probability for _ in range(len(config))]
             self.sample = self.sample_by_probability
@@ -54,7 +54,7 @@ class AbstractCounterDD(object):
             self.update_when_success = self.update_when_success_probdd
 
         else:
-            raise ValueError("sample_strategy should be either cdd or probdd")
+            raise ValueError("dd should be either cdd or probdd")
 
         # initialize current best config idx, all true
         self.current_best_config_idx = [True for _ in range(len(config))]

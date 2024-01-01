@@ -144,16 +144,14 @@ def process_args(parser, args):
     # Choose the reducer class that will be used and its configuration.
     args.reduce_config = {'split': split_class(n=args.granularity)}
     if not args.parallel:
-        if (args.dd == 'probdd'):
-            args.reduce_class = ProbDD
+        if (args.dd == 'probdd' or args.dd == 'counterdd'):
+            args.reduce_class = CounterDD
         elif (args.dd == 'ddmin'):
             args.reduce_class = LightDD
         elif (args.dd == 'fastdd'):
             args.reduce_class = FastDD
         elif (args.dd == 'simplifiedprobdd'):
             args.reduce_class = SimplifiedProbDD
-        elif (args.dd == 'counterdd'):
-            args.reduce_class = CounterDD
         
         args.reduce_config['subset_iterator'] = subset_iterator
         args.reduce_config['complement_iterator'] = complement_iterator
@@ -178,6 +176,7 @@ def process_args(parser, args):
     args.reduce_config['start_from_n'] = args.start_from_n
     args.reduce_config['init_probability'] = args.init_probability
     args.reduce_config['id'] = args.id
+    args.reduce_config['dd'] = args.dd
 
     args.out = realpath(args.out if args.out else '%s.%s' % (args.input, time.strftime('%Y%m%d_%H%M%S')))
 
