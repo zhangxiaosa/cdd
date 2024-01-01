@@ -18,30 +18,16 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractProbDD(object):
-    """
-    Abstract super-class of the parallel and non-parallel DD classes.
-    """
 
     # Test outcomes.
     PASS = 'PASS'
     FAIL = 'FAIL'
 
     def __init__(self, test, split, cache=None, id_prefix=(), other_config={}):
-        """
-        Initialise an abstract DD class. Not to be called directly, only by
-        super calls in subclass initializers.
-        :param test: A callable tester object.
-        :param split: Splitter method to break a configuration up to n parts.
-        :param cache: Cache object to use.
-        :param id_prefix: Tuple to prepend to config IDs during tests.
-        """
         self._test = test
         self._split = split
-        self._cache = cache or OutcomeCache()
         self._id_prefix = id_prefix
         self.p = collections.OrderedDict()
-        self.memory = {}
-        self.testHistory = []
         self.init_probability = other_config["init_probability"]
         self.threshold = 0.8
         self.passconfig = []
@@ -80,12 +66,8 @@ class AbstractProbDD(object):
             if(len(config2test) == len(self.passconfig)):
                 continue
 
-            outcome = None
             logger.info("%s: marker3" % datetime.now().strftime("%H:%M:%S"))
-            if (type(self._cache) is ContentCache):
-                outcome = self._lookup_history(config2test)
-            if outcome is None:
-                outcome = self._test_config(config2test, config_id)
+            outcome = self._test_config(config2test, config_id)
             # FAIL means current variant cannot satisify the property
             logger.info("%s: marker4" % datetime.now().strftime("%H:%M:%S"))
             if outcome == self.FAIL:
@@ -97,7 +79,6 @@ class AbstractProbDD(object):
                         delta = (self.computeRatio(deleteconfig, self.old_p) - 1) * self.old_p[key]
                         self.p[key] = self.p[key] + delta
                 logger.info("%s: marker6" % datetime.now().strftime("%H:%M:%S"))
-                self.testHistory.append(deleteconfig)
                 logger.info("%s: marker7" % datetime.now().strftime("%H:%M:%S"))
                 if len(deleteconfig) == 1:
                     #logger.info(str(deleteconfig[0]) + " must preserve\n")
@@ -119,8 +100,6 @@ class AbstractProbDD(object):
             
             run += 1
 
-            if (type(self._cache) is ContentCache):
-                self.memory[str(config2test)] = outcome
         logger.info("Final size: %d/%d" % (len(self.passconfig), len(config)))
         logger.info("Execution time at this level: %f s" % (time.time() - tstart))
         return self.passconfig
@@ -163,7 +142,7 @@ class AbstractProbDD(object):
         keylist = list(self.p.keys())
         i = 0
         while i < len(self.p):
-            logger.info("%s: marker11" % datetime.now().strftime("%H:%M:%S"))
+            # logger.info("%s: marker11" % datetime.now().strftime("%H:%M:%S"))
             logger.info("i=%d" % i)
             # if prob == 0, skip the element
             if self.p[keylist[i]] == 0 :
@@ -177,8 +156,8 @@ class AbstractProbDD(object):
             for j in range(k,i):
                 current_gain *= (1 - self.p[keylist[i]])
             current_gain *= (i - k + 1)
-            logger.info("%s: marker12" % datetime.now().strftime("%H:%M:%S"))
-            logger.info("current gain=%s" % current_gain)
+            # logger.info("%s: marker12" % datetime.now().strftime("%H:%M:%S"))
+            # logger.info("current gain=%s" % current_gain)
 
             # find out the range with max gain and stop
             if current_gain < last_gain:
@@ -295,27 +274,6 @@ class AbstractProbDD(object):
         logger.info("Iteration needs to stop because of convergence.")
         return True
 
-    def _lookup_history(self, config):
-        if str(config) in self.memory:
-            return self.memory[str(config)]
-        return None
-
-
-    def _lookup_cache(self, config, config_id):
-        """
-        Perform a cache lookup if caching is enabled.
-        :param config: The configuration we are looking for.
-        :param config_id: The ID describing the configuration (only for debug
-            message).
-        :return: None if outcome is not found for config in cache or if caching
-            is disabled, PASS or FAIL otherwise.
-        """
-        cached_result = self._cache.lookup(config)
-        if cached_result is not None:
-            logger.debug('\t[ %s ]: cache = %r', self._pretty_config_id(self._id_prefix + config_id), cached_result)
-
-        return cached_result
-
     def _test_config(self, config, config_id):
         """
         Test a single configuration and save the result in cache.
@@ -329,9 +287,6 @@ class AbstractProbDD(object):
         logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_id))
         outcome = self._test(config, config_id)
         logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_id), outcome)
-
-        if 'assert' not in config_id:
-            self._cache.add(config, outcome)
 
         return outcome
 
@@ -357,17 +312,3 @@ class AbstractProbDD(object):
         """
         c2 = set(c2)
         return [c for c in c1 if c not in c2]
-    
-    @staticmethod
-    def _aInb(c1,c2):
-        for i in c1:
-            if i not in c2:
-                return False
-        return True
-
-    @staticmethod
-    def _intersect(c1,c2):
-        for i in c1:
-            if i in c2:
-                return True
-        return False
