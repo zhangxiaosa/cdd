@@ -32,6 +32,7 @@ class AbstractCounterDD(object):
         self._id_prefix = id_prefix
         self.init_probability = other_config["init_probability"]
         self.dd = other_config["dd"]
+        print("self.dd is %s" % self.dd)
 
     def __call__(self, config):
         
@@ -39,14 +40,14 @@ class AbstractCounterDD(object):
         self.original_config = config[:]
 
         # initialize based on the specificed sample startegy
-        if self.dd is "cdd":
+        if self.dd == "cdd":
             # initialize counters
             self.counters = [0 for _ in range(len(config))]
             self.sample = self.sample_by_counter
             self.update_when_fail = self.update_when_fail_cdd
             self.update_when_success = self.update_when_success_cdd
 
-        elif self.dd is "probdd":
+        elif self.dd == "probdd":
             # initialize probabilities
             self.probabilities = [self.init_probability for _ in range(len(config))]
             self.sample = self.sample_by_probability
@@ -119,7 +120,7 @@ class AbstractCounterDD(object):
     def find_min_counter(self):
         current_min = sys.maxsize
         for counter in self.counters:
-            if counter is not -1 and current_min > counter:
+            if counter == -1 and current_min > counter:
                 current_min = counter
         return current_min
     
@@ -141,9 +142,7 @@ class AbstractCounterDD(object):
         current_gain = 1
         last_gain = 0
         while current_size < len(sorted_available_idx):
-            # logger.info("%s: marker11" % datetime.now().strftime("%H:%M:%S"))
             current_size = current_size + 1
-            logger.info("current_size=%d" % current_size)
 
             current_idx = sorted_available_idx[current_size - 1]
             accumulated_probability = accumulated_probability * (1 - self.probabilities[current_idx])
@@ -214,7 +213,6 @@ class AbstractCounterDD(object):
         return ratio
 
     def update_when_fail_probdd(self, config_idx_to_delete):
-        logger.info("%s: marker5" % datetime.now().strftime("%H:%M:%S"))
         ratio = self.compute_ratio(config_idx_to_delete)
 
         for i in config_idx_to_delete:
@@ -249,7 +247,7 @@ class AbstractCounterDD(object):
     def map_idx_to_config(self, config_idx):
         new_config = []
         for idx, availability in enumerate(config_idx):
-            if availability is True:
+            if availability == True:
                 new_config.append(self.original_config[idx])
         
         return new_config
