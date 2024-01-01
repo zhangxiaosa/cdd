@@ -126,9 +126,40 @@ class AbstractCDD(object):
                 current_min = counter
         return current_min
     
+    # how cdd compute the next subset to delete
+    def sample_by_counter(self):
+        
+        # filter out those removed elements (counter is -1)
+        available_idx_with_counter = [(idx, counter) for idx, counter in enumerate(self.counters) if counter != -1]
+
+        # sort idx by counter
+        sorted_available_idx_with_counter = sorted(available_idx_with_counter, key=lambda x: x[1])
+
+        # extract sorted idx
+        sorted_available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
+
+        logger.info("%s: marker1" % datetime.now().strftime("%H:%M:%S"))
+        counter_min = self.find_min_counter()
+        logger.info("%s: marker2" % datetime.now().strftime("%H:%M:%S"))
+        current_size = self.compute_size(counter_min)
+        logger.info("%s: marker3" % datetime.now().strftime("%H:%M:%S"))
+        current_config_size = self.get_current_config_size()
+        logger.info("%s: marker4" % datetime.now().strftime("%H:%M:%S"))
+        
+        while current_size >= current_config_size:
+            self.increase_all_counters()
+            counter_min = self.find_min_counter()
+            current_size = self.compute_size(counter_min)
+            if (current_size == 1):
+                break
+        logger.info("%s: marker5" % datetime.now().strftime("%H:%M:%S"))
+
+        config_idx_to_delete = sorted_available_idx[:current_size]
+        logger.info("\tSelected deletion size (cdd): " + str(len(config_idx_to_delete)))
+        return config_idx_to_delete
+    
     # how probdd compute the next subset to delete
     def sample_by_probability(self):
-        config_idx_to_delete = []
 
         # filter out those removed elements (probability is -1)
         available_idx_with_probability = [(idx, probability) for idx, probability in enumerate(self.probabilities) if probability != -1]
@@ -156,44 +187,9 @@ class AbstractCDD(object):
                 break
             last_gain = current_gain
 
-        for i in range(current_size):
-            config_idx_to_delete.append(sorted_available_idx[i])
+        config_idx_to_delete = sorted_available_idx[:current_size]
 
         logger.info("\tSelected deletion size (probdd): " + str(len(config_idx_to_delete)))
-        return config_idx_to_delete
-
-    # how cdd compute the next subset to delete
-    def sample_by_counter(self):
-        config_idx_to_delete = []
-        
-        # filter out those removed elements (counter is -1)
-        available_idx_with_counter = [(idx, counter) for idx, counter in enumerate(self.counters) if counter != -1]
-
-        # sort idx by counter
-        sorted_available_idx_with_counter = sorted(available_idx_with_counter, key=lambda x: x[1])
-
-        # extract sorted idx
-        sorted_available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
-
-        counter_min = self.find_min_counter()
-        size_current = self.compute_size(counter_min)
-        current_config_size = self.get_current_config_size()
-        
-        while size_current >= current_config_size:
-            self.increase_all_counters()
-            counter_min = self.find_min_counter()
-            size_current = self.compute_size(counter_min)
-            if (size_current == 1):
-                break
-
-        i = 0
-        for key in sorted_available_idx:
-            config_idx_to_delete.append(key)
-            i = i + 1
-            if (i >= size_current):
-                break
-
-        logger.info("\tSelected deletion size (cdd): " + str(len(config_idx_to_delete)))
         return config_idx_to_delete
 
     # Given a subset failed to be deleted,
