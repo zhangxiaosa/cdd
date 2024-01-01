@@ -163,6 +163,8 @@ class AbstractProbDD(object):
         keylist = list(self.p.keys())
         i = 0
         while i < len(self.p):
+            logger.info("%s: marker11" % datetime.now().strftime("%H:%M:%S"))
+            logger.info("i=%d" % i)
             # if prob == 0, skip the element
             if self.p[keylist[i]] == 0 :
                 k = k + 1
