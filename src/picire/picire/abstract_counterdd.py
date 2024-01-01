@@ -200,8 +200,7 @@ class AbstractCounterDD(object):
     # compute the ratio to increase the probability of each element in this subset
     def compute_ratio(self, config_idx_to_delete):
         accumulated_probability = 1
-        for i in range(len(config_idx_to_delete)):
-            idx = config_idx_to_delete[i]
+        for idx in config_idx_to_delete:
             accumulated_probability = accumulated_probability * (1 - self.probabilities[idx])
 
         ratio = 1 / (1 - accumulated_probability)
@@ -217,8 +216,7 @@ class AbstractCounterDD(object):
     def update_when_fail_probdd(self, config_idx_to_delete):
         ratio = self.compute_ratio(config_idx_to_delete)
 
-        for i in config_idx_to_delete:
-            idx = config_idx_to_delete[i]
+        for idx in config_idx_to_delete:
             self.probabilities[idx] = self.probabilities[idx] * ratio
             if (self.probabilities[idx] > self.threshold):
                 self.probabilities[idx] = -1
