@@ -65,7 +65,7 @@ class AbstractCounterDD(object):
             logger.info('\tConfig size: %d', self.get_current_config_size())
             
             # select a subsequence for testing
-            config_idx_to_delete = self.sample_by_counter()
+            config_idx_to_delete = self.sample()
             log_to_print = utils.generate_log(config_idx_to_delete, "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)
             config_log_id = ('r%d' % run, )
