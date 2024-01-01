@@ -103,9 +103,12 @@ class AbstractCDD(object):
     
     # directly compute the size of next subset based on the counter
     def compute_size(self, counter):
+        logger.info("%s: marker6" % datetime.now().strftime("%H:%M:%S"))
         size = round(-1 / math.log(1 - self.init_probability, math.e))
         i = 0
         while i < counter:
+            logger.info("%s: marker7" % datetime.now().strftime("%H:%M:%S"))
+            logger.info("i=%d, counter=%d, size=%d" % (i, counter, size))
             size = math.floor(size * (1 - pow(math.e, -1)))
             i = i + 1
         size = min(size, len(self.counters))
