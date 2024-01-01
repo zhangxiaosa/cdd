@@ -13,6 +13,7 @@ import time
 import traceback
 from .outcome_cache import OutcomeCache, ContentCache
 import copy
+from datetime import datetime
 logger = logging.getLogger(__name__)
 
 
@@ -69,8 +70,10 @@ class AbstractProbDD(object):
             logger.info('\tConfig size: %d', len(self.passconfig))
             
             # select a subsequence for testing
+            logger.info("%s: marker1" % datetime.now().strftime("%H:%M:%S"))
             deleteconfig = self.sample()
 
+            logger.info("%s: marker2" % datetime.now().strftime("%H:%M:%S"))
             config2test = self._minus(self.passconfig, deleteconfig)
             # self.printIdx(deleteconfig, "Try deleting")
             config_id = ('r%d' % run, )
@@ -78,31 +81,39 @@ class AbstractProbDD(object):
                 continue
 
             outcome = None
+            logger.info("%s: marker3" % datetime.now().strftime("%H:%M:%S"))
             if (type(self._cache) is ContentCache):
                 outcome = self._lookup_history(config2test)
             if outcome is None:
                 outcome = self._test_config(config2test, config_id)
             # FAIL means current variant cannot satisify the property
+            logger.info("%s: marker4" % datetime.now().strftime("%H:%M:%S"))
             if outcome == self.FAIL:
                 # logger.info("test failed\n")
                 self.old_p = copy.deepcopy(self.p)
+                logger.info("%s: marker5" % datetime.now().strftime("%H:%M:%S"))
                 for key in self.old_p.keys():
                     if key not in config2test and self.old_p[key] != 0 and self.old_p[key] != 1:
                         delta = (self.computeRatio(deleteconfig, self.old_p) - 1) * self.old_p[key]
                         self.p[key] = self.p[key] + delta
+                logger.info("%s: marker6" % datetime.now().strftime("%H:%M:%S"))
                 self.testHistory.append(deleteconfig)
+                logger.info("%s: marker7" % datetime.now().strftime("%H:%M:%S"))
                 if len(deleteconfig) == 1:
                     #logger.info(str(deleteconfig[0]) + " must preserve\n")
                     self.p[deleteconfig[0]] = 1
             else:
+                logger.info("%s: marker8" % datetime.now().strftime("%H:%M:%S"))
                 # logger.info("test passed\n")
                 for key in self.p.keys():
                     if key not in config2test:
                         self.p[key] = 0
+                logger.info("%s: marker9" % datetime.now().strftime("%H:%M:%S"))
                 deleteconfig = self._minus(self.passconfig, config2test)
                 self._process(deleteconfig,self.PASS)
                 # print successfully deleted idx
                 # self.printIdx(deleteconfig, "Deleted")
+                logger.info("%s: marker10" % datetime.now().strftime("%H:%M:%S"))
                 self.passconfig = config2test
                 continue
             
