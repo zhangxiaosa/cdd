@@ -14,6 +14,7 @@ import traceback
 from .outcome_cache import OutcomeCache, ContentCache
 import copy
 from datetime import datetime
+from . import utils
 logger = logging.getLogger(__name__)
 
 
@@ -30,8 +31,6 @@ class AbstractProbDD(object):
         self.p = collections.OrderedDict()
         self.init_probability = other_config["init_probability"]
         self.threshold = 0.8
-        self.passconfig = []
-        self.previous_position = 0
 
     def __call__(self, config):
         """
@@ -39,28 +38,29 @@ class AbstractProbDD(object):
         :param config: The initial configuration that will be reduced.
         :return: 1-minimal failing configuration.
         """
-        
+
         tstart = time.time()
         self.original_config = config[:]
-        self.partition_size = max(len(self.original_config) / 2, 1)
-        self.index = 0
-        self.next_size = True
-        for c in config:
-            self.p[c] = self.init_probability 
-        
-        self.p_backup = copy.deepcopy(self.p)
+
+        # initialize counters
+        self.probabilities = [self.init_probability for _ in range(len(config))]
+
+        # initialize current best config idx, all true
+        self.current_best_config_idx = [True for _ in range(len(config))]
         run = 0
-        self.passconfig = config
+
         while not self._test_done():
             logger.info('Run #%d', run)
-            logger.info('\tConfig size: %d', len(self.passconfig))
+            logger.info('\tConfig size: %d', self.get_current_config_size())
             
             # select a subsequence for testing
             logger.info("%s: marker1" % datetime.now().strftime("%H:%M:%S"))
-            deleteconfig = self.sample()
+            config_idx_to_delete = self.sample()
+            log_to_print = utils.generate_log(config_idx_to_delete, "Try deleting", print_idx=True, threshold=30)
+            logger.info(log_to_print)
 
             logger.info("%s: marker2" % datetime.now().strftime("%H:%M:%S"))
-            config2test = self._minus(self.passconfig, deleteconfig)
+            config2test = self._minus(self.passconfig, config_idx_to_delete)
             # self.printIdx(deleteconfig, "Try deleting")
             config_id = ('r%d' % run, )
             if(len(config2test) == len(self.passconfig)):
@@ -76,13 +76,13 @@ class AbstractProbDD(object):
                 logger.info("%s: marker5" % datetime.now().strftime("%H:%M:%S"))
                 for key in self.old_p.keys():
                     if key not in config2test and self.old_p[key] != 0 and self.old_p[key] != 1:
-                        delta = (self.computeRatio(deleteconfig, self.old_p) - 1) * self.old_p[key]
+                        delta = (self.computeRatio(config_idx_to_delete, self.old_p) - 1) * self.old_p[key]
                         self.p[key] = self.p[key] + delta
                 logger.info("%s: marker6" % datetime.now().strftime("%H:%M:%S"))
                 logger.info("%s: marker7" % datetime.now().strftime("%H:%M:%S"))
-                if len(deleteconfig) == 1:
+                if len(config_idx_to_delete) == 1:
                     #logger.info(str(deleteconfig[0]) + " must preserve\n")
-                    self.p[deleteconfig[0]] = 1
+                    self.p[config_idx_to_delete[0]] = 1
             else:
                 logger.info("%s: marker8" % datetime.now().strftime("%H:%M:%S"))
                 # logger.info("test passed\n")
@@ -90,8 +90,8 @@ class AbstractProbDD(object):
                     if key not in config2test:
                         self.p[key] = 0
                 logger.info("%s: marker9" % datetime.now().strftime("%H:%M:%S"))
-                deleteconfig = self._minus(self.passconfig, config2test)
-                self._process(deleteconfig,self.PASS)
+                config_idx_to_delete = self._minus(self.passconfig, config2test)
+                self._process(config_idx_to_delete,self.PASS)
                 # print successfully deleted idx
                 # self.printIdx(deleteconfig, "Deleted")
                 logger.info("%s: marker10" % datetime.now().strftime("%H:%M:%S"))
@@ -123,15 +123,15 @@ class AbstractProbDD(object):
         else:
             res = 1 / (1 - tmplog)
         return res
+    
+    def get_current_config_size(self):
+        return sum(self.current_best_config_idx)
 
     def _processElementToPreserve(toBePreserve):
         raise NotImplementedError()
 
     def _process(self, config, outcome):
         raise NotImplementedError()
-
-    def f(self,x):
-        return min(x,1)
 
     def sample(self):
         config2test = []

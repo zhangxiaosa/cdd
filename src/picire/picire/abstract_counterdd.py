@@ -31,17 +31,33 @@ class AbstractCounterDD(object):
         self._split = split
         self._id_prefix = id_prefix
         self.init_probability = other_config["init_probability"]
+        self.sample_strategy = other_config["sample_strategy"]
 
     def __call__(self, config):
         
         tstart = time.time()
         self.original_config = config[:]
 
-        # initialize counters
-        self.counters = [0 for i in range(len(config))]
+        # initialize based on the specificed sample startegy
+        if self.sample_strategy is "cdd":
+            # initialize counters
+            self.counters = [0 for _ in range(len(config))]
+            self.sample = self.sample_by_counter
+            self.update_when_fail = self.update_when_fail_cdd
+            self.update_when_success = self.update_when_success_cdd
+
+        elif self.sample_strategy is "probdd":
+            # initialize probabilities
+            self.probabilities = [self.init_probability for _ in range(len(config))]
+            self.sample = self.sample_by_probability
+            self.update_when_fail = self.update_when_fail_probdd
+            self.update_when_success = self.update_when_success_probdd
+
+        else:
+            raise ValueError("sample_strategy should be either cdd or probdd")
 
         # initialize current best config idx, all true
-        self.current_best_config_idx = [True for i in range(len(config))]
+        self.current_best_config_idx = [True for _ in range(len(config))]
         
         run = 0
         while not self._test_done():
@@ -49,7 +65,7 @@ class AbstractCounterDD(object):
             logger.info('\tConfig size: %d', self.get_current_config_size())
             
             # select a subsequence for testing
-            config_idx_to_delete = self.sample()
+            config_idx_to_delete = self.sample_by_counter()
             log_to_print = utils.generate_log(config_idx_to_delete, "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)
             config_log_id = ('r%d' % run, )
@@ -59,19 +75,11 @@ class AbstractCounterDD(object):
             
             # if the subset cannot be deleted
             if outcome == self.FAIL:
-                for idx in config_idx_to_delete:
-                    self.counters[idx] = self.counters[idx] + 1
-                if len(config_idx_to_delete) == 1:
-                    # assign the counter to maxsize and never consider this element
-                    self.counters[config_idx_to_delete[0]] = -1
+                self.update_when_fail()
             
             # if the subset can be deleted
             else:
-                for idx in config_idx_to_delete:
-                    self.counters[idx] = -1
-                    self.current_best_config_idx[idx] = False
-                # print successfully deleted idx
-                # self.printIdx(deleteconfig, "Deleted")
+                self.update_when_success()
                 log_to_print = utils.generate_log(config_idx_to_delete, "Deleted", print_idx=True, threshold=30)
                 logger.info(log_to_print)
             
@@ -90,6 +98,7 @@ class AbstractCounterDD(object):
     def _process(self, config, outcome):
         raise NotImplementedError()
     
+    # directly compute the size of next subset based on the counter
     def compute_size(self, counter):
         size = round(-1 / math.log(1 - self.init_probability, math.e))
         i = 0
@@ -99,12 +108,14 @@ class AbstractCounterDD(object):
         size = min(size, len(self.counters))
         size = max(size, 1)
         return size
-    
+
+    # increase all counters by 1
     def increase_all_counters(self):
         for idx in range(len(self.counters)):
             if (self.counters[idx] != -1):
                 self.counters[idx] = self.counters[idx] + 1
 
+    # find out the minimal counter among all available elements
     def find_min_counter(self):
         current_min = sys.maxsize
         for counter in self.counters:
@@ -112,7 +123,46 @@ class AbstractCounterDD(object):
                 current_min = counter
         return current_min
     
-    def sample(self):
+    # how probdd compute the next subset to delete
+    def sample_by_probability(self):
+        config_idx_to_delete = []
+
+        # filter out those removed elements (probability is -1)
+        available_idx_with_probability = [(idx, probability) for idx, probability in enumerate(self.probabilities) if probability != -1]
+
+        # sort idx by probability
+        sorted_available_idx_with_probability = sorted(available_idx_with_probability, key=lambda x: x[1])
+
+        # extract sorted idx
+        sorted_available_idx = [idx for idx, _ in sorted_available_idx_with_probability]
+
+        current_size = 0
+        accumulated_probability = 1
+        current_gain = 1
+        last_gain = 0
+        while current_size < len(sorted_available_idx):
+            # logger.info("%s: marker11" % datetime.now().strftime("%H:%M:%S"))
+            current_size = current_size + 1
+            logger.info("current_size=%d" % current_size)
+
+            current_idx = sorted_available_idx[current_size - 1]
+            accumulated_probability = accumulated_probability * (1 - self.probabilities[current_idx])
+
+            current_gain = accumulated_probability * current_size
+
+            # find out the size with max gain and stop
+            if current_gain < last_gain:
+                break
+            last_gain = current_gain
+
+        for i in range(len(current_size)):
+            config_idx_to_delete.append(sorted_available_idx[i])
+
+        logger.info("\tSelected deletion size: " + str(len(config_idx_to_delete)))
+        return config_idx_to_delete
+
+    # how cdd compute the next subset to delete
+    def sample_by_counter(self):
         config_idx_to_delete = []
         
         # filter out those removed elements (counter is -1)
@@ -144,6 +194,46 @@ class AbstractCounterDD(object):
 
         logger.info("\tSelected deletion size: " + str(len(config_idx_to_delete)))
         return config_idx_to_delete
+
+    def update_when_fail_cdd(self, config_idx_to_delete):
+        for idx in config_idx_to_delete:
+            self.counters[idx] = self.counters[idx] + 1
+        if len(config_idx_to_delete) == 1:
+            # assign the counter to maxsize and never consider this element
+            self.counters[config_idx_to_delete[0]] = -1
+
+    # Given a subset failed to be deleted,
+    # compute the ratio to increase the probability of each element in this subset
+    def compute_ratio(self, config_idx_to_delete):
+        accumulated_probability = 1
+        for i in config_idx_to_delete:
+            idx = config_idx_to_delete[i]
+            accumulated_probability = accumulated_probability * (1 - self.probabilities[idx])
+
+        ratio = 1 / (1 - accumulated_probability)
+        return ratio
+
+    def update_when_fail_probdd(self, config_idx_to_delete):
+        logger.info("%s: marker5" % datetime.now().strftime("%H:%M:%S"))
+        ratio = self.compute_ratio(config_idx_to_delete)
+
+        for i in config_idx_to_delete:
+            idx = config_idx_to_delete[i]
+            self.probabilities[idx] = self.probabilities[idx] * ratio
+
+        if len(config_idx_to_delete) == 1:
+            # never consider this element
+            self.probabilities[config_idx_to_delete[0]] = -1
+
+    def update_when_success_cdd(self, config_idx_to_delete):
+        for idx in config_idx_to_delete:
+            self.counters[idx] = -1
+            self.current_best_config_idx[idx] = False
+
+    def update_when_success_probdd(self, config_idx_to_delete):
+        for idx in config_idx_to_delete:
+            self.probabilities[idx] = -1
+            self.current_best_config_idx[idx] = False
 
     def _test_done(self):
         all_decided = True
