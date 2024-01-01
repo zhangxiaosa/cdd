@@ -46,6 +46,7 @@ class AbstractCounterDD(object):
             self.sample = self.sample_by_counter
             self.update_when_fail = self.update_when_fail_cdd
             self.update_when_success = self.update_when_success_cdd
+            self._test_done = self._test_done_cdd
 
         elif (self.dd == "probdd"):
             # initialize probabilities
@@ -53,6 +54,7 @@ class AbstractCounterDD(object):
             self.sample = self.sample_by_probability
             self.update_when_fail = self.update_when_fail_probdd
             self.update_when_success = self.update_when_success_probdd
+            self._test_done = self._test_done_probdd
 
         else:
             raise ValueError("dd should be either cdd or probdd")
@@ -235,10 +237,21 @@ class AbstractCounterDD(object):
             self.probabilities[idx] = -1
             self.current_best_config_idx[idx] = False
 
-    def _test_done(self):
+    def _test_done_cdd(self):
         all_decided = True
         for counter in self.counters:
             if (counter != -1):
+                all_decided = False
+        if (all_decided == True):
+            logger.info("Iteration needs to stop because all elements are decided.")
+            return True
+        else:
+            return False
+        
+    def _test_done_probdd(self):
+        all_decided = True
+        for probability in self.probabilities:
+            if (probability != -1):
                 all_decided = False
         if (all_decided == True):
             logger.info("Iteration needs to stop because all elements are decided.")
