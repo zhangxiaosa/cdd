@@ -177,6 +177,8 @@ class AbstractProbDD(object):
             for j in range(k,i):
                 current_gain *= (1 - self.p[keylist[i]])
             current_gain *= (i - k + 1)
+            logger.info("%s: marker12" % datetime.now().strftime("%H:%M:%S"))
+            logger.info("current gain=%s" % current_gain)
 
             # find out the range with max gain and stop
             if current_gain < last_gain:
