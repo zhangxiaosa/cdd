@@ -78,11 +78,11 @@ class AbstractCounterDD(object):
             
             # if the subset cannot be deleted
             if (outcome == self.FAIL):
-                self.update_when_fail()
+                self.update_when_fail(config_idx_to_delete)
             
             # if the subset can be deleted
             else:
-                self.update_when_success()
+                self.update_when_success(config_idx_to_delete)
                 log_to_print = utils.generate_log(config_idx_to_delete, "Deleted", print_idx=True, threshold=30)
                 logger.info(log_to_print)
             
