@@ -49,35 +49,24 @@ class AbstractCounterDD(object):
             logger.info('\tConfig size: %d', self.get_current_config_size())
             
             # select a subsequence for testing
-            logger.info("%s: marker1" % datetime.now().strftime("%H:%M:%S"))
             config_idx_to_delete = self.sample()
-            logger.info("%s: marker2" % datetime.now().strftime("%H:%M:%S"))
-            logger.info("%s: marker3" % datetime.now().strftime("%H:%M:%S"))
             log_to_print = utils.generate_log(config_idx_to_delete, "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)
             config_log_id = ('r%d' % run, )
 
             outcome = self._test_config(config_idx_to_delete, config_log_id)
             # FAIL means current variant cannot satisify the property
-            logger.info("%s: marker4" % datetime.now().strftime("%H:%M:%S"))
             
             # if the subset cannot be deleted
             if outcome == self.FAIL:
                 for idx in config_idx_to_delete:
                     self.counters[idx] = self.counters[idx] + 1
-                # for key in self.counters.keys():
-                #     if key in deleteconfig:
-                #         self.counters[key] = self.counters[key] + 1
-                logger.info("%s: marker5" % datetime.now().strftime("%H:%M:%S"))
-                logger.info("%s: marker6" % datetime.now().strftime("%H:%M:%S"))
                 if len(config_idx_to_delete) == 1:
                     # assign the counter to maxsize and never consider this element
                     self.counters[config_idx_to_delete[0]] = -1
             
             # if the subset can be deleted
             else:
-                logger.info("%s: marker7" % datetime.now().strftime("%H:%M:%S"))
-                logger.info("length of config_idx_to_delete: %d" % len(config_idx_to_delete))
                 for idx in config_idx_to_delete:
                     self.counters[idx] = -1
                     self.current_best_config_idx[idx] = False
@@ -85,7 +74,6 @@ class AbstractCounterDD(object):
                 # self.printIdx(deleteconfig, "Deleted")
                 log_to_print = utils.generate_log(config_idx_to_delete, "Deleted", print_idx=True, threshold=30)
                 logger.info(log_to_print)
-                logger.info("%s: marker8" % datetime.now().strftime("%H:%M:%S"))
             
             run += 1
 
@@ -137,7 +125,6 @@ class AbstractCounterDD(object):
         sorted_available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
 
         counter_min = self.find_min_counter()
-        logger.info("counter_min: %d" % counter_min)
         size_current = self.compute_size(counter_min)
         current_config_size = self.get_current_config_size()
         
