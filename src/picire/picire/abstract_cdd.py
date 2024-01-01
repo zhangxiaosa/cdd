@@ -103,11 +103,9 @@ class AbstractCDD(object):
     
     # directly compute the size of next subset based on the counter
     def compute_size(self, counter):
-        logger.info("%s: marker6" % datetime.now().strftime("%H:%M:%S"))
         size = round(-1 / math.log(1 - self.init_probability, math.e))
         i = 0
         while i < counter:
-            logger.info("%s: marker7" % datetime.now().strftime("%H:%M:%S"))
             logger.info("i=%d, counter=%d, size=%d" % (i, counter, size))
             size = math.floor(size * (1 - pow(math.e, -1)))
             i = i + 1
@@ -141,13 +139,9 @@ class AbstractCDD(object):
         # extract sorted idx
         sorted_available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
 
-        logger.info("%s: marker1" % datetime.now().strftime("%H:%M:%S"))
         counter_min = self.find_min_counter()
-        logger.info("%s: marker2" % datetime.now().strftime("%H:%M:%S"))
         current_size = self.compute_size(counter_min)
-        logger.info("%s: marker3" % datetime.now().strftime("%H:%M:%S"))
         current_config_size = self.get_current_config_size()
-        logger.info("%s: marker4" % datetime.now().strftime("%H:%M:%S"))
         
         while current_size >= current_config_size:
             self.increase_all_counters()
@@ -155,7 +149,6 @@ class AbstractCDD(object):
             current_size = self.compute_size(counter_min)
             if (current_size == 1):
                 break
-        logger.info("%s: marker5" % datetime.now().strftime("%H:%M:%S"))
 
         config_idx_to_delete = sorted_available_idx[:current_size]
         logger.info("\tSelected deletion size (cdd): " + str(len(config_idx_to_delete)))
