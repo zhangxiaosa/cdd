@@ -156,7 +156,7 @@ class AbstractCounterDD(object):
                 break
             last_gain = current_gain
 
-        for i in range(len(current_size)):
+        for i in range(current_size):
             config_idx_to_delete.append(sorted_available_idx[i])
 
         logger.info("\tSelected deletion size (probdd): " + str(len(config_idx_to_delete)))
