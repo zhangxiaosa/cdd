@@ -114,13 +114,13 @@ for benchmark in "${benchmarks[@]}"; do
             echo "already done ${benchmark}"
             continue
         fi	    
-        echo "running $benchmark"
+        echo "running ${benchmark}"
 
         # create tmp folder
         work_path=`mktemp -d -p ${out_path}`
         echo "created tmp folder ${work_path} for ${benchmark}"
-        cp ${benchmark_path}/$benchmark/r.sh $work_path
-        cp ${benchmark_path}/$benchmark/input $work_path/input
+        cp ${benchmark_path}/${benchmark}/r.sh $work_path
+        cp ${benchmark_path}/${benchmark}/input $work_path/input
         cd $work_path
 
         # record picireny version and run the benchmark
