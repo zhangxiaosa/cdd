@@ -10,22 +10,6 @@ from os.path import dirname, join
 from setuptools import setup, find_packages
 import subprocess
 
-# def picire_version():
-#     def _version_scheme(version):
-#         return version.format_with('{tag}')
-
-#     def _local_scheme(version):
-#         if version.exact and not version.dirty:
-#             return ''
-#         parts = ['{distance}'.format(distance=version.distance)]
-#         if version.node:
-#             parts.append('{node}'.format(node=version.node))
-#         if version.dirty:
-#             parts.append('d{time:%Y%m%d}'.format(time=version.time))
-#         return '+{parts}'.format(parts='.'.join(parts))
-
-#     return { 'version_scheme': _version_scheme, 'local_scheme': _local_scheme }
-
 def picire_version():
     with open(join(dirname(__file__), 'picire/VERSION'), 'rb') as f:
         version = f.read().decode('ascii').strip()
