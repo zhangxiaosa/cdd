@@ -19,13 +19,13 @@ function handle_interrupt(){
 trap handle_interrupt INT
 
 root=$(pwd)
-benchmark_path=${root}/benchmarks/compilerbug
+benchmark_path=${root}/benchmarks/utilitybugs
 
-${root}/scripts/build_hdd.sh
+${root}/scripts/build_picireny.sh
 
 # output folder
 out_folder_name=$(date +"%Y%m%d%H%M%S")
-out_path="${root}/results/hdd/${out_folder_name}"
+out_path="${root}/results/utilitybugs/${out_folder_name}"
 echo "out_path is ${out_path}"
 if [ ! -d "$out_path" ]; then
     mkdir -p $out_path
@@ -40,13 +40,13 @@ else
   echo "No git version available."
 fi
 
-# save the version and args_for_picireny
+# save the version and args_for_tool
 config_path=${out_path}/config.txt
 echo "${version}" > ${config_path}
 
 echo -n "$0 " >> ${config_path}
 for arg in "$@"; do
-  if [[ $arg == --args_for_picireny || $arg == --benchmark || $arg == --max_jobs ]]; then
+  if [[ $arg == --args_for_tool || $arg == --benchmark || $arg == --max_jobs ]]; then
     echo -n "$arg "
   else
     echo -n "\"$arg\" "
@@ -56,21 +56,21 @@ echo "" >> ${config_path}
 
 
 # init arguments
-args_for_picireny=""
-benchmarks=('clang-22382' 'clang-22704' 'clang-23309' 'clang-23353' 'clang-25900' 'clang-26760' 'clang-27137' 'clang-27747' 'clang-31259' 'gcc-59903' 'gcc-60116' 'gcc-61383' 'gcc-61917' 'gcc-64990' 'gcc-65383' 'gcc-66186' 'gcc-66375' 'gcc-70127' 'gcc-70586' 'gcc-71626')
+args_for_tool=""
+benchmarks=('dc-1.3', 'flex-2.5.39', 'gdb-8.1', 'lldb-7.1.0', 'troff-1.22.3')
 max_jobs=1
 
-# --args_for_picireny is mandatory
+# --args_for_tool is mandatory
 if [ $# -eq 0 ]; then
-  echo "Usage: $0 --args_for_picireny STRING [--benchmark benchmark_name] [--max_jobs MAX_JOBS_COUNT]"
+  echo "Usage: $0 --args_for_tool STRING [--benchmark benchmark_name] [--max_jobs MAX_JOBS_COUNT]"
   exit 1
 fi
 
 # parse the command line
 while (( "$#" )); do
   case "$1" in
-    --args_for_picireny)
-      args_for_picireny=$2
+    --args_for_tool)
+      args_for_tool=$2
       shift 2
       ;;
     --benchmark)
@@ -88,9 +88,9 @@ while (( "$#" )); do
   esac
 done
 
-# check whether --args_for_picireny is set
-if [ -z "$args_for_picireny" ]; then
-  echo "The --args_for_picireny option is mandatory."
+# check whether --args_for_tool is set
+if [ -z "$args_for_tool" ]; then
+  echo "The --args_for_tool option is mandatory."
   exit 1
 fi
 
@@ -108,9 +108,9 @@ for benchmark in "${benchmarks[@]}"; do
     {
         # init log and data path
         log_path=${out_path}/log_${benchmark}.txt
-        data_path=${out_path}/result_${benchmark}
+        result_path=${out_path}/result_${benchmark}
 
-        if [ -d ${log_path} ] || [ -f ${data_path} ]; then
+        if [ -d ${log_path} ] || [ -f ${result_path} ]; then
             echo "already done ${benchmark}"
             continue
         fi	    
@@ -120,15 +120,14 @@ for benchmark in "${benchmarks[@]}"; do
         work_path=`mktemp -d -p ${out_path}`
         echo "created tmp folder ${work_path} for ${benchmark}"
         cp ${benchmark_path}/$benchmark/r.sh $work_path
-        cp ${benchmark_path}/$benchmark/small.c $work_path/small.c
-        cp ${benchmark_path}/C.g4 $work_path
+        cp ${benchmark_path}/$benchmark/input $work_path/input
         cd $work_path
 
         # record picireny version and run the benchmark
-        picireny --version > ${log_path}
-        picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --disable-cleanup --cache none --sys-recursion-limit 10000000 ${args_for_picireny} >> ${log_path} 2>&1
+        picire --version > ${log_path}
+        picire -i input --test r.sh --disable-cleanup --cache none ${args_for_tool} >> ${log_path} 2>&1
         # save result, cleanup
-        mv small.c.* ${data_path}
+        mv input.* ${result_path}
         cd ${root}
         cleanup ${work_path}
     } &

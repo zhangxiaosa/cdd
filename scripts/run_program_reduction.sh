@@ -19,13 +19,13 @@ function handle_interrupt(){
 trap handle_interrupt INT
 
 root=$(pwd)
-benchmark_path=${root}/benchmarks/debloating
+benchmark_path=${root}/benchmarks/compilerbugs
 
-${root}/scripts/build_chisel.sh
+${root}/scripts/build_picireny.sh
 
 # output folder
 out_folder_name=$(date +"%Y%m%d%H%M%S")
-out_path="${root}/results/chisel/${out_folder_name}"
+out_path="${root}/results/compilerbugs/${out_folder_name}"
 echo "out_path is ${out_path}"
 if [ ! -d "$out_path" ]; then
     mkdir -p $out_path
@@ -40,13 +40,13 @@ else
   echo "No git version available."
 fi
 
-# save the version and args_for_chisel
+# save the version and args_for_tool
 config_path=${out_path}/config.txt
 echo "${version}" > ${config_path}
 
 echo -n "$0 " >> ${config_path}
 for arg in "$@"; do
-  if [[ $arg == --args_for_chisel || $arg == --benchmark || $arg == --max_jobs ]]; then
+  if [[ $arg == --args_for_tool || $arg == --benchmark || $arg == --max_jobs ]]; then
     echo -n "$arg "
   else
     echo -n "\"$arg\" "
@@ -56,21 +56,21 @@ echo "" >> ${config_path}
 
 
 # init arguments
-args_for_chisel=""
-benchmarks=('bzip2-1.0.5' 'chown-8.2' 'date-8.21' 'grep-2.19' 'gzip-1.2.4' 'mkdir-5.2.1' 'rm-8.4' 'tar-1.14' 'sort-8.16' 'uniq-8.16')
+args_for_tool=""
+benchmarks=('clang-22382' 'clang-22704' 'clang-23309' 'clang-23353' 'clang-25900' 'clang-26760' 'clang-27137' 'clang-27747' 'clang-31259' 'gcc-59903' 'gcc-60116' 'gcc-61383' 'gcc-61917' 'gcc-64990' 'gcc-65383' 'gcc-66186' 'gcc-66375' 'gcc-70127' 'gcc-70586' 'gcc-71626')
 max_jobs=1
 
-# --args_for_chisel is mandatory
+# --args_for_tool is mandatory
 if [ $# -eq 0 ]; then
-  echo "Usage: $0 --args_for_chisel STRING [--benchmark benchmark_name] [--max_jobs MAX_JOBS_COUNT]"
+  echo "Usage: $0 --args_for_tool STRING [--benchmark benchmark_name] [--max_jobs MAX_JOBS_COUNT]"
   exit 1
 fi
 
 # parse the command line
 while (( "$#" )); do
   case "$1" in
-    --args_for_chisel)
-      args_for_chisel=$2
+    --args_for_tool)
+      args_for_tool=$2
       shift 2
       ;;
     --benchmark)
@@ -88,9 +88,9 @@ while (( "$#" )); do
   esac
 done
 
-# check whether --args_for_chisel is set
-if [ -z "$args_for_chisel" ]; then
-  echo "The --args_for_chisel option is mandatory."
+# check whether --args_for_tool is set
+if [ -z "$args_for_tool" ]; then
+  echo "The --args_for_tool option is mandatory."
   exit 1
 fi
 
@@ -107,10 +107,10 @@ for benchmark in "${benchmarks[@]}"; do
 
     {
         # init log and data path
-        log_path=${out_path}/${benchmark}_log.txt
-        data_path=${out_path}/${benchmark}.c
+        log_path=${out_path}/log_${benchmark}.txt
+        result_path=${out_path}/result_${benchmark}
 
-        if [ -f ${log_path} ] || [ -f ${data_path} ]; then
+        if [ -d ${log_path} ] || [ -f ${result_path} ]; then
             echo "already done ${benchmark}"
             continue
         fi	    
@@ -119,15 +119,16 @@ for benchmark in "${benchmarks[@]}"; do
         # create tmp folder
         work_path=`mktemp -d -p ${out_path}`
         echo "created tmp folder ${work_path} for ${benchmark}"
-        cp -r ${benchmark_path}/$benchmark/* $work_path
+        cp ${benchmark_path}/$benchmark/r.sh $work_path
+        cp ${benchmark_path}/$benchmark/small.c $work_path/small.c
+        cp ${benchmark_path}/C.g4 $work_path
         cd $work_path
-        mkdir ./output_dir
 
-        /home/coq/demystifying_probdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ${args_for_chisel} ./test.sh ./${benchmark}.c
-
+        # record picireny version and run the benchmark
+        picireny --version > ${log_path}
+        picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --disable-cleanup --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> ${log_path} 2>&1
         # save result, cleanup
-        mv ./output_dir/full_log.txt ${log_path} 
-        mv ${benchmark}.c.chisel.c ${data_path}
+        mv small.c.* ${result_path}
         cd ${root}
         cleanup ${work_path}
     } &
@@ -138,4 +139,5 @@ done
 # wait for the last few tasks to complete
 wait
 
-python ${root}/scripts/summarize_chisel.py ${out_path}
+python ${root}/scripts/summarize_hdd.py ${out_path}
+python ${root}/scripts/cleanup_hdd.py ${out_path}
