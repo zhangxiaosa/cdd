@@ -1,7 +1,7 @@
 #! /bin/bash
 UTILITY="flex"
 VERSION="2.5.39"
-BIN_PATH="/home/coq/cdd/benchmarks/utilitybug/${UTILITY}-${VERSION}/src/build/bin/${UTILITY}"
+BIN_PATH="/home/coq/cdd/benchmarks/utilitybugs/${UTILITY}-${VERSION}/bin/${UTILITY}"
 
 TIMEOUT=30
 
