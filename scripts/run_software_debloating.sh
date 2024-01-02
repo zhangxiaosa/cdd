@@ -40,13 +40,13 @@ else
   echo "No git version available."
 fi
 
-# save the version and args_for_chisel
+# save the version and args_for_tool
 config_path=${out_path}/config.txt
 echo "${version}" > ${config_path}
 
 echo -n "$0 " >> ${config_path}
 for arg in "$@"; do
-  if [[ $arg == --args_for_chisel || $arg == --benchmark || $arg == --max_jobs ]]; then
+  if [[ $arg == --args_for_tool || $arg == --benchmark || $arg == --max_jobs ]]; then
     echo -n "$arg "
   else
     echo -n "\"$arg\" "
@@ -56,21 +56,21 @@ echo "" >> ${config_path}
 
 
 # init arguments
-args_for_chisel=""
+args_for_tool=""
 benchmarks=('bzip2-1.0.5' 'chown-8.2' 'date-8.21' 'grep-2.19' 'gzip-1.2.4' 'mkdir-5.2.1' 'rm-8.4' 'tar-1.14' 'sort-8.16' 'uniq-8.16')
 max_jobs=1
 
-# --args_for_chisel is mandatory
+# --args_for_tool is mandatory
 if [ $# -eq 0 ]; then
-  echo "Usage: $0 --args_for_chisel STRING [--benchmark benchmark_name] [--max_jobs MAX_JOBS_COUNT]"
+  echo "Usage: $0 --args_for_tool STRING [--benchmark benchmark_name] [--max_jobs MAX_JOBS_COUNT]"
   exit 1
 fi
 
 # parse the command line
 while (( "$#" )); do
   case "$1" in
-    --args_for_chisel)
-      args_for_chisel=$2
+    --args_for_tool)
+      args_for_tool=$2
       shift 2
       ;;
     --benchmark)
@@ -88,9 +88,9 @@ while (( "$#" )); do
   esac
 done
 
-# check whether --args_for_chisel is set
-if [ -z "$args_for_chisel" ]; then
-  echo "The --args_for_chisel option is mandatory."
+# check whether --args_for_tool is set
+if [ -z "$args_for_tool" ]; then
+  echo "The --args_for_tool option is mandatory."
   exit 1
 fi
 
@@ -108,9 +108,9 @@ for benchmark in "${benchmarks[@]}"; do
     {
         # init log and data path
         log_path=${out_path}/${benchmark}_log.txt
-        data_path=${out_path}/${benchmark}.c
+        result_path=${out_path}/${benchmark}.c
 
-        if [ -f ${log_path} ] || [ -f ${data_path} ]; then
+        if [ -f ${log_path} ] || [ -f ${result_path} ]; then
             echo "already done ${benchmark}"
             continue
         fi	    
@@ -123,11 +123,11 @@ for benchmark in "${benchmarks[@]}"; do
         cd $work_path
         mkdir ./output_dir
 
-        /home/coq/demystifying_probdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ${args_for_chisel} ./test.sh ./${benchmark}.c
+        /home/coq/demystifying_probdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ${args_for_tool} ./test.sh ./${benchmark}.c
 
         # save result, cleanup
         mv ./output_dir/full_log.txt ${log_path} 
-        mv ${benchmark}.c.chisel.c ${data_path}
+        mv ${benchmark}.c.chisel.c ${result_path}
         cd ${root}
         cleanup ${work_path}
     } &
