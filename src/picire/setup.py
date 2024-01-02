@@ -52,7 +52,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     setup_requires=['setuptools_scm'],
-    #use_scm_version=picire_version,
+    use_scm_version=True,
     version=picire_version(),
     entry_points={
         'console_scripts': ['picire = picire.cli:execute']
