@@ -6,23 +6,37 @@
 # according to those terms.
 
 from setuptools import find_packages, setup
+from os.path import dirname, join
+from setuptools import setup, find_packages
+import subprocess
 
+# def picire_version():
+#     def _version_scheme(version):
+#         return version.format_with('{tag}')
+
+#     def _local_scheme(version):
+#         if version.exact and not version.dirty:
+#             return ''
+#         parts = ['{distance}'.format(distance=version.distance)]
+#         if version.node:
+#             parts.append('{node}'.format(node=version.node))
+#         if version.dirty:
+#             parts.append('d{time:%Y%m%d}'.format(time=version.time))
+#         return '+{parts}'.format(parts='.'.join(parts))
+
+#     return { 'version_scheme': _version_scheme, 'local_scheme': _local_scheme }
 
 def picire_version():
-    def _version_scheme(version):
-        return version.format_with('{tag}')
+    with open(join(dirname(__file__), 'picire/VERSION'), 'rb') as f:
+        version = f.read().decode('ascii').strip()
+        try:
+            git_version = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode('ascii').strip()
+            if git_version:
+                version = f"{version}+{git_version}"
+        except subprocess.CalledProcessError:
+            pass
 
-    def _local_scheme(version):
-        if version.exact and not version.dirty:
-            return ''
-        parts = ['{distance}'.format(distance=version.distance)]
-        if version.node:
-            parts.append('{node}'.format(node=version.node))
-        if version.dirty:
-            parts.append('d{time:%Y%m%d}'.format(time=version.time))
-        return '+{parts}'.format(parts='.'.join(parts))
 
-    return { 'version_scheme': _version_scheme, 'local_scheme': _local_scheme }
 
 
 setup(
@@ -39,7 +53,7 @@ setup(
     include_package_data=True,
     setup_requires=['setuptools_scm'],
     #use_scm_version=picire_version,
-    version='20.12',
+    version=picire_version(),
     entry_points={
         'console_scripts': ['picire = picire.cli:execute']
     },
