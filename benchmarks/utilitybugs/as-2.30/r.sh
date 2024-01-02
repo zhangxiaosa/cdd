@@ -1,7 +1,7 @@
 #! /bin/bash
 UTILITY="as"
 VERSION="2.30"
-BIN_PATH="/home/coq/cdd/benchmarks/utilitybug/${UTILITY}-${VERSION}/src/build/bin/${UTILITY}"
+BIN_PATH="/home/coq/cdd/benchmarks/utilitybugs/${UTILITY}-${VERSION}/bin/${UTILITY}"
 
 TIMEOUT=30
 
