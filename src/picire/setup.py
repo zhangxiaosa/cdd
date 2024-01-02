@@ -29,12 +29,18 @@ import subprocess
 def picire_version():
     with open(join(dirname(__file__), 'picire/VERSION'), 'rb') as f:
         version = f.read().decode('ascii').strip()
+    return version
+
+def picire_detailed_version():
+    with open(join(dirname(__file__), 'picire/VERSION'), 'rb') as f:
+        version = f.read().decode('ascii').strip()
         try:
             git_version = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode('ascii').strip()
             if git_version:
                 version = f"{version}+{git_version}"
         except subprocess.CalledProcessError:
             pass
+    return version
 
 
 
@@ -52,7 +58,6 @@ setup(
     zip_safe=False,
     include_package_data=True,
     setup_requires=['setuptools_scm'],
-    use_scm_version=True,
     version=picire_version(),
     entry_points={
         'console_scripts': ['picire = picire.cli:execute']
