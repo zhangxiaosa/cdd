@@ -139,5 +139,5 @@ done
 # wait for the last few tasks to complete
 wait
 
-python ${root}/scripts/summarize_hdd.py ${out_path}
-python ${root}/scripts/cleanup_hdd.py ${out_path}
+python ${root}/scripts/summarize_program_reduction.py ${out_path}
+python ${root}/scripts/cleanup_program_reduction.py ${out_path}
