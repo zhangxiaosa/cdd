@@ -34,7 +34,7 @@ def file_count(path, extension):
 
 with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
     CSV_WRITER = csv.writer(csvfile)
-    CSV_WRITER.writerow(["target", "time", "token num", "test num"])
+    CSV_WRITER.writerow(["target", "time", "char num", "test num"])
 
     for target in BENCHMARK_LIST:
         row = [target]  # Initialize row with target as the first column
@@ -53,7 +53,7 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
             # iteration = get_iteration(intermidiate_result_path)
             test_num = get_test_num(intermidiate_result_path)
 
-            print("target: %s: time: %s, token num: %s, test num: %d"
+            print("target: %s: time: %s, char num: %s, test num: %d"
                   % (target, time, char_num, test_num))
             row.extend([time, char_num, test_num])
         else:
