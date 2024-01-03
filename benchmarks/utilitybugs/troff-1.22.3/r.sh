@@ -1,7 +1,7 @@
 #! /bin/bash
 UTILITY="troff"
 VERSION="1.22.3"
-BIN_PATH="/home/coq/cdd/benchmarks/utilitybugs/${UTILITY}-${VERSION}/bin/${UTILITY}"
+BIN_PATH="${UTILITY}"
 
 TIMEOUT=30
 
