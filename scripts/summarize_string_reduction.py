@@ -42,9 +42,9 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
         if os.path.isfile(final_program_path):
             char_num = get_char_num(final_program_path)
             log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
+            query_stat_file = os.path.join(RESULT_PATH, "query_stat_" + target + ".txt")
             time = get_time_from_log(log_file)
-            intermidiate_result_path = os.path.join(collect_path, "tests")
-            test_num = get_test_num(log_file)
+            test_num = get_test_num(query_stat_file)
 
             print("target: %s: time: %s, char num: %s, test num: %d"
                   % (target, time, char_num, test_num))

@@ -35,14 +35,10 @@ def get_token_num(file):
 def get_iteration(log_file):
     pass
 
-def get_test_num(res_path):
-    return file_count(res_path, "small.c")
-
-def file_count(path, extension):
-    count = 0
-    for _, _, files in os.walk(path):
-        count += sum(f.endswith(extension) for f in files)
-    return count
+def get_test_num(log_file):
+    with open(log_file, "r")as f:
+        queries = f.readlines()
+    return len(queries)
 
 with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
     CSV_WRITER = csv.writer(csvfile)
@@ -60,10 +56,10 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
         if os.path.isfile(final_program_path):
             token_num = get_token_num(final_program_path)
             log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
+            query_stat_file = os.path.join(RESULT_PATH, "query_stat_" + target + ".txt")
             time = get_time_from_log(log_file)
-            intermidiate_result_path = os.path.join(collect_path, "tests")
             iteration = get_iteration(log_file)
-            test_num = get_test_num(intermidiate_result_path)
+            test_num = get_test_num(query_stat_file)
 
             print("target: %s: time: %s, token num: %s, iteration: %d, test num: %d"
                   % (target, time, token_num, iteration, test_num))
