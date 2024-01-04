@@ -57,7 +57,7 @@ echo "" >> ${config_path}
 
 # init arguments
 args_for_tool=""
-benchmarks=('dc-1.3' 'flex-2.5.39' 'gdb-8.1' 'lldb-7.1.0' 'troff-1.22.3')
+benchmarks=('dc-1.3' 'gdb-8.1' 'lldb-7.1.0' 'troff-1.22.3')
 max_jobs=1
 
 # --args_for_tool is mandatory

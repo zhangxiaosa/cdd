@@ -3,7 +3,7 @@ import re
 import sys
 import csv
 
-BENCHMARK_LIST = ['dc-1.3', 'flex-2.5.39', 'gdb-8.1', 'lldb-7.1.0', 'troff-1.22.3']
+BENCHMARK_LIST = ['dc-1.3', 'gdb-8.1', 'lldb-7.1.0', 'troff-1.22.3']
 RESULT_PATH = sys.argv[1]
 
 def get_time_from_log(log_file):
