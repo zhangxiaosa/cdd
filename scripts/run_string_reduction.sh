@@ -122,6 +122,7 @@ for benchmark in "${benchmarks[@]}"; do
         echo "created tmp folder ${work_path} for ${benchmark}"
         cp ${benchmark_path}/${benchmark}/r.sh $work_path
         # insert counter to property test
+        touch $query_stat_path
         /home/coq/cdd/scripts/insert_counter.sh $work_path/r.sh $query_stat_path
         
         cp ${benchmark_path}/${benchmark}/input $work_path/input
