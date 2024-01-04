@@ -109,6 +109,7 @@ for benchmark in "${benchmarks[@]}"; do
         # init log and data path
         log_path=${out_path}/log_${benchmark}.txt
         result_path=${out_path}/result_${benchmark}
+        query_stat_path=${out_path}/query_stat_${benchmark}.txt
 
         if [ -d ${log_path} ] || [ -f ${result_path} ]; then
             echo "already done ${benchmark}"
@@ -120,6 +121,9 @@ for benchmark in "${benchmarks[@]}"; do
         work_path=`mktemp -d -p ${out_path}`
         echo "created tmp folder ${work_path} for ${benchmark}"
         cp ${benchmark_path}/${benchmark}/r.sh $work_path
+        # insert counter to property test
+        /home/coq/cdd/scripts/insert_counter.sh $work_path/r.sh $query_stat_path
+        
         cp ${benchmark_path}/${benchmark}/input $work_path/input
         cd $work_path
 
