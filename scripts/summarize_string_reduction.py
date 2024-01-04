@@ -57,7 +57,7 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
                   % (target, time, char_num, test_num))
             row.extend([time, char_num, test_num])
         else:
-            print("%s: small.c not available" % target)
+            print("%s: final result not available" % target)
             row.extend([None, None, None, None])
 
         CSV_WRITER.writerow(row)
