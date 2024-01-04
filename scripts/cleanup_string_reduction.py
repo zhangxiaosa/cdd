@@ -8,7 +8,7 @@ def delete_non_input_files(path):
                 file_to_remove = os.path.join(root, file)
                 os.remove(file_to_remove)
 
-BENCHMARK_LIST = ['dc-1.3', 'gdb-8.1', 'lldb-7.1.0', 'troff-1.22.3']
+BENCHMARK_LIST = ['dc-1.3', 'gdb-8.1', 'troff-1.22.3']
 
 RESULT_PATH = sys.argv[1]
 

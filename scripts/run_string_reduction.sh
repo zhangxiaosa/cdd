@@ -57,7 +57,7 @@ echo "" >> ${config_path}
 
 # init arguments
 args_for_tool=""
-benchmarks=('dc-1.3' 'gdb-8.1' 'lldb-7.1.0' 'troff-1.22.3')
+benchmarks=('dc-1.3' 'gdb-8.1' 'troff-1.22.3')
 max_jobs=1
 
 # --args_for_tool is mandatory
@@ -130,7 +130,7 @@ for benchmark in "${benchmarks[@]}"; do
 
         # record picireny version and run the benchmark
         picire --version > ${log_path}
-        picire -i input --test r.sh --cache none --atom char ${args_for_tool} >> ${log_path} 2>&1
+        picire -i input --test r.sh --cache none --atom char -j 1 -u 1 ${args_for_tool} >> ${log_path} 2>&1
         # save result, cleanup
         mv input.* ${result_path}
         cd ${root}
