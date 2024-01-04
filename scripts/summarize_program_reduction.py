@@ -22,7 +22,7 @@ def get_time_from_log(log_file):
         return None
 
 def get_token_num(file):
-    cmd = "~/demystifying_probdd/build/bin/counter %s" % file
+    cmd = "~/cdd/build/bin/counter %s" % file
     proc = os.popen(cmd)
     output = proc.read()
 
@@ -32,8 +32,8 @@ def get_token_num(file):
     else:
         return None
 
-def get_iteration(res_path):
-    return len(os.listdir(res_path))
+def get_iteration(log_file):
+    pass
 
 def get_test_num(res_path):
     return file_count(res_path, "small.c")
@@ -62,7 +62,7 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
             log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
             time = get_time_from_log(log_file)
             intermidiate_result_path = os.path.join(collect_path, "tests")
-            iteration = get_iteration(intermidiate_result_path)
+            iteration = get_iteration(log_file)
             test_num = get_test_num(intermidiate_result_path)
 
             print("target: %s: time: %s, token num: %s, iteration: %d, test num: %d"

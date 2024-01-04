@@ -109,6 +109,7 @@ for benchmark in "${benchmarks[@]}"; do
         # init log and data path
         log_path=${out_path}/log_${benchmark}.txt
         result_path=${out_path}/result_${benchmark}
+        query_stat_path=${out_path}/query_stat_${benchmark}.txt
 
         if [ -d ${log_path} ] || [ -f ${result_path} ]; then
             echo "already done ${benchmark}"
@@ -120,13 +121,17 @@ for benchmark in "${benchmarks[@]}"; do
         work_path=`mktemp -d -p ${out_path}`
         echo "created tmp folder ${work_path} for ${benchmark}"
         cp ${benchmark_path}/$benchmark/r.sh $work_path
+        # insert counter to property test
+        touch $query_stat_path
+        /home/coq/cdd/scripts/insert_counter.sh $work_path/r.sh $query_stat_path
+
         cp ${benchmark_path}/$benchmark/small.c $work_path/small.c
         cp ${benchmark_path}/C.g4 $work_path
         cd $work_path
 
         # record picireny version and run the benchmark
         picireny --version > ${log_path}
-        picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --disable-cleanup --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> ${log_path} 2>&1
+        picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> ${log_path} 2>&1
         # save result, cleanup
         mv small.c.* ${result_path}
         cd ${root}

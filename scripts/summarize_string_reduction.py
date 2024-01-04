@@ -20,17 +20,11 @@ def get_time_from_log(log_file):
 def get_char_num(file):
     return os.path.getsize(file)
 
-# def get_iteration(res_path):
-#     return len(os.listdir(res_path))
+def get_test_num(log_file):
+    with open(log_file, "r")as f:
+        queries = f.readlines()
+    return len(queries)
 
-def get_test_num(res_path):
-    return file_count(res_path, "input")
-
-def file_count(path, extension):
-    count = 0
-    for _, _, files in os.walk(path):
-        count += sum(f.endswith(extension) for f in files)
-    return count
 
 with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
     CSV_WRITER = csv.writer(csvfile)
@@ -50,8 +44,7 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
             log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
             time = get_time_from_log(log_file)
             intermidiate_result_path = os.path.join(collect_path, "tests")
-            # iteration = get_iteration(intermidiate_result_path)
-            test_num = get_test_num(intermidiate_result_path)
+            test_num = get_test_num(log_file)
 
             print("target: %s: time: %s, char num: %s, test num: %d"
                   % (target, time, char_num, test_num))

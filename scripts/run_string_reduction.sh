@@ -130,7 +130,7 @@ for benchmark in "${benchmarks[@]}"; do
 
         # record picireny version and run the benchmark
         picire --version > ${log_path}
-        picire -i input --test r.sh --disable-cleanup --cache none --atom char ${args_for_tool} >> ${log_path} 2>&1
+        picire -i input --test r.sh --cache none --atom char ${args_for_tool} >> ${log_path} 2>&1
         # save result, cleanup
         mv input.* ${result_path}
         cd ${root}
