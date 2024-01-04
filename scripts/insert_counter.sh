@@ -21,11 +21,20 @@ if [ ! -f "$log_file" ]; then
     echo "Log file not found: $log_file, a new log file will be created."
 fi
 
-# Check if '#! /bin/bash' or '#!/bin/bash' exists in the script file
-if grep -qE '^#! ?/bin/bash' "$script_file"; then
-    # If found, insert 'date >> log_file' after this line
-    sed -i '/^#! ?\/bin\/bash/a date >> '"$log_file" "$script_file"
-else
-    # If not found, insert 'date >> log_file' at the beginning of the file
+# Use sed to insert 'date >> log_file' after the shebang line (#! /bin/bash or #!/bin/bash)
+sed -i '1 {
+    /^#!\/bin\/bash/ {
+        a\
+date >> '"$log_file"'
+        b
+    }
+    /^#! \/bin\/bash/ {
+        a\
+date >> '"$log_file"'
+    }
+}' "$script_file"
+
+# If the shebang line is not found, insert at the beginning of the file
+if ! grep -qE '^#! ?/bin/bash' "$script_file"; then
     sed -i '1i date >> '"$log_file" "$script_file"
 fi
