@@ -267,7 +267,9 @@ class AbstractCDD(object):
             new_config_idx[idx] = False
 
         new_config = self.map_idx_to_config(new_config_idx)
+        tstart = time.time()
         outcome = self._test(new_config, config_log_id)
+        logger.info("execution time of this test: " + str(time.time() - tstart) + "s")
 
         logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_log_id), outcome)
 

@@ -10,7 +10,6 @@ import logging
 from . import config_iterators
 from . import config_splitters
 from .abstract_dd import AbstractDD
-from .outcome_cache import ConfigCache
 from . import utils
 
 logger = logging.getLogger(__name__)
@@ -38,7 +37,7 @@ class LightDD(AbstractDD):
         :param complement_iterator: Reference to a generator function that
             provides config indices in an arbitrary order.
         """
-        cache = cache or ConfigCache()
+        cache = None
 
         AbstractDD.__init__(self, test, split, cache=cache, id_prefix=id_prefix, other_config=other_config)
 
@@ -94,8 +93,8 @@ class LightDD(AbstractDD):
             log_to_print = utils.generate_log(subsets[i], "Try deleting(complement of)", print_idx=True, threshold=30)
             logger.info(log_to_print)
 
-            # Get the outcome either from cache or by testing it.
-            outcome = self._lookup_cache(subset, config_id) or self._test_config(subset, config_id)
+            # Get the outcome by testing it.
+            outcome = self._test_config(subset, config_id)
             if outcome == self.PASS:
                 # Interesting subset is found.
                 log_to_print = utils.generate_log(subsets[i], "Deleted(complement of)", print_idx=True, threshold=30)
@@ -132,7 +131,7 @@ class LightDD(AbstractDD):
             log_to_print = utils.generate_log(subsets[i], "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)
 
-            outcome = self._lookup_cache(complement, config_id) or self._test_config(complement, config_id)
+            outcome = self._test_config(complement, config_id)
             if outcome == self.PASS:
                 # Interesting complement is found.
                 # In next run, start removing the following subset

@@ -8,6 +8,7 @@
 import itertools
 import logging
 import random
+import time
 
 from .outcome_cache import OutcomeCache
 
@@ -149,7 +150,9 @@ class AbstractDD(object):
         config_id = self._id_prefix + config_id
 
         logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_id))
+        tstart = time.time()
         outcome = self._test(self.idx2config(config), config_id)
+        logger.info("execution time of this test: " + str(time.time() - tstart) + "s")
         logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_id), outcome)
 
         if 'assert' not in config_id:
