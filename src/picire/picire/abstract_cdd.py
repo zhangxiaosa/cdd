@@ -262,9 +262,12 @@ class AbstractCDD(object):
         logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_log_id))
 
         # compute new config idx
+        logger.info("before deep copy")
         new_config_idx = copy.deepcopy(self.current_best_config_idx)
+        logger.info("after deep copy")
         for idx in config_idx_to_delete:
             new_config_idx[idx] = False
+        logger.info("exclude elements in config_idx_to_delete")
 
         new_config = self.map_idx_to_config(new_config_idx)
         tstart = time.time()

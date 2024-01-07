@@ -138,7 +138,7 @@ class AbstractDD(object):
 
         return cached_result
 
-    def _test_config(self, config, config_id):
+    def _test_config(self, config_idx, config_unique_id):
         """
         Test a single configuration and save the result in cache.
 
@@ -147,16 +147,17 @@ class AbstractDD(object):
             identifiable directories.
         :return: PASS or FAIL
         """
-        config_id = self._id_prefix + config_id
+        config_unique_id = self._id_prefix + config_unique_id
 
-        logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_id))
+        logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_unique_id))
         tstart = time.time()
-        outcome = self._test(self.idx2config(config), config_id)
+        config = self.idx2config(config_idx)
+        outcome = self._test(config, config_unique_id)
         logger.info("execution time of this test: " + str(time.time() - tstart) + "s")
-        logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_id), outcome)
+        logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_unique_id), outcome)
 
-        if 'assert' not in config_id:
-            self._cache.add(config, outcome)
+        if 'assert' not in config_unique_id:
+            self._cache.add(config_idx, outcome)
 
         return outcome
 
