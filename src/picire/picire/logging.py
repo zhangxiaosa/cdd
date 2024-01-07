@@ -31,6 +31,7 @@ __getLogger = getLogger
 
 def getLogger(name=None):
     logger = __getLogger(name)
+    logger.propagate = False
     
     handler = StreamHandler(sys.stdout)
     formatter = Formatter('%(asctime)s - %(levelname)s - %(message)s')
