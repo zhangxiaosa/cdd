@@ -270,6 +270,7 @@ class AbstractCDD(object):
         logger.info("exclude elements in config_idx_to_delete")
 
         new_config = self.map_idx_to_config(new_config_idx)
+        logger.info("after mapping")
         tstart = time.time()
         outcome = self._test(new_config, config_log_id)
         logger.info("execution time of this test: " + str(time.time() - tstart) + "s")
