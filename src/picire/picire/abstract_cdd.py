@@ -263,7 +263,7 @@ class AbstractCDD(object):
 
         # compute new config idx
         logger.info("before deep copy")
-        new_config_idx = copy.deepcopy(self.current_best_config_idx)
+        new_config_idx = self.current_best_config_idx[:]
         logger.info("after deep copy")
         for idx in config_idx_to_delete:
             new_config_idx[idx] = False
