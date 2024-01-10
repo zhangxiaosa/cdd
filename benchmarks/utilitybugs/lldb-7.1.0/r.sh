@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/coq/anaconda3/lib
+
 UTILITY="lldb"
 VERSION="7.1.0"
 BIN_PATH="${UTILITY}"
