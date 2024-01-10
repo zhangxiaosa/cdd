@@ -13,6 +13,8 @@ if [ $ret != 139 ]; then
     exit 1
 fi
 
+tail -n 100 out.txt > temp.txt && mv temp.txt out.txt
+
 # An array containing all the strings to check, each pattern on a new line
 check_strings=(
     "Process terminating with default action of signal 11 (SIGSEGV): dumping core"
