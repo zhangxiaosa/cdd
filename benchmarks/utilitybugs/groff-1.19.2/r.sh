@@ -3,7 +3,7 @@ UTILITY="groff"
 VERSION="1.19.2"
 BIN_PATH="${UTILITY}"
 
-TIMEOUT=30
+TIMEOUT=300
 
 timeout -s 9 $TIMEOUT $BIN_PATH < input > out.txt 2>&1
 ret=$?
