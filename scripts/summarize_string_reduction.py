@@ -20,6 +20,18 @@ def get_time_from_log(log_file):
 def get_char_num(file):
     return os.path.getsize(file)
 
+def get_char_num_from_log(file):
+    with open(file, 'r') as f:
+        lines = f.readlines()
+
+    for line in reversed(lines):
+        if 'Config size' in line:
+            match = re.search(r'Config size: (\d+)', line)
+            if match:
+                return int(match.group(1))
+
+    return None
+
 def get_test_num(log_file):
     with open(log_file, "r")as f:
         queries = f.readlines()
@@ -39,13 +51,19 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
             CSV_WRITER.writerow(row)  # Write only target if not available
             continue
         final_program_path = os.path.join(collect_path, "input")
+        log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
+        query_stat_file = os.path.join(RESULT_PATH, "query_stat_" + target + ".txt")
         if os.path.isfile(final_program_path):
             char_num = get_char_num(final_program_path)
-            log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
-            query_stat_file = os.path.join(RESULT_PATH, "query_stat_" + target + ".txt")
             time = get_time_from_log(log_file)
             test_num = get_test_num(query_stat_file)
-
+            print("target: %s: time: %s, char num: %s, test num: %d"
+                  % (target, time, char_num, test_num))
+            row.extend([time, char_num, test_num])
+        elif os.path.isfile(log_file):
+            char_num = get_char_num_from_log(log_file)
+            time = str(24 * 60 * 60)
+            test_num = get_test_num(query_stat_file)
             print("target: %s: time: %s, char num: %s, test num: %d"
                   % (target, time, char_num, test_num))
             row.extend([time, char_num, test_num])
