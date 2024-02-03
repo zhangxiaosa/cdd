@@ -12,7 +12,7 @@ if [ $ret != 0 ]; then
 fi
 
 # process saxon result
-grep -o 'id="[^"]*"' ${target}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' > ${target}_processed_result.txt
+grep -o 'id="[^"]*"' ${target}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target}_processed_result.txt
 
 # run basex
 target="basex"
@@ -24,7 +24,7 @@ if [ $ret != 0 ]; then
 fi
 
 # process basex result
-grep -o 'id="[^"]*"' ${target}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' > ${target}_processed_result.txt
+grep -o 'id="[^"]*"' ${target}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target}_processed_result.txt
 
 # diff
 if diff saxon_processed_result.txt basex_processed_result.txt > /dev/null 2>&1; then
