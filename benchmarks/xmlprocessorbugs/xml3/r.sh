@@ -1,5 +1,7 @@
 #! /bin/bash
 
+echo 'declare namespace r ="oOPqSKGThUaiMWmph";declare namespace oJn ="oOPqSKGThUaiMWmph";declare namespace rJPNr ="IuLpmgT";declare namespace mK ="oOPqSKGThUaiMWmph";declare namespace OHS ="u";declare namespace ZkZ ="eiVH";//*[((boolean(./ancestor::*) = false()) = false()) and true() and not(head(tail(.//*[boolean(reverse(.))]))/has-children() != true())]' > query.xq
+
 # run saxon
 target="saxon"
 java -cp '../saxon-he-12.4.jar:../xmlresolver-5.2.0/lib/*' net.sf.saxon.Query -s:./input.xml -q:./query.xq > ${target}_raw_result.xml 2>&1
