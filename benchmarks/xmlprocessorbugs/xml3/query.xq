@@ -1,0 +1,1 @@
+declare namespace r ="oOPqSKGThUaiMWmph";declare namespace oJn ="oOPqSKGThUaiMWmph";declare namespace rJPNr ="IuLpmgT";declare namespace mK ="oOPqSKGThUaiMWmph";declare namespace OHS ="u";declare namespace ZkZ ="eiVH";//*[((boolean(./ancestor::*) = false()) = false()) and true() and not(head(tail(.//*[boolean(reverse(.))]))/has-children() != true())]
