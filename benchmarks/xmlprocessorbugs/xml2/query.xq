@@ -1,1 +1,0 @@
-declare namespace WR ="aWwj";declare namespace vwgd ="aWwj";declare namespace Hhh ="qkvnEiE";declare namespace roLj ="WECTJLzCtBUglwP";//Hhh:Q25[(boolean(count(node-name())) or (subsequence((. ! boolean(subsequence(., 4, 4))) and false(), 49, 3) castable as xs:boolean)) and not((@b14 ! boolean(. < -71472.9004)) = false())]
