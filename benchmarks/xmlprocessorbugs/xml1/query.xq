@@ -1,1 +1,0 @@
-declare namespace oWizm ="XgiH";declare namespace Lh ="XgiH";declare namespace kwft ="XgiH";declare namespace HCv ="HODLoWHcnD";//*[head(@u7 <= 1229227930) or (head(reverse(reverse(. ! (.,head(node-name()))))) castable as xs:integer)]
