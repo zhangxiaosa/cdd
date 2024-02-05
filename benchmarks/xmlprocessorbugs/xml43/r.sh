@@ -1,6 +1,6 @@
 #! /bin/bash
 
-echo '' > query.xq
+echo 'declare namespace Aa ="saEqczELwiDr";declare namespace eTA ="NrJTEVj";declare namespace A ="xBgwTrJDHDdbRMXBx";declare namespace ycMC ="iFMLJyyqIYnZTtwzRjQf";declare namespace feMuH ="WyfHLLUDdrTuJjNxgxH";declare namespace VrN ="X";declare namespace CrEt ="iF";declare namespace EU ="fLxguhNPLNhmUoaCLj";declare namespace yAcX ="QcMEgKoMhEpBY";declare namespace CIIz ="NrJTEVj";declare namespace s ="xBgwTrJDHDdbRMXBx";declare namespace ibfTi ="saEqczELwiDr";//*/ancestor::*[reverse(boolean(reverse(B29))) or not(boolean(normalize-space(@e9)))]/CIIz:G5/preceding::VrN:U5[not((boolean(tail(./(/U13/S11/E16/F5/T6/H7/U5))) and false()) ! head(.))]/parent::*[(boolean(last()) or ((head(head(head(head(subsequence(., 2))/node-name()))) ! .) castable as xs:duration)) or (reverse(boolean(.)) = false()) = false()]/Aa:T31[boolean((node-name() ! count(subsequence(., 90))) + -299134339) and (boolean(last()) and not(boolean(subsequence(tail(./preceding-sibling::Aa:E3), 2))))]/parent::VrN:H7[boolean(./*//*[not(boolean(O31))])]/*' > query.xq
 
 # run saxon
 target="saxon"
