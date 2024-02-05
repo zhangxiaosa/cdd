@@ -1,6 +1,6 @@
 #! /bin/bash
 
-echo '' > query.xq
+echo 'declare namespace x ="qHFILMkIZrWvBBBwpi";declare namespace iR ="PImnSUJSoUuKopO";declare namespace PLM ="PImnSUJSoUuKopO";declare namespace JQAe ="qHFILMkIZrWvBBBwpi";declare namespace PwxX ="PV";declare namespace YUWKp ="L";declare namespace iOiTy ="nDGl";declare namespace RC ="QPWGZvRIFyhUTk";declare namespace jN ="zK";//I2[not(head(head(I17/P14/G14/K19)/has-children() = false())) and (boolean(./(/I2,X13)) and not(not(boolean((has-children() or true()) != false()))))]' > query.xq
 
 # run saxon
 target="saxon"
