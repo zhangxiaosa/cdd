@@ -6,6 +6,20 @@ cd $repo
 
 git reset --hard
 
+git checkout 3c26407
+/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/bisect_script.sh
+if [ $? -eq 0 ]; then
+    echo "bad init commit not bad"
+    exit 1
+fi
+git checkout d1bb20b
+/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/bisect_script.sh
+if [ $? -eq 1 ]; then
+    echo "good init commit not good"
+    exit 1
+fi
+
+
 # 初始化git bisect
 git bisect start
 git bisect bad 3c26407

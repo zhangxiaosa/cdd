@@ -16,12 +16,14 @@ cp ${repo}/basex-core/target/basex-*-SNAPSHOT.jar ${repo}/basex-core/target/base
 git reset --hard
 
 # 进入case folder执行r.sh
-cd /data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/xml2
+cd /data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/xml43
 ./r.sh
 
 # 根据r.sh的返回值决定当前commit是good还是bad
 if [ $? -eq 0 ]; then
+    cd ${repo}
     exit 0
 else
+    cd ${repo}
     exit 1
 fi
