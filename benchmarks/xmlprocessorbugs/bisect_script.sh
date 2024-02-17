@@ -4,7 +4,7 @@
 CASE_FOLDER=$1
 
 # 进入git仓库目录
-repo="/data/m492zhan/review/icse24/artifact_evaluation/basex"
+repo="/data/m492zhan/review/icse24/artifact_evaluation/basex-bisect"
 cd ${repo}
 # 编译项目
 rm ${repo}/basex-core/target/*
@@ -16,7 +16,7 @@ cp ${repo}/basex-core/target/basex-*-SNAPSHOT.jar ${repo}/basex-core/target/base
 git reset --hard
 
 # 进入case folder执行r.sh
-cd /data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/xml43
+cd $CASE_FOLDER
 ./r.sh
 
 # 根据r.sh的返回值决定当前commit是good还是bad

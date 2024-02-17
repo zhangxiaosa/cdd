@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # 进入git仓库目录
-repo="/data/m492zhan/review/icse24/artifact_evaluation/basex_bisect"
+repo="/data/m492zhan/review/icse24/artifact_evaluation/basex-bisect"
 cd $repo
 latest_version="3c26407"
-oldest_version="d1bb20b"
+oldest_version="8ede04"
+CASE_FOLDER="/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/xml47"
 git reset --hard
 
 git checkout $latest_version
@@ -27,7 +28,7 @@ git bisect bad $latest_version
 git bisect good $oldest_version
 
 # 定义bisect运行时的脚本
-git bisect run /data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/bisect_script.sh
+git bisect run "/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/bisect_script.sh $CASE_FOLDER"
 
 # 结束git bisect
 git bisect reset
