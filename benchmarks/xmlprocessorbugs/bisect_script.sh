@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 定义case folder路径，这个路径应该作为脚本的第一个参数传入
-CASE_FOLDER=$1
+CASE_FOLDER="/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/xml47"
 
 # 进入git仓库目录
 repo="/data/m492zhan/review/icse24/artifact_evaluation/basex-bisect"
@@ -17,6 +17,8 @@ git reset --hard
 
 # 进入case folder执行r.sh
 cd $CASE_FOLDER
+echo "case folder is" $CASE_FOLDER
+pwd
 ./r.sh
 
 # 根据r.sh的返回值决定当前commit是good还是bad
