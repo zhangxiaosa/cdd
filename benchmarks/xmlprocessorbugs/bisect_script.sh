@@ -1,17 +1,19 @@
 #!/bin/bash
 
 # 定义case folder路径，这个路径应该作为脚本的第一个参数传入
-CASE_FOLDER="/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/xml47"
+CASE_FOLDER="/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/xml52"
 
 # 进入git仓库目录
 repo="/data/m492zhan/review/icse24/artifact_evaluation/basex-bisect"
 cd ${repo}
 # 编译项目
-rm ${repo}/basex-core/target/*
+sed -i 's|http://repo2.maven.org/maven2/|https://repo.maven.apache.org/maven2/|g' pom.xml
+mvn clean
 mvn package -Dmaven.test.skip
 
 # 复制jar文件
-cp ${repo}/basex-core/target/basex-*-SNAPSHOT.jar ${repo}/basex-core/target/basex.jar
+rm ${repo}/basex-core/target/*-sources.jar
+cp ${repo}/basex-core/target/basex-*.jar ${repo}/basex-core/target/basex.jar
 
 git reset --hard
 
