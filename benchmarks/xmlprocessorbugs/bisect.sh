@@ -3,8 +3,8 @@
 # 进入git仓库目录
 repo="/data/m492zhan/review/icse24/artifact_evaluation/basex-bisect"
 cd $repo
-latest_version="818794f"
-oldest_version="22f868e"
+latest_version="3c26407"
+oldest_version="d1bb20b"
 git reset --hard
 mvn clean
 
