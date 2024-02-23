@@ -1,6 +1,6 @@
 #! /bin/bash
 
-echo 'declare namespace V ="XqYNfP";declare namespace ncNcu ="vGEcLuyJhxGFoyui";declare namespace tG ="IzuflGsvxUUMpWWhcPXm";declare namespace X ="vGEcLuyJhxGFoyui";declare namespace r ="oFbwz";declare namespace l ="qp";declare namespace HV ="IzuflGsvxUUMpWWhcPXm";declare namespace ora ="IBKbc";declare namespace FZj ="XqYNfP";declare namespace XV ="lDVXNNTY";//ora:L2[(boolean(reverse(head(.))) and boolean(./child::*[boolean(position())])) and boolean(./ora:F8//*[not(boolean(H19))])]' > query.xq
+echo 'declare namespace uKXoO ="yDwiNMMEuVjJuvZf";declare namespace LemT ="aDDqAz";declare namespace EsA ="aDDqAz";declare namespace YnbP ="XpgDMTZgKqnf";declare namespace nwFZ ="hNFp";declare namespace cEE ="Jn";declare namespace qJ ="NIahUaEr";declare namespace MLzV ="aDDqAz";declare namespace KgDs ="WKCGfpyMNHpuWuJo";declare namespace q ="yDwiNMMEuVjJuvZf";//*[(has-children() = true()) or false() or (reverse(boolean(@t8 != 610311428)) and boolean(./self::qJ:C2))]' > query.xq
 
 # run saxon
 target="saxon"
