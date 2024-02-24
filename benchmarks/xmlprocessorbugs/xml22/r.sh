@@ -1,8 +1,8 @@
 #! /bin/bash
 
 QUERY='declare namespace haIlW ="FK";declare namespace To ="FK";declare namespace jDrvx ="siOnytXBmPcmqDKvOpr";declare namespace Kzagd ="FK";//*[not((tail(subsequence(boolean(subsequence(V43, 63)), 18, 2)) ! (.,count(.))) castable as xs:double) and boolean(reverse(./self::jDrvx:X6[not(boolean(V43))]))]'
-GOOD_VERSION="1e9bc83"
-BAD_VERSION="816b386"
+GOOD_VERSION="071d221"
+BAD_VERSION="863ddfd"
 
 echo $QUERY > query.xq
 
