@@ -1,8 +1,8 @@
 #! /bin/bash
 
 QUERY='declare namespace SEQ ="uZjMkoToe";declare namespace PQ ="uZjMkoToe";declare namespace jfXJ ="uZjMkoToe";//*[has-children() and (boolean(upper-case(normalize-space(head(.)/local-name()))) and boolean(@id))]'
-GOOD_VERSION="2f1fb03"
-BAD_VERSION="df7b21d"
+GOOD_VERSION="4c99b96"
+BAD_VERSION="2f1fb03"
 
 echo $QUERY > query.xq
 
