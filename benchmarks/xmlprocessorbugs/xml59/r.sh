@@ -1,8 +1,8 @@
 #! /bin/bash
 
 QUERY='declare namespace XL ="BdtWwGzHqjVVw";declare namespace yDu ="M";declare namespace Juc ="BdtWwGzHqjVVw";//*[(boolean(round(math:sin(math:cos(sum(count(.)))))) and not(boolean(E35))) and head(.)/has-children(.)]'
-GOOD_VERSION="2f1fb03"
-BAD_VERSION="df7b21d"
+GOOD_VERSION="4c99b96"
+BAD_VERSION="2f1fb03"
 
 echo $QUERY > query.xq
 

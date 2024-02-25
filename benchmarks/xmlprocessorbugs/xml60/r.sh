@@ -1,10 +1,32 @@
 #! /bin/bash
 
-echo 'declare namespace t ="lyShYXgGaiPtTgJiN";declare namespace icW ="AzSRpHWSSWBvQRnFVOh";declare namespace NFV ="lyShYXgGaiPtTgJiN";declare namespace iWX ="cgFfMTZSsDgUrcxt";declare namespace owMr ="iUMAp";declare namespace BaG ="zKFTJvZEHrnVcsM";declare namespace SNV ="tzRIteiQMepYwIDOvz";//*[boolean(./self::*/parent::*[boolean(local-name())]) != true() or ((has-children(.) and boolean(count(reverse(node-name())))) and boolean(./preceding::*/descendant-or-self::SNV:K16))]' > query.xq
+QUERY='declare namespace t ="lyShYXgGaiPtTgJiN";declare namespace icW ="AzSRpHWSSWBvQRnFVOh";declare namespace NFV ="lyShYXgGaiPtTgJiN";declare namespace iWX ="cgFfMTZSsDgUrcxt";declare namespace owMr ="iUMAp";declare namespace BaG ="zKFTJvZEHrnVcsM";declare namespace SNV ="tzRIteiQMepYwIDOvz";//*[boolean(./self::*/parent::*[boolean(local-name())]) != true() or ((has-children(.) and boolean(count(reverse(node-name())))) and boolean(./preceding::*/descendant-or-self::SNV:K16))]'
+GOOD_VERSION="4c99b96"
+BAD_VERSION="2f1fb03"
+
+echo $QUERY > query.xq
 
 # run saxon
-target="saxon"
-java -cp '/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/saxon-he-12.4.jar:/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/xmlresolver-5.2.0/lib/*' net.sf.saxon.Query -s:./input.xml -q:./query.xq > ${target}_raw_result.xml 2>&1
+target_saxon="saxon"
+java -cp '/home/coq/cdd/benchmarks/xmlprocessorbugs/lib/saxon-he-12.4.jar:/home/coq/cdd/benchmarks/xmlprocessorbugs/lib/xmlresolver-5.2.0/lib/*' net.sf.saxon.Query -s:./input.xml -q:./query.xq > ${target_saxon}_raw_result.xml 2>&1
+ret=$?
+
+if [ $ret != 0 ]; then
+  exit 1
+fi
+
+# run basex_bad
+target_basex_bad="basex_bad"
+java -cp "/home/coq/cdd/benchmarks/xmlprocessorbugs/lib/basex-${BAD_VERSION}.jar" org.basex.BaseX -i input.xml query.xq > ${target_basex_bad}_raw_result.xml 2>&1
+ret=$?
+
+if [ $ret != 0 ]; then
+  exit 1
+fi
+
+# run basex_good
+target_basex_good="basex_good"
+java -cp "/home/coq/cdd/benchmarks/xmlprocessorbugs/lib/basex-${GOOD_VERSION}.jar" org.basex.BaseX -i input.xml query.xq > ${target_basex_good}_raw_result.xml 2>&1
 ret=$?
 
 if [ $ret != 0 ]; then
@@ -12,25 +34,22 @@ if [ $ret != 0 ]; then
 fi
 
 # process saxon result
-grep -o 'id="[^"]*"' ${target}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target}_processed_result.txt
+grep -o 'id="[^"]*"' ${target_saxon}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target_saxon}_processed_result.txt
 
-# run basex
-target="basex"
-#java -cp "/data/m492zhan/review/icse24/artifact_evaluation/basex-bisect/basex.jar" org.basex.BaseX -i input.xml query.xq > ${target}_raw_result.xml 2>&1
-#java -cp "/tmp/basex.jar" org.basex.BaseX -i input.xml query.xq > ${target}_raw_result.xml 2>&1
-java -cp "/data/m492zhan/review/icse24/artifact_evaluation/basex-7165a07.jar" org.basex.BaseX -i input.xml query.xq > ${target}_raw_result.xml 2>&1
-ret=$?
+# process basex_bad result
+grep -o 'id="[^"]*"' ${target_basex_bad}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target_basex_bad}_processed_result.txt
 
-if [ $ret != 0 ]; then
-  exit 1
+# process basex_good result
+grep -o 'id="[^"]*"' ${target_basex_good}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target_basex_good}_processed_result.txt
+
+
+# diff, files should be different
+if diff ${target_saxon}_processed_result.txt ${target_basex_bad}_processed_result.txt > /dev/null 2>&1; then
+    exit 1
 fi
 
-# process basex result
-grep -o 'id="[^"]*"' ${target}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target}_processed_result.txt
-
-# diff
-if diff saxon_processed_result.txt basex_processed_result.txt > /dev/null 2>&1; then
-    # files are different
+# diff, files should be same
+if ! diff ${target_saxon}_processed_result.txt ${target_basex_good}_processed_result.txt > /dev/null 2>&1; then
     exit 1
 fi
 
