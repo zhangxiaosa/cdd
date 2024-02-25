@@ -1,8 +1,8 @@
 #! /bin/bash
 
 QUERY='declare namespace p ="aOnlp";declare namespace D ="dyPrVoP";declare namespace Tmsw ="dyPrVoP";declare namespace L ="ndpYHbZBRjkLIuFWkfUh";declare namespace Fa ="aOnlp";declare namespace b ="dyPrVoP";//*[reverse(.)/has-children(.) or boolean(avg(subsequence(count(tail(.//*[not(boolean(tail(G22)))]/descendant::*)), 1)))]'
-GOOD_VERSION="2f1fb03"
-BAD_VERSION="df7b21d"
+GOOD_VERSION="4c99b96"
+BAD_VERSION="2f1fb03"
 
 echo $QUERY > query.xq
 
