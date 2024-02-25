@@ -1,8 +1,8 @@
 #! /bin/bash
 
 QUERY='declare namespace ZF ="TqSgHhbHSwH";declare namespace jdYX ="CkRmpYRETdaWjNRGg";declare namespace qo ="TqSgHhbHSwH";declare namespace Av ="CkRmpYRETdaWjNRGg";//*[((not(. = <A>2</A>) and not(not((sum(@f2) > 78390.3750) != true()))) and boolean(@id >= -1879133140)) and not(boolean(avg(reverse(reverse(subsequence(count(@id), 82))))))]'
-GOOD_VERSION="abf455c"
-BAD_VERSION="49e81b9"
+GOOD_VERSION="4c99b96"
+BAD_VERSION="2f1fb03"
 
 echo $QUERY > query.xq
 
