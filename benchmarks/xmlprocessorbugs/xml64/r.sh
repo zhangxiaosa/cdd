@@ -1,8 +1,8 @@
 #! /bin/bash
 
 QUERY='declare namespace EMQ ="grOwJgwODaCKLhH";declare namespace oxF ="fWIlJzpnEwr";declare namespace GwrN ="oYbsCHXewHYRjNDWF";declare namespace pt ="jtcZLXUtzBhPhg";declare namespace YK ="T";declare namespace l ="nhMuAJDkDWeZ";declare namespace ZX ="oYbsCHXewHYRjNDWF";declare namespace ZepWQ ="grOwJgwODaCKLhH";declare namespace Ujlg ="nlMsJDQve";declare namespace psler ="fWIlJzpnEwr";//*[(not(min(count(./*[boolean(math:cos(last()))]/descendant-or-self::*[boolean(namespace-uri-from-QName(node-name()))]) + -161301332) > 7866669) and boolean(./(B16)/child::R10)) and not(tail(./*/(J25)[has-children()]) = ())]'
-GOOD_VERSION="38740ab"
-BAD_VERSION="e5de15a"
+GOOD_VERSION="3398ac2"
+BAD_VERSION="38740ab"
 
 echo $QUERY > query.xq
 
