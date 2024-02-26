@@ -1,1 +1,0 @@
-declare namespace Uj ="EyMRsWQdJRXnE";declare namespace YV ="EyMRsWQdJRXnE";declare namespace Cz ="EyMRsWQdJRXnE";//Uj:U1[boolean(./descendant-or-self::*/descendant-or-self::Cz:U1[boolean(reverse(.))]) or (head(./following::*[boolean(count(.) - 689232717)] = ()) and boolean(count(head(boolean(subsequence(., 59))))))]/descendant-or-self::*
