@@ -125,12 +125,14 @@ for benchmark in "${benchmarks[@]}"; do
         touch $query_stat_path
         /home/coq/cdd/scripts/insert_counter.sh $work_path/r.sh $query_stat_path
         
-        cp ${benchmark_path}/${benchmark}/input $work_path/input
+        cp ${benchmark_path}/${benchmark}/input.xml $work_path/input.xml
+        cp ${benchmark_path}/XMLLexer.g4 $work_path
+        cp ${benchmark_path}/XMLParser.g4 $work_path
         cd $work_path
 
         # record picireny version and run the benchmark
         picire --version > ${log_path}
-        timeout 24h picireny -i small.c --test r.sh --grammar ../XMLLexer.g4 ../XMLParser.g4 --start document --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> ${log_path} 2>&1
+        timeout 24h picireny -i input.xml --test r.sh --grammar XMLLexer.g4 XMLParser.g4 --start document --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> ${log_path} 2>&1
         # save result, cleanup
         mv input.* ${result_path}
         cd ${root}
