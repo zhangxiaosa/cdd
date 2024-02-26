@@ -1,8 +1,8 @@
 #! /bin/bash
 
 QUERY='declare namespace LMMqB ="oRrVno";declare namespace zr ="gxZrNAR";declare namespace o ="oRrVno";declare namespace kGARo ="gxZrNAR";declare namespace apk ="oRrVno";//*[has-children() != false() and not(boolean(count(subsequence(boolean(subsequence(./(/R10/E17/T21/V11/D6/C12/R15/U14)/o:F13[boolean(position())], 1)), 12, 18))))]'
-GOOD_VERSION="2f1fb03"
-BAD_VERSION="df7b21d"
+GOOD_VERSION="4c99b96"
+BAD_VERSION="2f1fb03"
 
 echo $QUERY > query.xq
 
