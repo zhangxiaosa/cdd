@@ -1,8 +1,8 @@
 #! /bin/bash
 
 QUERY='declare namespace ZTwz ="nRK";declare namespace bYL ="vLwo";declare namespace lt ="O";declare namespace z ="IYuFJqIMDFUWhgZ";declare namespace JqTTh ="vLwo";declare namespace Yr ="O";declare namespace Z ="FKncjODlTvGWlXclon";declare namespace y ="nRK";declare namespace sqB ="pQS";declare namespace xkBL ="zdWUKRyuNHLZN";declare namespace IWqUE ="rQTchFqrskKRCfuxs";//*[boolean(./ZTwz:S26[not(boolean(position() idiv 91032079))]) and (boolean(.//*[not(last() < -1794714260)]/parent::*) or head(tail(subsequence(starts-with(name(), ",I w{") != true(), 3))))]'
-GOOD_VERSION="38740ab"
-BAD_VERSION="e5de15a"
+GOOD_VERSION="3398ac2"
+BAD_VERSION="38740ab"
 
 echo $QUERY > query.xq
 
