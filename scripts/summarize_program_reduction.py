@@ -36,7 +36,15 @@ def get_token_num(file):
 
 
 def get_iteration(log_file):
-    pass
+    pattern = re.compile(r"Iteration #(\d+)")
+    with open(log_file, 'r') as file:
+        lines = file.readlines()
+        for line in reversed(lines):
+            match = pattern.search(line)
+            if match:
+                return int(match.group(1)) + 1
+
+    return None
 
 
 def get_test_num(log_file):
