@@ -1,8 +1,8 @@
 #! /bin/bash
 
-QUERY='declare namespace ciEJU ="EsZLbBUbSMkZrB";declare namespace lDXQt ="EsZLbBUbSMkZrB";declare namespace F ="rbOVGyba";declare namespace b ="bTmsLz";declare namespace TfCCZ ="rzCUqyw";declare namespace z ="BRt";declare namespace OqDbe ="rB";//*[not(boolean(abs(min(sum(boolean(.) ! (subsequence(., 66) ! count(.)))))))]//*[(boolean(tail(subsequence(./(/E21/L18/L9/C10/V26), 40, 33))) or (count(name() <= "VOhlq8") < 974223853 or boolean(head(subsequence(position(), 2)) < 1936496908))) and not((./ancestor::*/descendant::W3 = ()) or false())]/preceding::OqDbe:X11/following::*[boolean(name()) or ((boolean(subsequence(reverse(.//F:K7), 44)) and boolean(math:cos(max(count(.))))) and boolean(last() * 4))]/descendant-or-self::b:Y17/following::*[boolean(.//*/*)]//*[((boolean(./(K7)/OqDbe:I8[. ! (local-name() != "fQ)iwH,%L um")]) and boolean(subsequence(./*[not(starts-with(local-name(), "*k:zY! "))], 24))) and subsequence(., 44) = ()) or not(head(subsequence(./*/preceding::*[boolean(name())] = (), 6)))]'
-GOOD_VERSION="3398ac2"
-BAD_VERSION="38740ab"
+QUERY='declare namespace ciEJU ="EsZLbBUbSMkZrB";declare namespace lDXQt ="EsZLbBUbSMkZrB";declare namespace F ="rbOVGyba";declare namespace b ="bTmsLz";declare namespace TfCCZ ="rzCUqyw";declare namespace z ="BRt";declare namespace OqDbe ="rB";//*[not(boolean(abs(min(sum(boolean(.) ! (subsequence(., 66) ! count(.)))))))]//*[(boolean(tail(subsequence(./(/E21/L18/L9/C10/V26), 40, 33))) or (count(name() <= "VOhlq8") < 974223853 or boolean(head(subsequence(position(), 2)) < 1936496908))) and not((./ancestor::*/descendant::W3 = ()) or false())]/preceding::OqDbe:X11/following::*[boolean(name()) or ((boolean(subsequence(reverse(.//F:K7), 44)) and boolean(math:cos(max(count(.))))) and boolean(last()))]/descendant-or-self::b:Y17/following::*[boolean(.//*/*)]//*[((boolean(./(K7)/OqDbe:I8[. ! (local-name() != "fQ)iwH,%L um")]) and boolean(subsequence(./*[not(starts-with(local-name(), "*k:zY! "))], 24))) and subsequence(., 44) = ()) or not(head(subsequence(./*/preceding::*[boolean(name())] = (), 6)))]'
+GOOD_VERSION="1e9bc83"
+BAD_VERSION="816b386"
 
 echo $QUERY > query.xq
 
