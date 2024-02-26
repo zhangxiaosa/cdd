@@ -11,6 +11,7 @@ BENCHMARK_LIST = ['xml10', 'xml12', 'xml15', 'xml17', 'xml18', 'xml19', 'xml2, '
                   'xml78', 'xml79', 'xml80', 'xml81', 'xml9']
 RESULT_PATH = sys.argv[1]
 
+
 def get_time_from_log(log_file):
     with open(log_file, 'r') as fopen:
         lines = fopen.readlines()
@@ -21,6 +22,7 @@ def get_time_from_log(log_file):
         return match.group(1)
     else:
         return None
+
 
 def get_token_num(file):
     cmd = "~/cdd/build/bin/counter %s" % file
@@ -33,13 +35,16 @@ def get_token_num(file):
     else:
         return None
 
+
 def get_iteration(log_file):
     pass
 
+
 def get_test_num(log_file):
-    with open(log_file, "r")as f:
+    with open(log_file, "r") as f:
         queries = f.readlines()
     return len(queries)
+
 
 with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
     CSV_WRITER = csv.writer(csvfile)

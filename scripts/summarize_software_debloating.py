@@ -8,6 +8,7 @@ BENCHMARK_LIST = ['bzip2-1.0.5', 'chown-8.2', 'date-8.21', 'grep-2.19',
                   'tar-1.14', 'uniq-8.16']
 RESULT_PATH = sys.argv[1]
 
+
 def get_time_from_log(log_file):
     with open(log_file, 'r') as fopen:
         lines = fopen.readlines()
@@ -19,6 +20,7 @@ def get_time_from_log(log_file):
             # Extract the time value and return it
             return match.group(1)
     return None
+
 
 def get_test_num_from_log(log_file):
     with open(log_file, 'r') as fopen:
@@ -32,6 +34,7 @@ def get_test_num_from_log(log_file):
             return match.group(1)
     return None
 
+
 def get_token_num(file):
     cmd = "~/demystifying_probdd/build/bin/counter %s" % file
     proc = os.popen(cmd)
@@ -42,6 +45,7 @@ def get_token_num(file):
         return match.group(1)
     else:
         return None
+
 
 with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
     CSV_WRITER = csv.writer(csvfile)
