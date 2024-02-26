@@ -1,10 +1,32 @@
 #! /bin/bash
 
-echo 'declare namespace I ="uelhxzesNErXHBPykNd";declare namespace exznS ="hGBZZOL";declare namespace G ="SzkN";declare namespace hr ="TcJAfSrFQuTAdXMvFrQ";declare namespace nBGl ="XpAyYZGQSJKhZq";declare namespace yu ="uelhxzesNErXHBPykNd";declare namespace zg ="byJJkclgtvLLMuiqe";declare namespace jP ="LKTKjt";declare namespace fTuI ="hGBZZOL";//W24[((boolean(subsequence(./exznS:J25[boolean(position())], 53, 1)) or not(boolean(./(J25)[boolean(K15/E15/S14/N33)]))) and not(boolean(tail(./(J25))))) and boolean(count(reverse(.//fTuI:J25)))]' > query.xq
+QUERY='declare namespace I ="uelhxzesNErXHBPykNd";declare namespace exznS ="hGBZZOL";declare namespace G ="SzkN";declare namespace hr ="TcJAfSrFQuTAdXMvFrQ";declare namespace nBGl ="XpAyYZGQSJKhZq";declare namespace yu ="uelhxzesNErXHBPykNd";declare namespace zg ="byJJkclgtvLLMuiqe";declare namespace jP ="LKTKjt";declare namespace fTuI ="hGBZZOL";//W24[((boolean(subsequence(./exznS:J25[boolean(position())], 53, 1)) or not(boolean(./(J25)[boolean(K15/E15/S14/N33)]))) and not(boolean(tail(./(J25))))) and boolean(count(reverse(.//fTuI:J25)))]'
+GOOD_VERSION="3398ac2"
+BAD_VERSION="38740ab"
+
+echo $QUERY > query.xq
 
 # run saxon
-target="saxon"
-java -cp '/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/saxon-he-12.4.jar:/data/m492zhan/cdd/cdd/benchmarks/xmlprocessorbugs/xmlresolver-5.2.0/lib/*' net.sf.saxon.Query -s:./input.xml -q:./query.xq > ${target}_raw_result.xml 2>&1
+target_saxon="saxon"
+java -cp '/home/coq/cdd/benchmarks/xmlprocessorbugs/lib/saxon-he-12.4.jar:/home/coq/cdd/benchmarks/xmlprocessorbugs/lib/xmlresolver-5.2.0/lib/*' net.sf.saxon.Query -s:./input.xml -q:./query.xq > ${target_saxon}_raw_result.xml 2>&1
+ret=$?
+
+if [ $ret != 0 ]; then
+  exit 1
+fi
+
+# run basex_bad
+target_basex_bad="basex_bad"
+java -cp "/home/coq/cdd/benchmarks/xmlprocessorbugs/lib/basex-${BAD_VERSION}.jar" org.basex.BaseX -i input.xml query.xq > ${target_basex_bad}_raw_result.xml 2>&1
+ret=$?
+
+if [ $ret != 0 ]; then
+  exit 1
+fi
+
+# run basex_good
+target_basex_good="basex_good"
+java -cp "/home/coq/cdd/benchmarks/xmlprocessorbugs/lib/basex-${GOOD_VERSION}.jar" org.basex.BaseX -i input.xml query.xq > ${target_basex_good}_raw_result.xml 2>&1
 ret=$?
 
 if [ $ret != 0 ]; then
@@ -12,25 +34,22 @@ if [ $ret != 0 ]; then
 fi
 
 # process saxon result
-grep -o 'id="[^"]*"' ${target}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target}_processed_result.txt
+grep -o 'id="[^"]*"' ${target_saxon}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target_saxon}_processed_result.txt
 
-# run basex
-target="basex"
-#java -cp "/data/m492zhan/review/icse24/artifact_evaluation/basex-bisect/basex.jar" org.basex.BaseX -i input.xml query.xq > ${target}_raw_result.xml 2>&1
-#java -cp "/tmp/basex.jar" org.basex.BaseX -i input.xml query.xq > ${target}_raw_result.xml 2>&1
-java -cp "/data/m492zhan/review/icse24/artifact_evaluation/basex-2f1fb03.jar" org.basex.BaseX -i input.xml query.xq > ${target}_raw_result.xml 2>&1
-ret=$?
+# process basex_bad result
+grep -o 'id="[^"]*"' ${target_basex_bad}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target_basex_bad}_processed_result.txt
 
-if [ $ret != 0 ]; then
-  exit 1
+# process basex_good result
+grep -o 'id="[^"]*"' ${target_basex_good}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target_basex_good}_processed_result.txt
+
+
+# diff, files should be different
+if diff ${target_saxon}_processed_result.txt ${target_basex_bad}_processed_result.txt > /dev/null 2>&1; then
+    exit 1
 fi
 
-# process basex result
-grep -o 'id="[^"]*"' ${target}_raw_result.xml | sed 's/id="//g' | sed 's/"//g' | grep -v '^[[:space:]]*$' > ${target}_processed_result.txt
-
-# diff
-if diff saxon_processed_result.txt basex_processed_result.txt > /dev/null 2>&1; then
-    # files are different
+# diff, files should be same
+if ! diff ${target_saxon}_processed_result.txt ${target_basex_good}_processed_result.txt > /dev/null 2>&1; then
     exit 1
 fi
 
