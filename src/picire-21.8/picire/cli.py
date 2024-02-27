@@ -120,13 +120,6 @@ def process_args(args):
 
     args.src = args.src.decode(args.encoding)
 
-    # configs about probdd and cdd
-    args.reduce_config['onepass'] = args.onepass
-    args.reduce_config['start_from_n'] = args.start_from_n
-    args.reduce_config['init_probability'] = args.init_probability
-    args.reduce_config['id'] = args.id
-    args.reduce_config['dd'] = args.dd
-
     args.out = realpath(args.out if args.out else '%s.%s' % (args.input, time.strftime('%Y%m%d_%H%M%S')))
 
     args.test = realpath(args.test)
@@ -166,6 +159,13 @@ def process_args(args):
         args.reduce_config.update(dict(proc_num=args.jobs,
                                        max_utilization=args.max_utilization))
     args.reduce_config.update(dict(split=split_class(n=args.granularity)))
+
+    # configs about probdd and cdd
+    args.reduce_config['onepass'] = args.onepass
+    args.reduce_config['start_from_n'] = args.start_from_n
+    args.reduce_config['init_probability'] = args.init_probability
+    args.reduce_config['id'] = args.id
+    args.reduce_config['dd'] = args.dd
 
     logger.info('Input loaded from %s', args.input)
 
