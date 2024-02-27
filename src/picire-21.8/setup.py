@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 import subprocess
 
 
-with open(join(dirname(__file__), 'picireny/VERSION'), 'rb') as f:
+with open(join(dirname(__file__), 'picire/VERSION'), 'rb') as f:
     version = f.read().decode('ascii').strip()
     try:
         git_version = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode('ascii').strip()
@@ -21,21 +21,20 @@ with open(join(dirname(__file__), 'picireny/VERSION'), 'rb') as f:
 
 
 setup(
-    name='picireny',
+    name='picire',
     version=version,
     packages=find_packages(),
-    url='https://github.com/renatahodovan/picireny',
+    url='https://github.com/renatahodovan/picire',
     license='BSD',
     author='Renata Hodovan, Akos Kiss',
     author_email='hodovan@inf.u-szeged.hu, akiss@inf.u-szeged.hu',
-    description='Picireny Hierarchical Delta Debugging Framework',
+    description='Picire Delta Debugging Framework',
     long_description=open('README.rst').read(),
-    install_requires=['antlerinator==1!3.0.0', 'picire==21.8'],
     zip_safe=False,
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'picireny = picireny.cli:execute'
+            'picire = picire.cli:execute'
         ]
     },
 )
