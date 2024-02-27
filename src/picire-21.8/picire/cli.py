@@ -47,7 +47,7 @@ def create_parser():
 
     # Base reduce settings.
     parser.add_argument('--cache', metavar='NAME',
-                        choices=[i for i in dir(outcome_cache) if not i.startswith('_') and i.islower()], default='config',
+                        choices=[i for i in dir(outcome_cache) if not i.startswith('_') and i.islower()], default='none',
                         help='cache strategy (%(choices)s; default: %(default)s)')
     parser.add_argument('--split', metavar='NAME',
                         choices=[i for i in dir(config_splitters) if not i.startswith('_') and i.islower()], default='zeller',
@@ -85,6 +85,18 @@ def create_parser():
                         help='working directory (default: input.timestamp)')
     parser.add_argument('--no-cleanup', dest='cleanup', default=True, action='store_false',
                         help='disable the removal of generated temporary files')
+
+    # Ddmin settings
+    parser.add_argument('--dd', metavar='NAME', choices=['ddmin', 'probdd', 'cdd'],
+                         default='ddmin', help = 'DD variant to run (%(choices)s; default: %(default)s)')
+    parser.add_argument('--onepass', default=False, action='store_true',
+                         help='do not reset index to 0 when a partition is deleted')
+    parser.add_argument('--start-from-n', metavar='NUMBER', type=int, default=None,
+                         help='partition size start from a specified number, instead of half of the total size')
+    parser.add_argument('--init-probability', metavar='NUMBER', type=float, default=0.1,
+                         help='provide the initial probability for probdd, default value is 0.1')
+    parser.add_argument('--id', metavar='NUMBER', type=int, default=0, help='just used for identify each trail')
+
     return parser
 
 
@@ -107,6 +119,13 @@ def process_args(args):
         args.encoding = chardet.detect(args.src)['encoding'] or 'latin-1'
 
     args.src = args.src.decode(args.encoding)
+
+    # configs about probdd and cdd
+    args.reduce_config['onepass'] = args.onepass
+    args.reduce_config['start_from_n'] = args.start_from_n
+    args.reduce_config['init_probability'] = args.init_probability
+    args.reduce_config['id'] = args.id
+    args.reduce_config['dd'] = args.dd
 
     args.out = realpath(args.out if args.out else '%s.%s' % (args.input, time.strftime('%Y%m%d_%H%M%S')))
 
@@ -269,6 +288,7 @@ def execute():
     except ValueError as e:
         parser.error(e)
 
+    time_start = time.time()
     out_src = reduce(args.src,
                      reduce_class=args.reduce_class,
                      reduce_config=args.reduce_config,
@@ -278,3 +298,4 @@ def execute():
                      cache_class=args.cache)
 
     postprocess(args, out_src)
+    print("execution time: " + str(time.time() - time_start) + "s")
