@@ -78,7 +78,7 @@ class AbstractDD(object):
             if len(current_config_idx) < 2:
                 logger.info('\tGranularity: %d', len(subsets))
                 logger.debug('\tConfig: %r', subsets)
-                logger.info("\t Final result: %d/%d" % (len(flatten(subsets)), self.original_config_size))
+                logger.info("\tFinal result: %d/%d" % (len(flatten(subsets)), self.original_config_size))
                 logger.info('\tDone')
                 return self.idx2config(current_config_idx)
 
@@ -108,7 +108,7 @@ class AbstractDD(object):
 
             else:
                 # Minimization ends if no interesting configuration was found by the finest splitting.
-                logger.info("\t Final result: %d/%d" % (len(flatten(subsets)), len(self.original_config)))
+                logger.info("\tFinal result: %d/%d" % (len(flatten(subsets)), len(self.original_config)))
                 logger.info('\tDone')
                 return self.idx2config(current_config_idx)
 
