@@ -7,6 +7,8 @@
 
 import logging
 
+from picire import Outcome
+
 from .abstract_dd import AbstractDD
 from .config_iterators import forward
 from . import utils
@@ -132,7 +134,7 @@ class DD(AbstractDD):
 
             # Get the outcome by testing it.
             outcome = self._test_config(complement, config_id)
-            if outcome == self.PASS:
+            if outcome is Outcome.FAIL:
                 # Interesting complement is found.
                 # In next run, start removing the following subset
                 log_to_print = utils.generate_log(subsets[i], "Deleted", print_idx=True, threshold=30)

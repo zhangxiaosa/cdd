@@ -29,10 +29,6 @@ class AbstractDD(object):
     Abstract super-class of the parallel and non-parallel DD classes.
     """
 
-    # Test outcomes.
-    PASS = 'PASS'
-    FAIL = 'FAIL'
-
     def __init__(self, test, *, split=None, cache=None, id_prefix=None, other_config=None):
         """
         Initialise an abstract DD class. Not to be called directly, only by
