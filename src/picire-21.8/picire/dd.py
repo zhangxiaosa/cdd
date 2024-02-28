@@ -21,7 +21,7 @@ class DD(AbstractDD):
     """
 
     def __init__(self, test, *, split=None, cache=None, id_prefix=None,
-                 subset_first=True, subset_iterator=None, complement_iterator=None):
+                 subset_first=True, subset_iterator=None, complement_iterator=None, **other_config):
         """
         Initialize a DD object.
 
