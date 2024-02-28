@@ -21,7 +21,7 @@ trap handle_interrupt INT
 root=$(pwd)
 benchmark_path=${root}/benchmarks/xmlprocessorbugs
 
-${root}/scripts/build_picireny.sh
+${root}/scripts/build_hdd.sh
 
 # output folder
 out_folder_name=$(date +"%Y%m%d%H%M%S")
