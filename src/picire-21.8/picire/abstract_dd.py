@@ -146,18 +146,18 @@ class AbstractDD(object):
         """
         Test a single configuration and save the result in cache.
 
-        :param config: The current configuration to test.
-        :param config_id: Unique ID that will be used to save tests to easily
+        :param config_idx: The current configuration idx to test.
+        :param config_unique_id: Unique ID that will be used to save tests to easily
             identifiable directories.
         :return: PASS or FAIL
         """
         config_unique_id = self._id_prefix + config_unique_id
 
         logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_unique_id))
-        tstart = time.time()
+        start_time = time.time()
         config = self.idx2config(config_idx)
         outcome = self._test(config, config_unique_id)
-        logger.info("execution time of this test: " + str(time.time() - tstart) + "s")
+        logger.info("execution time of this test: " + str(time.time() - start_time) + "s")
         logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_unique_id), outcome)
 
         if 'assert' not in config_unique_id:

@@ -95,7 +95,7 @@ class DD(AbstractDD):
 
             # Get the outcome by testing it.
             outcome = self._test_config(subset, config_id)
-            if outcome == self.PASS:
+            if outcome is Outcome.FAIL:
                 # Interesting subset is found.
                 log_to_print = utils.generate_log(subsets[i], "Deleted(complement of)", print_idx=True, threshold=30)
                 logger.info(log_to_print)
