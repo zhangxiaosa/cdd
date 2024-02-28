@@ -1,6 +1,6 @@
 #! /bin/bash
 root=$(pwd)
-cd root
+cd ${root}
 git_version=$(git rev-parse --short HEAD)
 
 # install picire
