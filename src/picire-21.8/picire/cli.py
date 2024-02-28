@@ -47,10 +47,12 @@ def create_parser():
 
     # Base reduce settings.
     parser.add_argument('--cache', metavar='NAME',
-                        choices=[i for i in dir(outcome_cache) if not i.startswith('_') and i.islower()], default='none',
+                        choices=[i for i in dir(outcome_cache) if not i.startswith('_') and i.islower()],
+                        default='none',
                         help='cache strategy (%(choices)s; default: %(default)s)')
     parser.add_argument('--split', metavar='NAME',
-                        choices=[i for i in dir(config_splitters) if not i.startswith('_') and i.islower()], default='zeller',
+                        choices=[i for i in dir(config_splitters) if not i.startswith('_') and i.islower()],
+                        default='zeller',
                         help='split algorithm (%(choices)s; default: %(default)s)')
     parser.add_argument('--test', metavar='FILE', required=True,
                         help='test command that decides about interestingness of an input')
@@ -88,13 +90,13 @@ def create_parser():
 
     # Ddmin settings
     parser.add_argument('--dd', metavar='NAME', choices=['ddmin', 'probdd', 'cdd'],
-                         default='ddmin', help = 'DD variant to run (%(choices)s; default: %(default)s)')
+                        default='ddmin', help='DD variant to run (%(choices)s; default: %(default)s)')
     parser.add_argument('--onepass', default=False, action='store_true',
-                         help='do not reset index to 0 when a partition is deleted')
+                        help='do not reset index to 0 when a partition is deleted')
     parser.add_argument('--start-from-n', metavar='NUMBER', type=int, default=None,
-                         help='partition size start from a specified number, instead of half of the total size')
+                        help='partition size start from a specified number, instead of half of the total size')
     parser.add_argument('--init-probability', metavar='NUMBER', type=float, default=0.1,
-                         help='provide the initial probability for probdd, default value is 0.1')
+                        help='provide the initial probability for probdd, default value is 0.1')
     parser.add_argument('--id', metavar='NUMBER', type=int, default=0, help='just used for identify each trail')
 
     return parser
@@ -150,7 +152,8 @@ def process_args(args):
     else:
         if args.combine_loops:
             args.reduce_class = CombinedParallelDD
-            args.reduce_config = dict(config_iterator=CombinedIterator(args.subset_first, subset_iterator, complement_iterator))
+            args.reduce_config = dict(
+                config_iterator=CombinedIterator(args.subset_first, subset_iterator, complement_iterator))
         else:
             args.reduce_class = ParallelDD
             args.reduce_config = dict(subset_iterator=subset_iterator,
@@ -161,11 +164,14 @@ def process_args(args):
     args.reduce_config.update(dict(split=split_class(n=args.granularity)))
 
     # configs about probdd and cdd
-    args.reduce_config['onepass'] = args.onepass
-    args.reduce_config['start_from_n'] = args.start_from_n
-    args.reduce_config['init_probability'] = args.init_probability
-    args.reduce_config['id'] = args.id
-    args.reduce_config['dd'] = args.dd
+    args.reduce_config.update(
+        dict(onepass=args.onepass,
+             start_from_n=args.start_from_n,
+             init_probability=args.init_probability,
+             dd=args.dd,
+             id=args.id,
+             )
+    )
 
     logger.info('Input loaded from %s', args.input)
 
@@ -201,6 +207,7 @@ def log_args(title, args):
         if hasattr(args, '__name__'):
             return '.'.join(([args.__module__] if hasattr(args, '__module__') else []) + [args.__name__])
         return str(args)
+
     logger.info('%s\n\t%s\n', title, '\n\t'.join(_log_args(args)))
 
 
