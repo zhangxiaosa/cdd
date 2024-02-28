@@ -53,7 +53,7 @@ class EmptyDD(AbstractDD):
     else).
     """
 
-    def __init__(self, test, *, cache=None, id_prefix=()):
+    def __init__(self, test, *, cache=None, id_prefix=(), **other_config):
         """
         Initialize an EmptyDD object.
 
@@ -61,7 +61,7 @@ class EmptyDD(AbstractDD):
         :param cache: Cache object to use.
         :param id_prefix: Tuple to prepend to config IDs during tests.
         """
-        super().__init__(test=test, split=None, cache=cache, id_prefix=id_prefix)
+        super().__init__(test=test, split=None, cache=cache, id_prefix=id_prefix, other_config=other_config)
 
     def __call__(self, config):
         """
