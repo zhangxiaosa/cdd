@@ -7,6 +7,7 @@
 
 import itertools
 import logging
+import time
 
 from .config_splitters import ZellerSplit
 from .outcome import Outcome
@@ -15,12 +16,24 @@ from .outcome_cache import OutcomeCache
 logger = logging.getLogger(__name__)
 
 
+def split_list(input_list, chunk_size):
+    return [input_list[i:i + chunk_size] for i in range(0, len(input_list), chunk_size)]
+
+
+def flatten(l):
+    return [item for sublist in l for item in sublist]
+
+
 class AbstractDD(object):
     """
     Abstract super-class of the parallel and non-parallel DD classes.
     """
 
-    def __init__(self, test, *, split=None, cache=None, id_prefix=None):
+    # Test outcomes.
+    PASS = 'PASS'
+    FAIL = 'FAIL'
+
+    def __init__(self, test, *, split=None, cache=None, id_prefix=None, other_config=None):
         """
         Initialise an abstract DD class. Not to be called directly, only by
         super calls in subclass initializers.
@@ -30,10 +43,15 @@ class AbstractDD(object):
         :param cache: Cache object to use.
         :param id_prefix: Tuple to prepend to config IDs during tests.
         """
+        if other_config is None:
+            other_config = {}
         self._test = test
         self._split = split or ZellerSplit()
         self._cache = cache or OutcomeCache()
         self._id_prefix = id_prefix or ()
+        self.onepass = other_config["onepass"]
+        self.start_from_n = other_config["start_from_n"]
+        self.delete_history = []
 
     def __call__(self, config):
         """
@@ -45,17 +63,28 @@ class AbstractDD(object):
         subsets = [config]
         complement_offset = 0
 
+        self.original_config = config[:]
+        self.original_config_size = len(self.original_config)
+        self.original_config_idx = list(range(self.original_config_size))
+        current_config_idx = self.original_config_idx[:]
+
+        if self.start_from_n:
+            subsets = split_list(self.original_config_idx, self.start_from_n)
+        else:
+            subsets = [self.original_config_idx]
+
         for run in itertools.count():
             logger.info('Run #%d', run)
-            logger.info('\tConfig size: %d', len(config))
+            logger.info('\tConfig size: %d', len(current_config_idx))
             assert self._test_config(config, ('r%d' % run, 'assert')) is Outcome.FAIL
 
             # Minimization ends if the configuration is already reduced to a single unit.
-            if len(config) < 2:
+            if len(current_config_idx) < 2:
                 logger.info('\tGranularity: %d', len(subsets))
                 logger.debug('\tConfig: %r', subsets)
+                logger.info("\t Final result: %d/%d" % (len(flatten(subsets)), self.original_config_size))
                 logger.info('\tDone')
-                return config
+                return self.idx2config(current_config_idx)
 
             if len(subsets) < 2:
                 assert len(subsets) == 1
@@ -69,11 +98,11 @@ class AbstractDD(object):
             if next_subsets is not None:
                 # Interesting configuration is found, start new iteration.
                 subsets = next_subsets
-                config = [c for s in subsets for c in s]
+                current_config_idx = [c for s in subsets for c in s]
 
                 logger.info('\tReduced')
 
-            elif len(subsets) < len(config):
+            elif len(subsets) < len(current_config_idx):
                 # No interesting configuration is found but it is still not the finest splitting, start new iteration.
                 next_subsets = self._split(subsets)
                 complement_offset = (complement_offset * len(next_subsets)) / len(subsets)
@@ -83,8 +112,9 @@ class AbstractDD(object):
 
             else:
                 # Minimization ends if no interesting configuration was found by the finest splitting.
+                logger.info("\t Final result: %d/%d" % (len(flatten(subsets)), len(self.original_config)))
                 logger.info('\tDone')
-                return config
+                return self.idx2config(current_config_idx)
 
     def _reduce_config(self, run, subsets, complement_offset):
         """
@@ -111,11 +141,12 @@ class AbstractDD(object):
         """
         cached_result = self._cache.lookup(config)
         if cached_result is not None:
-            logger.debug('\t[ %s ]: cache = %r', self._pretty_config_id(self._id_prefix + config_id), cached_result.name)
+            logger.debug('\t[ %s ]: cache = %r', self._pretty_config_id(self._id_prefix + config_id),
+                         cached_result.name)
 
         return cached_result
 
-    def _test_config(self, config, config_id):
+    def _test_config(self, config_idx, config_unique_id):
         """
         Test a single configuration and save the result in cache.
 
@@ -124,14 +155,17 @@ class AbstractDD(object):
             identifiable directories.
         :return: PASS or FAIL
         """
-        config_id = self._id_prefix + config_id
+        config_unique_id = self._id_prefix + config_unique_id
 
-        logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_id))
-        outcome = self._test(config, config_id)
-        logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_id), outcome.name)
+        logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_unique_id))
+        tstart = time.time()
+        config = self.idx2config(config_idx)
+        outcome = self._test(config, config_unique_id)
+        logger.info("execution time of this test: " + str(time.time() - tstart) + "s")
+        logger.debug('\t[ %s ]: test = %r', self._pretty_config_id(config_unique_id), outcome)
 
-        if 'assert' not in config_id:
-            self._cache.add(config, outcome)
+        if 'assert' not in config_unique_id:
+            self._cache.add(config_idx, outcome)
 
         return outcome
 
@@ -150,3 +184,11 @@ class AbstractDD(object):
         :return: Concatenating the arguments with slashes, e.g., "rN / DM".
         """
         return ' / '.join(str(i) for i in config_id)
+
+    def idx2config(self, indices):
+        new_indices = indices[:]
+        new_indices.sort()
+        config = []
+        for i in indices:
+            config.append(self.original_config[i])
+        return config

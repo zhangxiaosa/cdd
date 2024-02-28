@@ -9,8 +9,7 @@ import logging
 
 from .abstract_dd import AbstractDD
 from .config_iterators import forward
-from .outcome import Outcome
-from .outcome_cache import ConfigCache
+from . import utils
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +35,7 @@ class DD(AbstractDD):
         :param complement_iterator: Reference to a generator function that
             provides config indices in an arbitrary order.
         """
-        cache = cache or ConfigCache()
-        super().__init__(test=test, split=split, cache=cache, id_prefix=id_prefix)
+        super().__init__(test=test, split=split, cache=None, id_prefix=id_prefix, other_config=other_config)
 
         self._subset_iterator = subset_iterator or forward
         self._complement_iterator = complement_iterator or forward
@@ -81,12 +79,24 @@ class DD(AbstractDD):
                 continue
 
             config_id = ('r%d' % run, 's%d' % i)
+            complement = [c for si, s in enumerate(subsets) for c in s if si != i]
             subset = subsets[i]
 
             # Get the outcome either from cache or by testing it.
-            outcome = self._lookup_cache(subset, config_id) or self._test_config(subset, config_id)
-            if outcome is Outcome.FAIL:
+            if self.onepass:
+                if complement in self.delete_history:
+                    continue
+                else:
+                    self.delete_history.append(subsets[i])
+                log_to_print = utils.generate_log(subsets[i], "Try deleting(complement of)", print_idx=True, threshold=30)
+                logger.info(log_to_print)
+
+            # Get the outcome by testing it.
+            outcome = self._test_config(subset, config_id)
+            if outcome == self.PASS:
                 # Interesting subset is found.
+                log_to_print = utils.generate_log(subsets[i], "Deleted(complement of)", print_idx=True, threshold=30)
+                logger.info(log_to_print)
                 return [subsets[i]], 0
 
         return None, complement_offset
@@ -103,7 +113,8 @@ class DD(AbstractDD):
             next complement_offset).
         """
         n = len(subsets)
-        for i in self._complement_iterator(n):
+        iterator = self._complement_iterator(n)
+        for i in iterator:
             if i is None:
                 continue
             i = int((i + complement_offset) % n)
@@ -111,10 +122,21 @@ class DD(AbstractDD):
             config_id = ('r%d' % run, 'c%d' % i)
             complement = [c for si, s in enumerate(subsets) for c in s if si != i]
 
-            outcome = self._lookup_cache(complement, config_id) or self._test_config(complement, config_id)
-            if outcome is Outcome.FAIL:
+            if self.onepass:
+                if subsets[i] in self.delete_history:
+                    continue
+            else:
+                self.delete_history.append(subsets[i])
+            log_to_print = utils.generate_log(subsets[i], "Try deleting", print_idx=True, threshold=30)
+            logger.info(log_to_print)
+
+            outcome = self._test_config(complement, config_id)
+            if outcome == self.PASS:
                 # Interesting complement is found.
                 # In next run, start removing the following subset
-                return subsets[:i] + subsets[i + 1:], i
+                log_to_print = utils.generate_log(subsets[i], "Deleted", print_idx=True, threshold=30)
+                logger.info(log_to_print)
+                iterator.reset()
+                return subsets[:i] + subsets[i + 1:], 0
 
         return None, complement_offset
