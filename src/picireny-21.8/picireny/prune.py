@@ -129,9 +129,9 @@ def prune(hdd_tree, config_nodes, *,
     test = tester_class(test_builder=test_builder, **tester_config)
     dd = reduce_class(test, cache=cache, id_prefix=id_prefix, **reduce_config)
     c = dd(config_ids)
-    if len(c) == 1:
-        dd = EmptyDD(test, cache=cache, id_prefix=id_prefix)
-        c = dd(c)
+    # if len(c) == 1:
+    #     dd = EmptyDD(test, cache=cache, id_prefix=id_prefix)
+    #     c = dd(c)
     c = set(c)
 
     def _set_state(node):
