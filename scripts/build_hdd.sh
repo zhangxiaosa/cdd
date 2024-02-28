@@ -5,7 +5,7 @@ git_version=$(git rev-parse --short HEAD)
 
 # install picire
 cd ${root}/src/picire-21.8
-version=$(cat picire-21.8/picire/VERSION)
+version=$(cat picire/VERSION)
 full_version="picire-${version}+${git_version}"
 pip install .
 if pip list | grep -q "$full_version"; then
@@ -17,7 +17,7 @@ fi
 
 # install picireny
 cd ${root}/src/picireny-21.8
-version=$(cat picireny-21.8/picireny/VERSION)
+version=$(cat picireny/VERSION)
 full_version="picireny-${version}+${git_version}"
 pip install .
 if pip list | grep -q "$full_version"; then
