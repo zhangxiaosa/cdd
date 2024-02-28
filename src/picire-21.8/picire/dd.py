@@ -7,7 +7,7 @@
 
 import logging
 
-from picire import Outcome
+from .outcome import Outcome
 
 from .abstract_dd import AbstractDD
 from .config_iterators import forward
