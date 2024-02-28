@@ -76,7 +76,7 @@ class AbstractDD(object):
         for run in itertools.count():
             logger.info('Run #%d', run)
             logger.info('\tConfig size: %d', len(current_config_idx))
-            assert self._test_config(config, ('r%d' % run, 'assert')) is Outcome.FAIL
+            assert self._test_config(current_config_idx, ('r%d' % run, 'assert')) is Outcome.FAIL
 
             # Minimization ends if the configuration is already reduced to a single unit.
             if len(current_config_idx) < 2:

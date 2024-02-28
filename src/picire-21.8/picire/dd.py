@@ -88,8 +88,8 @@ class DD(AbstractDD):
                     continue
                 else:
                     self.delete_history.append(subsets[i])
-                log_to_print = utils.generate_log(subsets[i], "Try deleting(complement of)", print_idx=True, threshold=30)
-                logger.info(log_to_print)
+            log_to_print = utils.generate_log(subsets[i], "Try deleting(complement of)", print_idx=True, threshold=30)
+            logger.info(log_to_print)
 
             # Get the outcome by testing it.
             outcome = self._test_config(subset, config_id)
@@ -130,6 +130,7 @@ class DD(AbstractDD):
             log_to_print = utils.generate_log(subsets[i], "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)
 
+            # Get the outcome by testing it.
             outcome = self._test_config(complement, config_id)
             if outcome == self.PASS:
                 # Interesting complement is found.
