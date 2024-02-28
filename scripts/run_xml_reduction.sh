@@ -108,7 +108,7 @@ for benchmark in "${benchmarks[@]}"; do
     {
         # init log and data path
         log_path=${out_path}/log_${benchmark}.txt
-        result_path=${out_path}/result_${benchmark}
+        result_path=${out_path}/result_${benchmark}.xml
         query_stat_path=${out_path}/query_stat_${benchmark}.txt
 
         if [ -d ${log_path} ] || [ -f ${result_path} ]; then
@@ -134,7 +134,7 @@ for benchmark in "${benchmarks[@]}"; do
         picire --version > ${log_path}
         timeout 24h picireny -i input.xml --test r.sh --grammar XMLLexer.g4 XMLParser.g4 --start document --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> ${log_path} 2>&1
         # save result, cleanup
-        mv input.* ${result_path}
+        mv input.xml ${result_path}
         cd ${root}
         cleanup ${work_path}
     } &
