@@ -134,7 +134,7 @@ for benchmark in "${benchmarks[@]}"; do
         picire --version > ${log_path}
         timeout 24h picireny -i input.xml --test r.sh --grammar XMLLexer.g4 XMLParser.g4 --start document --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> ${log_path} 2>&1
         # save result, cleanup
-        mv input.xml ${result_path}
+        mv input.xml.* ${result_path}
         cd ${root}
         cleanup ${work_path}
     } &
