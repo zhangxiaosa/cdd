@@ -25,11 +25,16 @@ def get_time_from_log(log_file):
 
 
 def get_token_num(file):
-    cmd = "~/cdd/build/bin/counter %s" % file
+    cmd = "java -jar ~/cdd/tools/token_counter.jar %s" % file
     proc = os.popen(cmd)
     output = proc.read()
 
-    match = re.search(r'original tokens:\s*(\d+)', output)
+    # Split the output into lines and get the last line
+    lines = output.strip().split('\n')
+    last_line = lines[-1] if lines else ''
+
+    # Search for a number in the last line
+    match = re.search(r'(\d+)', last_line)
     if match:
         return match.group(1)
     else:
