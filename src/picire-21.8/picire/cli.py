@@ -281,6 +281,7 @@ def execute():
     """
     The main entry point of picire.
     """
+    time_start = time.time()
     logging.basicConfig(format='%(message)s')
 
     parser = create_parser()
@@ -295,7 +296,6 @@ def execute():
     except ValueError as e:
         parser.error(e)
 
-    time_start = time.time()
     out_src = reduce(args.src,
                      reduce_class=args.reduce_class,
                      reduce_config=args.reduce_config,

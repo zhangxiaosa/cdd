@@ -6,6 +6,7 @@
 # according to those terms.
 
 import json
+import time
 
 from argparse import ArgumentParser
 from os.path import abspath, dirname, exists, join, realpath
@@ -258,6 +259,7 @@ def execute():
     """
     The main entry point of picireny.
     """
+    time_start = time.time()
     logging.basicConfig(format='%(message)s')
 
     arg_parser = ArgumentParser(description='CLI for the Picireny Hierarchical Delta Debugging Framework',
@@ -343,3 +345,4 @@ def execute():
     out_src = hdd_tree.unparse(with_whitespace=unparse_with_whitespace)
 
     picire.cli.postprocess(args, out_src)
+    print("execution time: " + str(time.time() - time_start) + "s")
