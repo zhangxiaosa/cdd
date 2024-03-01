@@ -111,7 +111,7 @@ for benchmark in "${benchmarks[@]}"; do
         result_path=${out_path}/result_${benchmark}
         query_stat_path=${out_path}/query_stat_${benchmark}.txt
 
-        if [ -d ${log_path} ] || [ -f ${result_path} ]; then
+        if [ -f ${log_path} ] || [ -d ${result_path} ]; then
             echo "already done ${benchmark}"
             continue
         fi	    
