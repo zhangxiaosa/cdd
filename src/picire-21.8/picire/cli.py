@@ -24,6 +24,7 @@ from . import config_iterators, config_splitters, outcome_cache
 from .combined_iterator import CombinedIterator
 from .combined_parallel_dd import CombinedParallelDD
 from .dd import DD
+from .cdd import CDD
 from .parallel_dd import ParallelDD
 from .shared_cache import shared_cache_decorator
 from .subprocess_test import ConcatTestBuilder, SubprocessTest
@@ -145,7 +146,11 @@ def process_args(args):
 
     # Choose the reducer class that will be used and its configuration.
     if not args.parallel:
+
         args.reduce_class = DD
+        if args.dd == 'probdd' or args.dd == 'cdd':
+            args.reduce_class = CDD
+
         args.reduce_config = dict(subset_iterator=subset_iterator,
                                   complement_iterator=complement_iterator,
                                   subset_first=args.subset_first)
