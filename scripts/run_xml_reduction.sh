@@ -57,7 +57,7 @@ echo "" >> ${config_path}
 
 # init arguments
 args_for_tool=""
-benchmarks=('xml10' 'xml12' 'xml15' 'xml17' 'xml18' 'xml19' 'xml2' 'xml20' 'xml21' 'xml22' 'xml23' 'xml25' 'xml26' 'xml27' 'xml3' 'xml30' 'xml31' 'xml32' 'xml33' 'xml36' 'xml38' 'xml39' 'xml4' 'xml41' 'xml42' 'xml43' 'xml50' 'xml51' 'xml52' 'xml53' 'xml54' 'xml55' 'xml56' 'xml58' 'xml59' 'xml60' 'xml61' 'xml62' 'xml63' 'xml64' 'xml65' 'xml66' 'xml67' 'xml68' 'xml69' 'xml7' 'xml70' 'xml71' 'xml72' 'xml73' 'xml74' 'xml75' 'xml76' 'xml77' 'xml78' 'xml79' 'xml80' 'xml81' 'xml9')
+benchmarks=('xml10' 'xml12' 'xml15' 'xml17' 'xml18' 'xml19' 'xml2' 'xml20' 'xml21' 'xml22' 'xml23' 'xml26' 'xml27' 'xml3' 'xml30' 'xml31' 'xml32' 'xml33' 'xml36' 'xml38' 'xml39' 'xml4' 'xml41' 'xml42' 'xml43' 'xml50' 'xml51' 'xml52' 'xml53' 'xml54' 'xml55' 'xml56' 'xml58' 'xml59' 'xml60' 'xml61' 'xml62' 'xml63' 'xml64' 'xml65' 'xml66' 'xml67' 'xml68' 'xml69' 'xml7' 'xml70' 'xml71' 'xml72' 'xml73' 'xml74' 'xml75' 'xml76' 'xml77' 'xml78' 'xml79' 'xml80' 'xml81' 'xml9')
 max_jobs=1
 
 # --args_for_tool is mandatory
