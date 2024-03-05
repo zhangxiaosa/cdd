@@ -108,7 +108,7 @@ class DD(AbstractDD):
             next complement_offset).
         """
         n = len(subsets)
-        iterator = self._complement_iterator(n)
+        iterator = self._complement_iterator(n - complement_offset)
         for i in iterator:
             if i is None:
                 continue
