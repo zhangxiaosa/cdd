@@ -81,15 +81,8 @@ class DD(AbstractDD):
                 continue
 
             config_id = ('r%d' % run, 's%d' % i)
-            complement = [c for si, s in enumerate(subsets) for c in s if si != i]
             subset = subsets[i]
 
-            # Get the outcome either from cache or by testing it.
-            if self.onepass:
-                if complement in self.delete_history:
-                    continue
-                else:
-                    self.delete_history.append(subsets[i])
             log_to_print = utils.generate_log(subsets[i], "Try deleting(complement of)", print_idx=True, threshold=30)
             logger.info(log_to_print)
 
@@ -124,11 +117,6 @@ class DD(AbstractDD):
             config_id = ('r%d' % run, 'c%d' % i)
             complement = [c for si, s in enumerate(subsets) for c in s if si != i]
 
-            if self.onepass:
-                if subsets[i] in self.delete_history:
-                    continue
-            else:
-                self.delete_history.append(subsets[i])
             log_to_print = utils.generate_log(subsets[i], "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)
 
@@ -139,7 +127,10 @@ class DD(AbstractDD):
                 # In next run, start removing the following subset
                 log_to_print = utils.generate_log(subsets[i], "Deleted", print_idx=True, threshold=30)
                 logger.info(log_to_print)
-                iterator.reset()
-                return subsets[:i] + subsets[i + 1:], 0
+                if self.onepass:
+                    return subsets[:i] + subsets[i + 1:], i
+                else:
+                    iterator.reset()
+                    return subsets[:i] + subsets[i + 1:], 0
 
         return None, complement_offset

@@ -47,7 +47,6 @@ class AbstractDD(object):
         self._id_prefix = id_prefix or ()
         self.onepass = other_config["onepass"]
         self.start_from_n = other_config["start_from_n"]
-        self.delete_history = []
 
     def __call__(self, config):
         """
