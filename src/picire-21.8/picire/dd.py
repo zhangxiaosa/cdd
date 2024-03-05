@@ -107,12 +107,12 @@ class DD(AbstractDD):
         :return: Tuple: (list of subsets composing the failing config or None,
             next complement_offset).
         """
-        n = len(subsets)
-        iterator = self._complement_iterator(n - complement_offset)
+        n = len(subsets) - complement_offset
+        iterator = self._complement_iterator(n)
         for i in iterator:
             if i is None:
                 continue
-            i = int((i + complement_offset) % n)
+            i = i + complement_offset
 
             config_id = ('r%d' % run, 'c%d' % i)
             complement = [c for si, s in enumerate(subsets) for c in s if si != i]
