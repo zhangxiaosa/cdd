@@ -100,7 +100,7 @@ class AbstractDD(object):
             elif len(subsets) < len(current_config_idx):
                 # No interesting configuration is found but it is still not the finest splitting, start new iteration.
                 next_subsets = self._split(subsets)
-                complement_offset = (complement_offset * len(next_subsets)) / len(subsets)
+                complement_offset = 0
                 subsets = next_subsets
 
                 logger.info('\tIncreased granularity')
