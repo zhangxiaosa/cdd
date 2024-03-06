@@ -123,7 +123,7 @@ for benchmark in "${benchmarks[@]}"; do
         cd $work_path
         mkdir ./output_dir
 
-        /home/coq/demystifying_probdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ${args_for_tool} ./test.sh ./${benchmark}.c
+        timeout 3h /home/coq/demystifying_probdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ${args_for_tool} ./test.sh ./${benchmark}.c
 
         # save result, cleanup
         mv ./output_dir/full_log.txt ${log_path} 

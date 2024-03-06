@@ -131,7 +131,7 @@ for benchmark in "${benchmarks[@]}"; do
 
         # record picireny version and run the benchmark
         picireny --version > ${log_path}
-        timeout 24h picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> ${log_path} 2>&1
+        timeout 3h picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> ${log_path} 2>&1
         # save result, cleanup
         mv small.c.* ${result_path}
         cd ${root}
