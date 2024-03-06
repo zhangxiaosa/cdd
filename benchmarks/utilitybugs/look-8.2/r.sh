@@ -3,7 +3,7 @@ UTILITY="look"
 VERSION="8.2"
 BIN_PATH="/home/coq/cdd/benchmarks/utilitybugs/${UTILITY}-${VERSION}/bin/${UTILITY}"
 
-TIMEOUT=300
+TIMEOUT=30
 
 timeout -s 9 $TIMEOUT $BIN_PATH -d a input > out.txt 2>&1
 ret=$?
