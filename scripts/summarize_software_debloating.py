@@ -36,7 +36,7 @@ def get_test_num_from_log(log_file):
 
 
 def get_token_num(file):
-    cmd = "~/demystifying_probdd/build/bin/counter %s" % file
+    cmd = "~/cdd/build/bin/counter %s" % file
     proc = os.popen(cmd)
     output = proc.read()
 
