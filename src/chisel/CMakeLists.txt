@@ -14,7 +14,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package(LLVM REQUIRED)
 find_package(Clang REQUIRED)
 
-set(CMAKE_CXX_FLAGS "${LLVM_COMPILE_FLAGS} ${CMAKE_CXX_FLAGS} -std=c++11 -lstdc++ -w -Os -march=native -fexceptions -pthread")
+set(CMAKE_CXX_FLAGS "${LLVM_COMPILE_FLAGS} ${CMAKE_CXX_FLAGS} -std=c++11 -lstdc++ -w -Os -march=native -fexceptions -pthread -frtti")
 if(CMAKE_BUILD_TYPE MATCHES Debug)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address")
 endif(CMAKE_BUILD_TYPE MATCHES Debug)
@@ -71,7 +71,7 @@ add_custom_target(lib ALL
 
 target_link_libraries(counter ${CLANG_LIBS} ${LLVM_LIBS_CORE} ${LLVM_LDFLAGS})
 
-target_link_libraries(chisel ${CLANG_LIBS} ${LLVM_LIBS_CORE} ${LLVM_LDFLAGS})
+target_link_libraries(chisel clangAST libclang libLLVM ${CLANG_LIBS} ${LLVM_LIBS_CORE} ${LLVM_LDFLAGS})
 
 # for make test
 enable_testing()

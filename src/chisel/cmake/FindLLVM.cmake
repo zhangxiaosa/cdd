@@ -13,7 +13,7 @@
 # LLVM_LIBS_JIT : ldflags needed to link against a LLVM JIT
 # LLVM_LIBS_JIT_OBJECTS : objects you need to add to your source when using LLVM JIT
 
-set(CONFIG_NAME "llvm-config")
+set(CONFIG_NAME "/usr/lib/llvm-9/bin/llvm-config")
 if (NOT "${LLVM_CONFIG_EXECUTABLE}" STREQUAL "")
   set(CONFIG_NAME "${LLVM_CONFIG_EXECUTABLE}")
   unset(LLVM_CONFIG_EXECUTABLE CACHE)
