@@ -125,13 +125,19 @@ for benchmark in "${benchmarks[@]}"; do
         touch $query_stat_path
         /home/coq/cdd/scripts/insert_counter.sh $work_path/r.sh $query_stat_path
 
-        cp ${benchmark_path}/$benchmark/small.c $work_path/small.c
+        cp "${benchmark_path}"/"$benchmark"/small.c "$work_path"/small.c
         cp ${benchmark_path}/C.g4 $work_path
         cd $work_path
 
         # record picireny version and run the benchmark
-        picireny --version > ${log_path}
-        timeout 3h picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> ${log_path} 2>&1
+        picireny --version > "${log_path}"
+        timeout -s 9 10800s picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --cache none --sys-recursion-limit 10000000 "${args_for_tool}" >> "${log_path}" 2>&1
+        ret=$?
+        if [ $ret -eq 137 ]; then
+          echo "time out" >> "${log_path}"
+          echo "execution time: 10800s" >> "${log_path}"
+        fi
+
         # save result, cleanup
         mv small.c.* ${result_path}
         cd ${root}
