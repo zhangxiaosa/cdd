@@ -50,28 +50,34 @@ class SubprocessTest(object):
         :return: The evaluation of the current test. It's either FAIL or PASS.
         """
 
-        test_dir = os.path.join(self.work_dir, '_'.join(str(i) for i in config_id))
-        test_path = os.path.join(test_dir, self.filename)
+        tmp_test_dir = os.path.join(self.work_dir, '_'.join(str(i) for i in config_id))
+        tmp_test_path = os.path.join(tmp_test_dir, self.filename)
+        current_best_path = os.path.join(self.work_dir, self.filename)
 
-        os.makedirs(test_dir, exist_ok=True)
+        os.makedirs(tmp_test_dir, exist_ok=True)
 
-        with codecs.open(test_path, 'w', encoding=self.encoding, errors='ignore') as f:
+        with codecs.open(tmp_test_path, 'w', encoding=self.encoding, errors='ignore') as f:
             f.write(self.test_builder(config))
 
         args = []
         for arg in self.command_pattern:
             try:
-                arg = arg % test_path
+                arg = arg % tmp_test_path
             except TypeError:
                 pass
             args.append(arg)
-        returncode = run(args, cwd=test_dir, check=False).returncode
+        returncode = run(args, cwd=tmp_test_dir, check=False).returncode
 
         if self.cleanup:
-            shutil.rmtree(test_dir)
+            shutil.rmtree(tmp_test_dir)
 
         # Determine outcome.
-        return Outcome.FAIL if returncode == 0 else Outcome.PASS
+        if returncode == 0:
+            with codecs.open(current_best_path, 'w', encoding=self.encoding, errors='ignore') as f:
+                f.write(self.test_builder(config))
+            return Outcome.FAIL
+        else:
+            return Outcome.PASS
 
 
 class ConcatTestBuilder(object):
