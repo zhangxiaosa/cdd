@@ -131,7 +131,7 @@ for benchmark in "${benchmarks[@]}"; do
 
         # record picireny version and run the benchmark
         picireny --version > "${log_path}"
-        timeout -s 9 10800s picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --cache none --sys-recursion-limit 10000000 "${args_for_tool}" >> "${log_path}" 2>&1
+        timeout -s 9 10800s picireny -i small.c --test r.sh --grammar C.g4 --start compilationUnit --cache none --sys-recursion-limit 10000000 ${args_for_tool} >> "${log_path}" 2>&1
         ret=$?
         if [ $ret -eq 137 ]; then
           echo "time out" >> "${log_path}"
