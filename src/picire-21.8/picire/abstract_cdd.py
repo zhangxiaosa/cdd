@@ -76,18 +76,20 @@ class AbstractCDD(object):
 
         run = 1
         while not self._test_done():
+            # select a subsequence to delete, if the subsequence is the whole current list, skip
+            config_idx_to_delete = self.sample()
+            if len(config_idx_to_delete) == self.get_current_config_size():
+                self.update_when_fail(config_idx_to_delete)
+                continue
+
             logger.info('Run #%d', run)
             logger.info('\tConfig size: %d', self.get_current_config_size())
             assert self._test_config(self.current_best_config_idx, ('r%d' % run, 'assert')) is Outcome.FAIL
 
-            # select a subsequence for testing
-            config_idx_to_delete = self.sample()
             log_to_print = utils.generate_log(config_idx_to_delete, "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)
             config_log_id = ('r%d' % run,)
-            if len(config_idx_to_delete) == self.get_current_config_size():
-                self.update_when_fail(config_idx_to_delete)
-                continue
+
 
             config_to_keep = self.current_best_config_idx[:]
             for idx in config_idx_to_delete:
