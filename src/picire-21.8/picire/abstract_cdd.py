@@ -63,7 +63,7 @@ class AbstractCDD(object):
         # try deleting all elements at the beginning
         logger.info('Run #%d', 0)
         logger.info('\tConfig size: %d', self.get_current_config_size())
-        log_to_print = utils.generate_log(self.get_current_config_size(), "Try deleting", print_idx=True, threshold=30)
+        log_to_print = utils.generate_log(list(range(self.get_current_config_size())), "Try deleting", print_idx=True, threshold=30)
         logger.info(log_to_print)
         config_log_id = ('r%d' % 0,)
         outcome = self._test_config([False] * self.get_current_config_size(), config_log_id)
@@ -89,10 +89,10 @@ class AbstractCDD(object):
                 self.update_when_fail(config_idx_to_delete)
                 continue
 
-            config_idx_to_keep = self.current_best_config_idx[:]
+            config_to_keep = self.current_best_config_idx[:]
             for idx in config_idx_to_delete:
-                config_idx_to_keep[idx] = False
-            outcome = self._test_config(config_idx_to_keep, config_log_id)
+                config_to_keep[idx] = False
+            outcome = self._test_config(config_to_keep, config_log_id)
             # FAIL means current variant cannot satisify the property
 
             # if the subset cannot be deleted
