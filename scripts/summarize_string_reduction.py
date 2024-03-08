@@ -60,7 +60,7 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
         final_program_timeout_path = os.path.join(collect_path, "tests", "input.xml")
 
         if os.path.isfile(final_program_finish_path) or os.path.isfile(final_program_timeout_path):
-            final_program_path = final_program_finish_path or final_program_timeout_path
+            final_program_path = final_program_finish_path if os.path.isfile(final_program_finish_path) else final_program_timeout_path
             token_num = get_char_num(final_program_path)
             log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
             query_stat_file = os.path.join(RESULT_PATH, "query_stat_" + target + ".txt")
