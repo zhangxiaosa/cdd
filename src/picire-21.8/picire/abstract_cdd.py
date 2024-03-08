@@ -162,14 +162,6 @@ class AbstractCDD(object):
 
         counter_min = self.find_min_counter()
         current_size = self.compute_size(counter_min)
-        current_config_size = self.get_current_config_size()
-
-        while current_size >= current_config_size:
-            self.increase_all_counters()
-            counter_min = self.find_min_counter()
-            current_size = self.compute_size(counter_min)
-            if current_size == 1:
-                break
 
         config_idx_to_delete = sorted_available_idx[:current_size]
         logger.info("\tSelected deletion size (cdd): " + str(len(config_idx_to_delete)))
