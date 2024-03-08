@@ -60,6 +60,9 @@ class AbstractCDD(object):
         # initialize current best config idx, all true
         self.current_best_config_idx = [True for _ in range(len(config))]
 
+        # test the original config
+        assert self._test_config(self.current_best_config_idx, 'assert') is Outcome.FAIL
+
         # try deleting all elements at the beginning
         logger.info('Run #%d', 0)
         logger.info('\tConfig size: %d', self.get_current_config_size())
@@ -85,7 +88,6 @@ class AbstractCDD(object):
 
             logger.info('Run #%d', run)
             logger.info('\tConfig size: %d', self.get_current_config_size())
-            assert self._test_config(self.current_best_config_idx, ('r%d' % run, 'assert')) is Outcome.FAIL
 
             log_to_print = utils.generate_log(config_idx_to_delete, "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)

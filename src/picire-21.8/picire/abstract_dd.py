@@ -63,6 +63,9 @@ class AbstractDD(object):
         self.original_config_idx = list(range(self.original_config_size))
         current_config_idx = self.original_config_idx[:]
 
+        # test the original config
+        assert self._test_config(current_config_idx, 'assert') is Outcome.FAIL
+
         if self.start_from_n:
             subsets = split_list(self.original_config_idx, self.start_from_n)
         else:
@@ -71,7 +74,6 @@ class AbstractDD(object):
         for run in itertools.count():
             logger.info('Run #%d', run)
             logger.info('\tConfig size: %d', len(current_config_idx))
-            assert self._test_config(current_config_idx, ('r%d' % run, 'assert')) is Outcome.FAIL
 
             # Minimization ends if the configuration is already reduced to a single unit.
             if len(current_config_idx) < 2:
