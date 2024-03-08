@@ -61,7 +61,7 @@ class AbstractCDD(object):
         self.current_best_config_idx = [True for _ in range(len(config))]
 
         # test the original config
-        assert self._test_config(self.current_best_config_idx, 'assert') is Outcome.FAIL
+        assert self._test_config(self.current_best_config_idx, ('assert',)) is Outcome.FAIL
 
         # try deleting all elements at the beginning
         logger.info('Run #%d', 0)

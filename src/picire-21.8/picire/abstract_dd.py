@@ -64,7 +64,7 @@ class AbstractDD(object):
         current_config_idx = self.original_config_idx[:]
 
         # test the original config
-        assert self._test_config(current_config_idx, 'assert') is Outcome.FAIL
+        assert self._test_config(current_config_idx, ('assert',)) is Outcome.FAIL
 
         if self.start_from_n:
             subsets = split_list(self.original_config_idx, self.start_from_n)
