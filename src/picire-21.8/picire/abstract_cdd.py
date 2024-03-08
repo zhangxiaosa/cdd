@@ -42,16 +42,16 @@ class AbstractCDD(object):
             # initialize counters
             self.counters = [0 for _ in range(len(config))]
             self.sample = self.sample_by_counter
+            self.update_when_pass = self.update_when_pass_cdd
             self.update_when_fail = self.update_when_fail_cdd
-            self.update_when_success = self.update_when_success_cdd
             self._test_done = self._test_done_cdd
 
         elif self.dd == "probdd":
             # initialize probabilities
             self.probabilities = [self.init_probability for _ in range(len(config))]
             self.sample = self.sample_by_probability
+            self.update_when_pass = self.update_when_pass_probdd
             self.update_when_fail = self.update_when_fail_probdd
-            self.update_when_success = self.update_when_success_probdd
             self._test_done = self._test_done_probdd
 
         else:
@@ -80,7 +80,7 @@ class AbstractCDD(object):
             config_idx_to_delete = self.sample()
             if len(config_idx_to_delete) == self.get_current_config_size():
                 logger.info('Deletion size too large, skip')
-                self.update_when_fail(config_idx_to_delete)
+                self.update_when_pass(config_idx_to_delete)
                 continue
 
             logger.info('Run #%d', run)
@@ -100,11 +100,11 @@ class AbstractCDD(object):
 
             # if the subset cannot be deleted
             if outcome is Outcome.PASS:
-                self.update_when_fail(config_idx_to_delete)
+                self.update_when_pass(config_idx_to_delete)
 
             # if the subset can be deleted
             else:
-                self.update_when_success(config_idx_to_delete)
+                self.update_when_fail(config_idx_to_delete)
                 log_to_print = utils.generate_log(config_idx_to_delete, "Deleted", print_idx=True, threshold=30)
                 logger.info(log_to_print)
 
@@ -212,14 +212,14 @@ class AbstractCDD(object):
         ratio = 1 / (1 - accumulated_probability)
         return ratio
 
-    def update_when_fail_cdd(self, config_idx_to_delete):
+    def update_when_pass_cdd(self, config_idx_to_delete):
         for idx in config_idx_to_delete:
             self.counters[idx] = self.counters[idx] + 1
         if (len(config_idx_to_delete) == 1):
             # assign the counter to maxsize and never consider this element
             self.counters[config_idx_to_delete[0]] = -1
 
-    def update_when_fail_probdd(self, config_idx_to_delete):
+    def update_when_pass_probdd(self, config_idx_to_delete):
         ratio = self.compute_ratio(config_idx_to_delete)
 
         for idx in config_idx_to_delete:
@@ -231,12 +231,12 @@ class AbstractCDD(object):
             # never consider this element
             self.probabilities[config_idx_to_delete[0]] = -1
 
-    def update_when_success_cdd(self, config_idx_to_delete):
+    def update_when_fail_cdd(self, config_idx_to_delete):
         for idx in config_idx_to_delete:
             self.counters[idx] = -1
             self.current_best_config_idx[idx] = False
 
-    def update_when_success_probdd(self, config_idx_to_delete):
+    def update_when_fail_probdd(self, config_idx_to_delete):
         for idx in config_idx_to_delete:
             self.probabilities[idx] = -1
             self.current_best_config_idx[idx] = False
