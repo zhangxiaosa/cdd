@@ -185,7 +185,7 @@ class AbstractCDD(object):
         current_gain = 1
         last_gain = 0
         while current_size < len(sorted_available_idx):
-            current_size = current_size + 1
+            current_size += 1
 
             current_idx = sorted_available_idx[current_size - 1]
             accumulated_probability = accumulated_probability * (1 - self.probabilities[current_idx])
@@ -193,7 +193,8 @@ class AbstractCDD(object):
             current_gain = accumulated_probability * current_size
 
             # find out the size with max gain and stop
-            if (current_gain < last_gain):
+            if current_gain < last_gain:
+                current_size -= 1
                 break
             last_gain = current_gain
 
