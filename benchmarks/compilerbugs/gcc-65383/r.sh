@@ -149,12 +149,20 @@ for cc in "${BADCC2[@]}" ; do
             exit 1
         fi
 
-        (timeout -s 9 $TIMEOUTEXE ./t >out2.txt 2>&1) >&/dev/null
-        ret=$?
-        if [ $ret != 139 ]; then
+        # this execution is flaky, need to execute multiple times to minimize
+        # the possibility of producing uncertain result
+        segfault_happens=false
+        for _ in {1..5} ; do
+            (timeout -s 9 $TIMEOUTEXE ./t >out2.txt 2>&1) >&/dev/null
+            ret=$?
+            if [ $ret == 139 ]; then
+                segfault_happens=true
+                # "break" is not used here for stable execution time
+            fi
+        done
+        if [ "$segfault_happens" = false ] ; then
             exit 1
         fi
-
     done
 done
 
