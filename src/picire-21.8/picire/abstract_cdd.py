@@ -79,6 +79,7 @@ class AbstractCDD(object):
             # select a subsequence to delete, if the subsequence is the whole current list, skip
             config_idx_to_delete = self.sample()
             if len(config_idx_to_delete) == self.get_current_config_size():
+                logger.info('Deletion size too large, skip')
                 self.update_when_fail(config_idx_to_delete)
                 continue
 
@@ -127,7 +128,6 @@ class AbstractCDD(object):
         size = round(-1 / math.log(1 - self.init_probability, math.e))
         i = 0
         while i < counter:
-            logger.info("i=%d, counter=%d, size=%d" % (i, counter, size))
             size = math.floor(size * (1 - pow(math.e, -1)))
             i = i + 1
         size = min(size, len(self.counters))
@@ -275,16 +275,7 @@ class AbstractCDD(object):
         config_log_id = self._id_prefix + config_log_id
         logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_log_id))
 
-        # compute new config idx
-        # logger.info("before deep copy")
-        # new_config_idx = self.current_best_config_idx[:]
-        # logger.info("after deep copy")
-        # for idx in config_idx_to_delete:
-        #     new_config_idx[idx] = False
-        logger.info("exclude elements in config_idx_to_delete")
-
         new_config = self.map_idx_to_config(config_idx)
-        logger.info("after mapping")
         tstart = time.time()
         outcome = self._test(new_config, config_log_id)
         logger.info("execution time of this test: " + str(time.time() - tstart) + "s")
