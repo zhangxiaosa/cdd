@@ -55,7 +55,7 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
             row.extend([None, None, None, None])
             CSV_WRITER.writerow(row)  # Write only target if not available
             continue
-        final_program_path = os.path.join(collect_path, "input")
+        final_program_path = os.path.join(collect_path, "tests", "input")
         log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
         query_stat_file = os.path.join(RESULT_PATH, "query_stat_" + target + ".txt")
         if os.path.isfile(final_program_path):
