@@ -70,20 +70,23 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
             row.extend([None, None, None, None])
             CSV_WRITER.writerow(row)  # Write only target if not available
             continue
-        final_program_path = os.path.join(collect_path, "tests", "small.c")
-        if os.path.isfile(final_program_path):
+
+        final_program_finish_path = os.path.join(collect_path, "small.c")
+        final_program_timeout_path = os.path.join(collect_path, "tests", "small.c")
+
+        if os.path.isfile(final_program_finish_path) or os.path.isfile(final_program_timeout_path):
+            final_program_path = final_program_finish_path or final_program_timeout_path
             token_num = get_token_num(final_program_path)
             log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
             query_stat_file = os.path.join(RESULT_PATH, "query_stat_" + target + ".txt")
             time = get_time_from_log(log_file)
             iteration = get_iteration(log_file)
             test_num = get_test_num(query_stat_file)
-
             print("target: %s: time: %s, token num: %s, iteration: %d, test num: %d"
                   % (target, time, token_num, iteration, test_num))
             row.extend([time, token_num, iteration, test_num])
         else:
-            print("%s: small.c not available" % target)
+            print("%s: result not available" % target)
             row.extend([None, None, None, None])
 
         CSV_WRITER.writerow(row)

@@ -55,25 +55,22 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
             row.extend([None, None, None, None])
             CSV_WRITER.writerow(row)  # Write only target if not available
             continue
-        final_program_path = os.path.join(collect_path, "tests", "input")
-        log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
-        query_stat_file = os.path.join(RESULT_PATH, "query_stat_" + target + ".txt")
-        if os.path.isfile(final_program_path):
-            char_num = get_char_num(final_program_path)
+
+        final_program_finish_path = os.path.join(collect_path, "input.xml")
+        final_program_timeout_path = os.path.join(collect_path, "tests", "input.xml")
+
+        if os.path.isfile(final_program_finish_path) or os.path.isfile(final_program_timeout_path):
+            final_program_path = final_program_finish_path or final_program_timeout_path
+            token_num = get_char_num(final_program_path)
+            log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
+            query_stat_file = os.path.join(RESULT_PATH, "query_stat_" + target + ".txt")
             time = get_time_from_log(log_file)
             test_num = get_test_num(query_stat_file)
-            print("target: %s: time: %s, char num: %s, test num: %d"
-                  % (target, time, char_num, test_num))
-            row.extend([time, char_num, test_num])
-        elif os.path.isfile(log_file):
-            char_num = get_char_num_from_log(log_file)
-            time = str(24 * 60 * 60)
-            test_num = get_test_num(query_stat_file)
-            print("target: %s: time: %s, char num: %s, test num: %d"
-                  % (target, time, char_num, test_num))
-            row.extend([time, char_num, test_num])
+            print("target: %s: time: %s, token num: %s, test num: %d"
+                  % (target, time, token_num, test_num))
+            row.extend([time, token_num, test_num])
         else:
-            print("%s: final result not available" % target)
+            print("%s: result not available" % target)
             row.extend([None, None, None, None])
 
         CSV_WRITER.writerow(row)
