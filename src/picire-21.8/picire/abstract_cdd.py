@@ -60,18 +60,39 @@ class AbstractCDD(object):
         # initialize current best config idx, all true
         self.current_best_config_idx = [True for _ in range(len(config))]
 
-        run = 0
+        # try deleting all elements at the beginning
+        logger.info('Run #%d', 0)
+        logger.info('\tConfig size: %d', self.get_current_config_size())
+        log_to_print = utils.generate_log(self.get_current_config_size(), "Try deleting", print_idx=True, threshold=30)
+        logger.info(log_to_print)
+        config_log_id = ('r%d' % 0,)
+        outcome = self._test_config([False] * self.get_current_config_size(), config_log_id)
+
+        # if deleting all elements works
+        if outcome is Outcome.FAIL:
+            logger.info("Final size: %d/%d" % (0, len(config)))
+            logger.info("Execution time at this level: %f s" % (time.time() - time_start))
+            return self.map_idx_to_config([False] * self.get_current_config_size())
+
+        run = 1
         while not self._test_done():
             logger.info('Run #%d', run)
             logger.info('\tConfig size: %d', self.get_current_config_size())
+            assert self._test_config(self.current_best_config_idx, ('r%d' % run, 'assert')) is Outcome.FAIL
 
             # select a subsequence for testing
             config_idx_to_delete = self.sample()
             log_to_print = utils.generate_log(config_idx_to_delete, "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)
             config_log_id = ('r%d' % run,)
+            if len(config_idx_to_delete) == self.get_current_config_size():
+                self.update_when_fail(config_idx_to_delete)
+                continue
 
-            outcome = self._test_config(config_idx_to_delete, config_log_id)
+            config_idx_to_keep = self.current_best_config_idx[:]
+            for idx in config_idx_to_delete:
+                config_idx_to_keep[idx] = False
+            outcome = self._test_config(config_idx_to_keep, config_log_id)
             # FAIL means current variant cannot satisify the property
 
             # if the subset cannot be deleted
@@ -256,19 +277,19 @@ class AbstractCDD(object):
 
         return new_config
 
-    def _test_config(self, config_idx_to_delete, config_log_id):
+    def _test_config(self, config_idx, config_log_id):
         config_log_id = self._id_prefix + config_log_id
         logger.debug('\t[ %s ]: test...', self._pretty_config_id(config_log_id))
 
         # compute new config idx
-        logger.info("before deep copy")
-        new_config_idx = self.current_best_config_idx[:]
-        logger.info("after deep copy")
-        for idx in config_idx_to_delete:
-            new_config_idx[idx] = False
+        # logger.info("before deep copy")
+        # new_config_idx = self.current_best_config_idx[:]
+        # logger.info("after deep copy")
+        # for idx in config_idx_to_delete:
+        #     new_config_idx[idx] = False
         logger.info("exclude elements in config_idx_to_delete")
 
-        new_config = self.map_idx_to_config(new_config_idx)
+        new_config = self.map_idx_to_config(config_idx)
         logger.info("after mapping")
         tstart = time.time()
         outcome = self._test(new_config, config_log_id)
