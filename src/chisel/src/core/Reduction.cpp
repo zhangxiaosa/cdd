@@ -14,6 +14,7 @@
 #include "OptionManager.h"
 #include "Profiler.h"
 #include "Report.h"
+#include "FileManager.h"
 
 #include <random>
 #include <string>
@@ -542,6 +543,7 @@ DDElementSet Reduction::doProbDD(DDElementVector &Decls) {
 
     if (status) { // safely delete and update the model
       spdlog::get("Logger")->info("Deleted: {}", indicesToBeRemoved);
+      FileManager::GetInstance()->saveTempSuccess();
       configSize -= index.size();
       auto TargetSet = toSet(program);
       Removed.insert(TargetSet.begin(), TargetSet.end());
@@ -619,6 +621,7 @@ DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
 
     if (status) { // safely delete and update the model
       spdlog::get("Logger")->info("Deleted: {}", indicesToBeRemoved);
+      FileManager::GetInstance()->saveTempSuccess();
       configSize -= index.size();
       auto TargetSet = toSet(program);
       Removed.insert(TargetSet.begin(), TargetSet.end());
@@ -874,6 +877,7 @@ DDElementSet Reduction::doDdmin(DDElementVector &Decls) {
       removed.insert(toBeRemovedSet.begin(), toBeRemovedSet.end());
       spdlog::get("Logger")->info("Try deleting: [0]");
       spdlog::get("Logger")->info("Deleted");
+      FileManager::GetInstance()->saveTempSuccess();
       return removed;
     }
   }
