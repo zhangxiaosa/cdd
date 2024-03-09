@@ -37,6 +37,8 @@ void FileManager::saveTemp(std::string Phase, bool Status) {
 }
 
 void FileManager::saveTempSuccess() {
+  spdlog::get("Logger")->info(OptionManager::OutputDir + "/" +
+                                  Basename(OptionManager::InputFile);
   llvm::sys::fs::copy_file(OptionManager::InputFile,
                            OptionManager::OutputDir + "/" +
                                Basename(OptionManager::InputFile)
