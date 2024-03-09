@@ -575,9 +575,9 @@ DDElementSet Reduction::doProbDD(DDElementVector &Decls) {
   return Removed;
 }
 
-// algorithm of ProbDD
-DDElementSet Reduction::doCounterDD(DDElementVector &Decls) {
-  spdlog::get("Logger")->info("Running CounterDD - Size: {}", Decls.size());
+// algorithm of CDD
+DDElementSet Reduction::doCDD(DDElementVector &Decls) {
+  spdlog::get("Logger")->info("Running CDD - Size: {}", Decls.size());
   mp1.clear();
   DDElementSet Removed;
   std::map< std::vector<int>, std::map< int, double > > recordDelta; 
@@ -992,8 +992,8 @@ DDElementSet Reduction::doDeltaDebugging(DDElementVector &Decls) {
   if (OptionManager::Algorithm.compare("probdd") == 0) {
     removed = doProbDD(Decls);
   }  
-  else if (OptionManager::Algorithm.compare("counterdd") == 0) {
-    removed = doCounterDD(Decls);
+  else if (OptionManager::Algorithm.compare("cdd") == 0) {
+    removed = doCDD(Decls);
   }
   else if (OptionManager::Algorithm.compare("chiseldd") == 0) {
     removed = doChiselDD(Decls);
