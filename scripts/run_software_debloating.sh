@@ -127,17 +127,19 @@ for benchmark in "${benchmarks[@]}"; do
         /home/coq/cdd/scripts/insert_counter.sh ./test.sh $query_stat_path
 
         mkdir ./output_dir
+	cp ./${benchmark}.c ./output_dir
 
         timeout -s 9 10800s /home/coq/cdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ${args_for_tool} ./test.sh ./${benchmark}.c
         ret=$?
+        # save result
+        cp -r ./output_dir ${result_path}
+        cp ./output_dir/full_log.txt ${log_path}
         if [ $ret -eq 137 ]; then
           echo "time out" >> "${log_path}"
           echo "execution time: 10800s" >> "${log_path}"
         fi
 
-        # save result, cleanup
-        cp -r ./output_dir result_path
-        cp ./output_dir/full_log.txt ${log_path}
+	# cleanup
         cd ${root}
         cleanup ${work_path}
     } &
