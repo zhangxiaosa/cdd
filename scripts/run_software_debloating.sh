@@ -107,10 +107,11 @@ for benchmark in "${benchmarks[@]}"; do
 
     {
         # init log and data path
-        log_path=${out_path}/${benchmark}_log.txt
-        result_path=${out_path}/${benchmark}.c
+        log_path=${out_path}/log_${benchmark}.txt
+        result_path=${out_path}/result_${benchmark}
+        query_stat_path=${out_path}/query_stat_${benchmark}.txt
 
-        if [ -f ${log_path} ] || [ -f ${result_path} ]; then
+        if [ -f ${log_path} ] || [ -d ${result_path} ]; then
             echo "already done ${benchmark}"
             continue
         fi	    
@@ -121,13 +122,22 @@ for benchmark in "${benchmarks[@]}"; do
         echo "created tmp folder ${work_path} for ${benchmark}"
         cp -r ${benchmark_path}/$benchmark/* $work_path
         cd $work_path
+        # insert counter to property test
+        touch $query_stat_path
+        /home/coq/cdd/scripts/insert_counter.sh ./test.sh $query_stat_path
+
         mkdir ./output_dir
 
         timeout -s 9 10800s /home/coq/cdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ${args_for_tool} ./test.sh ./${benchmark}.c
+        ret=$?
+        if [ $ret -eq 137 ]; then
+          echo "time out" >> "${log_path}"
+          echo "execution time: 10800s" >> "${log_path}"
+        fi
 
         # save result, cleanup
-        mv ./output_dir/full_log.txt ${log_path} 
-        mv ${benchmark}.c.chisel.c ${result_path}
+        cp -r ./output_dir result_path
+        cp ./output_dir/full_log.txt ${log_path}
         cd ${root}
         cleanup ${work_path}
     } &
