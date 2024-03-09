@@ -56,8 +56,8 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
             CSV_WRITER.writerow(row)  # Write only target if not available
             continue
 
-        final_program_finish_path = os.path.join(collect_path, "input.xml")
-        final_program_timeout_path = os.path.join(collect_path, "tests", "input.xml")
+        final_program_finish_path = os.path.join(collect_path, "input")
+        final_program_timeout_path = os.path.join(collect_path, "tests", "input")
 
         if os.path.isfile(final_program_finish_path) or os.path.isfile(final_program_timeout_path):
             final_program_path = final_program_finish_path if os.path.isfile(final_program_finish_path) else final_program_timeout_path
