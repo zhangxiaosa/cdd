@@ -743,6 +743,7 @@ DDElementSet Reduction::doFastDD(DDElementVector &Decls) {
         removed.insert(toBeRemovedSet.begin(), toBeRemovedSet.end());
         declsCopy.erase(declsCopy.begin()+idx, declsCopy.begin()+end_idx);
         spdlog::get("Logger")->info("Deleted: {}", indicesToBeRemoved);
+        FileManager::GetInstance()->saveTempSuccess();
 	update_file(toBeRemoved.size(), "success");
       }
       else {
@@ -793,6 +794,7 @@ DDElementSet Reduction::doSimplifiedProbDD(DDElementVector &Decls) {
         removed.insert(toBeRemovedSet.begin(), toBeRemovedSet.end());
         declsCopy.erase(declsCopy.begin()+idx, declsCopy.begin()+end_idx);
         spdlog::get("Logger")->info("Deleted: {}", indicesToBeRemoved);
+        FileManager::GetInstance()->saveTempSuccess();
       }
       else {
         idx += chunkSize;
@@ -930,6 +932,7 @@ DDElementSet Reduction::doDdmin(DDElementVector &Decls) {
           auto toBeRemovedSet = toSet(toBeRemoved);
           removed.insert(toBeRemovedSet.begin(), toBeRemovedSet.end());
           spdlog::get("Logger")->info("Deleted(complement of): {}", indicesToBeRemoved);
+          FileManager::GetInstance()->saveTempSuccess();
           indices = indexPartition;
           n = 2;
           goto outerLoop;
@@ -965,6 +968,7 @@ DDElementSet Reduction::doDdmin(DDElementVector &Decls) {
         auto toBeRemovedSet = toSet(toBeRemoved);
         removed.insert(toBeRemovedSet.begin(), toBeRemovedSet.end());
         spdlog::get("Logger")->info("Deleted: {}", indicesToBeRemoved);
+        FileManager::GetInstance()->saveTempSuccess();
         indices = indexComplement;
         n--;
         goto outerLoop;
