@@ -6,6 +6,9 @@
 #include "llvm/Support/FileSystem.h"
 
 #include "OptionManager.h"
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
 
 FileManager *FileManager::Instance;
 
@@ -38,7 +41,7 @@ void FileManager::saveTemp(std::string Phase, bool Status) {
 
 void FileManager::saveTempSuccess() {
   spdlog::get("Logger")->info(OptionManager::OutputDir + "/" +
-                                  Basename(OptionManager::InputFile);
+                                  Basename(OptionManager::InputFile));
   llvm::sys::fs::copy_file(OptionManager::InputFile,
                            OptionManager::OutputDir + "/" +
                                Basename(OptionManager::InputFile)
