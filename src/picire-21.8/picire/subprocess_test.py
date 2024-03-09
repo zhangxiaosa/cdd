@@ -66,13 +66,19 @@ class SubprocessTest(object):
             except TypeError:
                 pass
             args.append(arg)
-        returncode = run(args, cwd=tmp_test_dir, check=False).returncode
+
+        # run multiple times to mitigate non-determinism
+        final_returncode = 0
+        for _ in range(5):
+            returncode = run(args, cwd=tmp_test_dir, check=False).returncode
+        if returncode != 0:
+            final_returncode = 1
 
         if self.cleanup:
             shutil.rmtree(tmp_test_dir)
 
         # Determine outcome.
-        if returncode == 0:
+        if final_returncode == 0:
             with codecs.open(current_best_path, 'w', encoding=self.encoding, errors='ignore') as f:
                 f.write(self.test_builder(config))
             return Outcome.FAIL
