@@ -150,4 +150,4 @@ done
 # wait for the last few tasks to complete
 wait
 
-python ${root}/scripts/summarize_chisel.py ${out_path}
+python ${root}/scripts/summarize_software_debloating.py ${out_path}
