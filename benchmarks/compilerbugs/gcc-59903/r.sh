@@ -8,6 +8,7 @@ TIMEOUT=30
 CFILE=small.c
 CFLAG="-o t"
 CLANGFC="clang-7.1.0 -O0 -Wall -fwrapv -ftrapv -fsanitize=undefined,address"
+readonly TIMEOUTCCOMP=20
 
 #################################################################################
 
