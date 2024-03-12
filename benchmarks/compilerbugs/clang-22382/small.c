@@ -1143,10 +1143,10 @@ transparent_crc_bytes (char *ptr, int nbytes, char* vname, int flag)
 static long __undefined;
 
 struct S0 {
-   signed f0 : 1;
+   signed f0;
    int64_t f1;
-   signed f2 : 20;
-   unsigned f3 : 8;
+   signed f2;
+   unsigned f3;
 };
 
 static int32_t g_2 = 1L;
