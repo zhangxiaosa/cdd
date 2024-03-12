@@ -1146,92 +1146,92 @@ static long __undefined;
 
 
 struct S0 {
-   volatile uint8_t f0;
-   volatile uint32_t f1;
-   const volatile int16_t f2;
-   volatile uint32_t f3;
+    uint8_t f0;
+    uint32_t f1;
+   const  int16_t f2;
+    uint32_t f3;
    int16_t f4;
-   volatile uint64_t f5;
+    uint64_t f5;
 };
 
 struct S1 {
    signed f0 : 5;
    signed f1 : 8;
    uint32_t f2;
-   volatile uint16_t f3;
+    uint16_t f3;
 };
 
 
 static int8_t g_16 = 0x61L;
 static int32_t g_25 = 0x6EAB3CF8L;
 static struct S0 g_59 = {1UL,0xED469F41L,0xF53CL,0xCBF698BAL,-1L,0x49E864ADB5D2300BLL};
-static volatile int64_t g_60 = 0xE07F0936A74B4FBFLL;
+static  int64_t g_60 = 0xE07F0936A74B4FBFLL;
 static int32_t g_62 = 3L;
-static volatile struct S1 g_80 = {-4,-4,0x4F663622L,0xFA2EL};
-static volatile int32_t ** volatile g_108 = (void*)0;
-static volatile int32_t ** volatile * const g_107 = &g_108;
+static  struct S1 g_80 = {-4,-4,0x4F663622L,0xFA2EL};
+static  int32_t **  g_108 = (void*)0;
+static  int32_t **  * const g_107 = &g_108;
 static int32_t *g_116 = &g_62;
 static struct S1 g_125 = {1,-5,0x24141E32L,1UL};
-static volatile struct S0 g_126 = {0x0BL,0UL,0x77E3L,18446744073709551615UL,0x04C8L,5UL};
-static int32_t *** volatile g_129 = (void*)0;
+static  struct S0 g_126 = {0x0BL,0UL,0x77E3L,18446744073709551615UL,0x04C8L,5UL};
+static int32_t ***  g_129 = (void*)0;
 static int32_t **g_132 = &g_116;
-static int32_t *** volatile g_131 = &g_132;
+static int32_t ***  g_131 = &g_132;
 static uint8_t g_266 = 0xCCL;
-static volatile struct S1 g_313 = {-4,-14,0xBCE0E0F3L,0x7A9BL};
+static  struct S1 g_313 = {-4,-14,0xBCE0E0F3L,0x7A9BL};
 static int64_t g_566 = (-9L);
-static volatile uint16_t g_570 = 0UL;
+static  uint16_t g_570 = 0UL;
 static uint8_t g_687 = 250UL;
-static volatile uint8_t g_692 = 0x82L;
-static volatile struct S0 g_753 = {1UL,18446744073709551606UL,-1L,7UL,0x7256L,18446744073709551611UL};
-static volatile struct S0 g_763 = {1UL,0xDC33B451L,-8L,0x53A7278CL,3L,18446744073709551615UL};
-static volatile struct S0 g_792 = {255UL,0x045F4A48L,-1L,1UL,-1L,0x064B141677A4AC4CLL};
-static volatile struct S1 g_793 = {3,15,0x139AF61BL,65526UL};
-static volatile struct S1 g_794 = {-3,6,0x7005EE34L,0xC9B9L};
+static  uint8_t g_692 = 0x82L;
+static  struct S0 g_753 = {1UL,18446744073709551606UL,-1L,7UL,0x7256L,18446744073709551611UL};
+static  struct S0 g_763 = {1UL,0xDC33B451L,-8L,0x53A7278CL,3L,18446744073709551615UL};
+static  struct S0 g_792 = {255UL,0x045F4A48L,-1L,1UL,-1L,0x064B141677A4AC4CLL};
+static  struct S1 g_793 = {3,15,0x139AF61BL,65526UL};
+static  struct S1 g_794 = {-3,6,0x7005EE34L,0xC9B9L};
 static struct S0 g_803 = {0x55L,18446744073709551615UL,0xA09CL,0xCFB1D8EFL,-4L,0xBD35DC7E0B9DB818LL};
 static struct S0 g_804 = {246UL,0xAA6AA057L,-6L,0xA3680CAEL,1L,1UL};
 static const struct S1 g_818 = {-4,-10,0UL,0x2C76L};
-static volatile struct S1 g_847 = {-3,9,18446744073709551614UL,0x1B89L};
+static  struct S1 g_847 = {-3,9,18446744073709551614UL,0x1B89L};
 static struct S1 g_1163 = {-0,-13,0xBAE1CE67L,4UL};
 static const struct S1 *g_1174 = (void*)0;
 static const struct S1 g_1202 = {-2,-4,0x4B14E178L,0x6718L};
 static uint32_t g_1416 = 0x7AEC422EL;
 static struct S0 g_1441 = {0xC3L,0UL,0x3F39L,3UL,8L,0xDF5CA00CAC530F6ELL};
-static volatile int32_t g_1478 = 0x647E141EL;
+static  int32_t g_1478 = 0x647E141EL;
 static struct S0 g_1530 = {0xDFL,0x6ABBDA1EL,0L,0x0F4ED0ADL,0L,0x194CD6B76CC454E7LL};
 static struct S0 *g_1529 = &g_1530;
 static struct S1 g_1594 = {1,-15,1UL,65529UL};
-static volatile struct S1 *g_1596 = &g_847;
-static volatile struct S1 ** volatile g_1595 = &g_1596;
+static  struct S1 *g_1596 = &g_847;
+static  struct S1 **  g_1595 = &g_1596;
 static const struct S0 g_1639 = {253UL,0UL,0x8B90L,0UL,0xF2BCL,18446744073709551608UL};
 static int32_t g_1648 = 0xE1A00619L;
 static uint8_t g_2015 = 0UL;
-static volatile struct S1 g_2191 = {-3,-0,0xFF05B2F0L,65531UL};
-static volatile struct S1 ** volatile g_2210 = &g_1596;
+static  struct S1 g_2191 = {-3,-0,0xFF05B2F0L,65531UL};
+static  struct S1 **  g_2210 = &g_1596;
 static struct S1 g_2213 = {0,-0,0xE975E4D3L,0xDE00L};
 static int32_t g_2243 = 0x41CCDE37L;
-static int32_t * volatile g_2280 = (void*)0;
+static int32_t *  g_2280 = (void*)0;
 static uint32_t g_2309 = 0x78979873L;
 static struct S0 g_2321 = {255UL,18446744073709551613UL,0xEB97L,9UL,0xDA48L,0xE34739B25885D871LL};
 static const struct S1 g_2325 = {3,-13,0x0D605087L,65528UL};
 static struct S1 g_2326 = {4,11,0xF27C41D8L,0xE835L};
 static const struct S0 g_2347 = {0UL,0xFC64B101L,9L,18446744073709551615UL,0x2928L,18446744073709551607UL};
-static int32_t ** volatile g_2678 = &g_116;
+static int32_t **  g_2678 = &g_116;
 static const struct S1 g_2792 = {-0,11,0xAF3DB8F7L,0x8427L};
 static int32_t g_2951 = 0x91FA2AD1L;
-static volatile struct S1 g_2952 = {0,-7,0UL,0xC54DL};
-static int32_t ** volatile g_2976 = &g_116;
-static int32_t ** const volatile g_3092 = &g_116;
-static int32_t ** volatile g_3383 = &g_116;
-static volatile uint32_t g_3732 = 1UL;
+static  struct S1 g_2952 = {0,-7,0UL,0xC54DL};
+static int32_t **  g_2976 = &g_116;
+static int32_t ** const  g_3092 = &g_116;
+static int32_t **  g_3383 = &g_116;
+static  uint32_t g_3732 = 1UL;
 static const struct S0 g_3771 = {0xE7L,0xBD7EB7F6L,0x3AA0L,18446744073709551613UL,0x7CECL,0xC87C56E30E774214LL};
-static int32_t ** volatile g_3800 = &g_116;
+static int32_t **  g_3800 = &g_116;
 static uint32_t g_4114 = 0xF64A08C1L;
 static struct S0 g_4141 = {0x42L,18446744073709551611UL,-8L,0x11136A37L,-8L,0x82D87D8D374F33A5LL};
-static int32_t ** volatile g_4148 = (void*)0;
-static const volatile struct S1 g_4181 = {0,-7,1UL,1UL};
+static int32_t **  g_4148 = (void*)0;
+static const  struct S1 g_4181 = {0,-7,1UL,1UL};
 static const struct S0 *g_4217 = &g_2321;
-static const struct S0 ** volatile g_4216 = &g_4217;
-static volatile uint16_t g_4582 = 65532UL;
+static const struct S0 **  g_4216 = &g_4217;
+static  uint16_t g_4582 = 65532UL;
 static struct S1 g_4585 = {1,-3,0x62F0FF62L,0xC4A2L};
 
 
@@ -1621,7 +1621,7 @@ static struct S1 func_1(void)
         struct S0 **l_4144 = &g_1529;
         (*l_4144) = (g_4141 , &g_59);
 
-        ((g_1529 == &g_59) ? (void) (0) : __assert_fail ("g_1529 == &g_59", "t.c", 500, __PRETTY_FUNCTION__));
+        ((g_1529 == &g_59) ? (void) (0) : __assert_fail ("g_1529 == &g_59", "t.c", 500, 0));
     }
     else
     {
@@ -1639,10 +1639,10 @@ static struct S1 func_1(void)
             int32_t **l_4169 = &l_4147;
             (*g_3800) = l_4147;
 
-            ((g_116 == &g_2243) ? (void) (0) : __assert_fail ("g_116 == &g_2243", "t.c", 518, __PRETTY_FUNCTION__));
+            ((g_116 == &g_2243) ? (void) (0) : __assert_fail ("g_116 == &g_2243", "t.c", 518, 0));
         }
 
-        ((g_116 == &g_2243 || g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951) ? (void) (0) : __assert_fail ("g_116 == &g_2243 || g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951", "t.c", 521, __PRETTY_FUNCTION__));
+        ((g_116 == &g_2243 || g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951) ? (void) (0) : __assert_fail ("g_116 == &g_2243 || g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951", "t.c", 521, 0));
         for (g_1416 = 0; (g_1416 == 17); ++g_1416)
         {
             uint16_t l_4172 = 0xCB82L;
@@ -1673,12 +1673,12 @@ static struct S1 func_1(void)
         ++l_4213;
     }
 
-    ((g_116 == &g_2243 || g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951) ? (void) (0) : __assert_fail ("g_116 == &g_2243 || g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951", "t.c", 552, __PRETTY_FUNCTION__));
+    ((g_116 == &g_2243 || g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951) ? (void) (0) : __assert_fail ("g_116 == &g_2243 || g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951", "t.c", 552, 0));
 
-    ((g_1529 == &g_1530 || g_1529 == &g_59) ? (void) (0) : __assert_fail ("g_1529 == &g_1530 || g_1529 == &g_59", "t.c", 554, __PRETTY_FUNCTION__));
+    ((g_1529 == &g_1530 || g_1529 == &g_59) ? (void) (0) : __assert_fail ("g_1529 == &g_1530 || g_1529 == &g_59", "t.c", 554, 0));
     (*g_4216) = &g_3771;
 
-    ((g_4217 == &g_3771) ? (void) (0) : __assert_fail ("g_4217 == &g_3771", "t.c", 557, __PRETTY_FUNCTION__));
+    ((g_4217 == &g_3771) ? (void) (0) : __assert_fail ("g_4217 == &g_3771", "t.c", 557, 0));
     --g_4582;
     return g_4585;
 }
@@ -1712,7 +1712,7 @@ static int32_t func_2(const int8_t p_3, int8_t p_4, const uint16_t p_5, uint16_t
     int32_t *l_2995 = &g_62;
     int32_t *l_2996 = &g_62;
     uint16_t l_2997 = 0xC9EAL;
-    volatile struct S1 *l_3013 = &g_2191;
+     struct S1 *l_3013 = &g_2191;
     int32_t l_3126 = 0L;
     int32_t l_3176 = 6L;
     int32_t l_3226 = (-1L);
@@ -1763,7 +1763,7 @@ static int16_t func_10(uint32_t p_11, int32_t p_12, uint8_t p_13, int16_t p_14)
     int32_t *l_2975 = &g_2951;
     (*g_2976) = func_49(l_2958, (*g_2678), g_2792.f2, (((safe_lshift_func_int16_t_s_u(l_2961, 0)) | (((p_12 & (safe_lshift_func_int8_t_s_u((safe_add_func_int64_t_s_s(((~(safe_lshift_func_uint16_t_u_s(0xFDCDL, l_2961))) , (((((safe_add_func_uint8_t_u_u((((safe_mod_func_uint64_t_u_u(1UL, (safe_rshift_func_int8_t_s_u((l_2961 , (-8L)), 1)))) && (-7L)) < l_2958), l_2961)) , g_2325.f0) == 0xC1C0960FL) , (void*)0) != (void*)0)), g_1163.f1)), l_2958))) , p_14) <= g_2951)) , l_2975));
 
-    ((g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951", "t.c", 642, __PRETTY_FUNCTION__));
+    ((g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25 || g_116 == &g_2951", "t.c", 642, 0));
     return p_13;
 }
 
@@ -1785,7 +1785,7 @@ static uint16_t func_19(int32_t p_20)
     (*l_24) = (!l_22);
     (*l_2950) &= (func_26((*l_24), func_30(p_20, (g_16 , (((p_20 , (safe_mul_func_int16_t_s_s(func_35(g_16), ((safe_sub_func_int16_t_s_s(p_20, p_20)) || (*l_24))))) >= 1L) , (*g_2678)))), l_24) == p_20);
 
-    ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 664, __PRETTY_FUNCTION__));
+    ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 664, 0));
 
     (*l_2957) &= ((p_20 < ((g_2952 , (l_2953 != ((*l_2950) , l_2953))) == g_2325.f1)) == ((*l_24) <= (safe_sub_func_uint8_t_u_u((1L <= p_20), g_1441.f4))));
     return (*l_24);
@@ -1940,7 +1940,7 @@ static int32_t * func_30(uint32_t p_31, int32_t * p_32)
     int32_t *l_2802 = &l_2801;
     l_2802 = ((safe_sub_func_uint16_t_u_u(((((!(((+p_31) > ((safe_unary_minus_func_uint32_t_u(((safe_mul_func_uint16_t_u_u((0x4DL < ((void*)0 != l_2791)), (g_2792 , (0xC02B8BA01BD72C3CLL & (g_753.f0 & (safe_rshift_func_int8_t_s_s(((+0xC23E8EFAL) <= (safe_add_func_uint32_t_u_u((safe_mod_func_int8_t_s_s(((!l_2801) >= 18446744073709551608UL), l_2801)), (*p_32)))), 3))))))) , p_31))) || p_31)) && p_31)) , 1L) != g_2213.f2) >= (-1L)), p_31)) , (void*)0);
 
-    ((l_2802 == 0) ? (void) (0) : __assert_fail ("l_2802 == 0", "t.c", 819, __PRETTY_FUNCTION__));
+    ((l_2802 == 0) ? (void) (0) : __assert_fail ("l_2802 == 0", "t.c", 819, 0));
     return (*g_2678);
 
 
@@ -1984,12 +1984,12 @@ static int16_t func_35(const uint32_t p_36)
             int32_t *l_2227 = &g_62;
             l_2209 = ((g_1202.f1 > (((*l_57) ^ (*l_57)) || ((*g_1596) , ((safe_mul_func_uint8_t_u_u(p_36, ((&l_2203 != (void*)0) >= p_36))) >= (l_2203 ^ 0x93CCL))))) , l_2208);
 
-            ((l_2209 == &g_25) ? (void) (0) : __assert_fail ("l_2209 == &g_25", "t.c", 863, __PRETTY_FUNCTION__));
+            ((l_2209 == &g_25) ? (void) (0) : __assert_fail ("l_2209 == &g_25", "t.c", 863, 0));
             (*g_2210) = (*g_1595);
             (*l_2227) |= (safe_sub_func_int32_t_s_s((p_36 <= (g_2213 , (((((*g_1595) != (void*)0) < (((((g_1530.f4 ^ ((safe_mod_func_uint16_t_u_u((safe_mul_func_int16_t_s_s(((safe_mul_func_uint8_t_u_u(255UL, (safe_mod_func_int8_t_s_s(0x49L, ((safe_sub_func_int8_t_s_s((((((p_36 , ((safe_rshift_func_uint8_t_u_s((*l_2209), 3)) & 0xD4FC38EBL)) && p_36) != 1UL) != 65526UL) && p_36), g_818.f0)) && 8UL))))) != (*l_2209)), 0xA830L)), p_36)) <= 0x9BB53017L)) , (*l_2209)) , g_1530.f4) <= 6UL) && p_36)) != (*l_57)) , 1L))), (*l_57)));
         }
 
-        ((l_2209 == &g_25 || l_2209 == &l_2203) ? (void) (0) : __assert_fail ("l_2209 == &g_25 || l_2209 == &l_2203", "t.c", 868, __PRETTY_FUNCTION__));
+        ((l_2209 == &g_25 || l_2209 == &l_2203) ? (void) (0) : __assert_fail ("l_2209 == &g_25 || l_2209 == &l_2203", "t.c", 868, 0));
         l_2238 |= ((-1L) ^ ((0x9DC9L > (*l_2209)) == ((safe_rshift_func_uint8_t_u_u((safe_sub_func_int64_t_s_s(((safe_mod_func_uint64_t_u_u(p_36, 0xB143F17757A0342FLL)) < 0x7896L), g_2191.f2)), l_2234)) , ((((((safe_sub_func_uint8_t_u_u((~p_36), p_36)) > (*l_57)) & g_1441.f4) >= 5L) == (-5L)) & 0x6DL))));
     }
     else
@@ -2024,7 +2024,7 @@ static int16_t func_35(const uint32_t p_36)
         }
     }
 
-    ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 903, __PRETTY_FUNCTION__));
+    ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 903, 0));
 
     return g_2243;
 }
@@ -2615,17 +2615,17 @@ static const uint8_t func_43(uint64_t p_44, uint32_t p_45, int32_t * p_46)
                         int32_t *l_791 = &g_25;
                         (*l_704) = l_781;
 
-                        ((g_132 == &g_116) ? (void) (0) : __assert_fail ("g_132 == &g_116", "t.c", 1494, __PRETTY_FUNCTION__));
+                        ((g_132 == &g_116) ? (void) (0) : __assert_fail ("g_132 == &g_116", "t.c", 1494, 0));
                         if ((*p_46))
                             continue;
                         (**l_704) = func_49(p_45, (p_44 , func_49(((safe_lshift_func_uint8_t_u_s(((safe_lshift_func_uint16_t_u_u(((**l_781) <= (safe_rshift_func_uint16_t_u_s((safe_unary_minus_func_int8_t_s((((!(~(p_44 && p_44))) , l_791) == ((**l_781) , (g_792 , (g_793 , (void*)0)))))), (***l_704)))), 6)) & g_566), g_566)) , p_45), (**l_744), g_25, (*g_132))), g_566, &g_25);
                     }
 
-                    ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 1500, __PRETTY_FUNCTION__));
+                    ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 1500, 0));
                 }
                 else
                 {
-                    volatile struct S1 *l_795 = &g_313;
+                     struct S1 *l_795 = &g_313;
                     const uint32_t l_802 = 18446744073709551615UL;
                     (*l_795) = g_794;
                     for (g_125.f2 = 0; (g_125.f2 > 16); g_125.f2 = safe_add_func_uint16_t_u_u(g_125.f2, 2))
@@ -2656,7 +2656,7 @@ return g_126.f4;
                     (*l_795) = g_818;
                 }
 
-                ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 1535, __PRETTY_FUNCTION__));
+                ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 1535, 0));
                 if (((safe_mul_func_int8_t_s_s((safe_lshift_func_uint16_t_u_u((safe_mod_func_int8_t_s_s((p_46 != (void*)0), (safe_sub_func_uint32_t_u_u((safe_rshift_func_int16_t_s_s(0xBD78L, g_763.f0)), ((((safe_lshift_func_int8_t_s_s((g_804.f4 , (((((safe_sub_func_int8_t_s_s((safe_lshift_func_uint16_t_u_u((18446744073709551613UL > (safe_add_func_int32_t_s_s((((18446744073709551614UL != (safe_mul_func_int8_t_s_s(0x96L, (+(((((safe_add_func_uint32_t_u_u((0x6825FD7FL >= 3UL), g_818.f1)) && g_125.f1) & (**l_781)) <= g_125.f2) <= (**l_709)))))) <= g_125.f2) && 0x7AA7L), p_44))), g_59.f4)), p_45)) > 0x9BE0B728D810C863LL) >= g_803.f4) && (*p_46)) && p_44)), p_44)) || g_818.f0) < g_818.f1) && p_45))))), 2)), g_125.f2)) != p_45))
                 {
                     (*l_709) = (**l_744);
@@ -2679,7 +2679,7 @@ return g_126.f4;
         struct S0 **l_4144 = &g_1529;
         (*l_4144) = ((*l_1439) , &(*l_1439));
 
-        ((g_1529 == &(*l_1439)) ? (void) (0) : __assert_fail ("g_1529 == &(*l_1439)", "t.c", 1558, __PRETTY_FUNCTION__));
+        ((g_1529 == &(*l_1439)) ? (void) (0) : __assert_fail ("g_1529 == &(*l_1439)", "t.c", 1558, 0));
     }
 
 
@@ -2699,11 +2699,11 @@ for (g_62 = (-25); (g_62 >= (-28)); g_62 = safe_sub_func_uint8_t_u_u(g_62, 1))
                 }
                 p_46 = (**l_744);
 
-                ((p_46 == &g_62 || p_46 == &g_25) ? (void) (0) : __assert_fail ("p_46 == &g_62 || p_46 == &g_25", "t.c", 1578, __PRETTY_FUNCTION__));
+                ((p_46 == &g_62 || p_46 == &g_25) ? (void) (0) : __assert_fail ("p_46 == &g_62 || p_46 == &g_25", "t.c", 1578, 0));
             }
 
-            ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 1581, __PRETTY_FUNCTION__));
-            ((p_46 == &g_62 || p_46 == &g_25) ? (void) (0) : __assert_fail ("p_46 == &g_62 || p_46 == &g_25", "t.c", 1582, __PRETTY_FUNCTION__));
+            ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 1581, 0));
+            ((p_46 == &g_62 || p_46 == &g_25) ? (void) (0) : __assert_fail ("p_46 == &g_62 || p_46 == &g_25", "t.c", 1582, 0));
             l_1148--;
         }
         else
@@ -2743,7 +2743,7 @@ for (g_62 = (-25); (g_62 >= (-28)); g_62 = safe_sub_func_uint8_t_u_u(g_62, 1))
 
 l_1440 = l_1439;
 
-            ((l_1440 == &g_804) ? (void) (0) : __assert_fail ("l_1440 == &g_804", "t.c", 1622, __PRETTY_FUNCTION__));
+            ((l_1440 == &g_804) ? (void) (0) : __assert_fail ("l_1440 == &g_804", "t.c", 1622, 0));
             for (g_266 = 0; (g_266 < 42); ++g_266)
             {
                 struct S1 * const l_1451 = &g_125;
@@ -2768,17 +2768,17 @@ l_1440 = l_1439;
                     int32_t *l_1506 = (void*)0;
                     l_1488 = (void*)0;
 
-                    ((l_1488 == 0) ? (void) (0) : __assert_fail ("l_1488 == 0", "t.c", 1647, __PRETTY_FUNCTION__));
+                    ((l_1488 == 0) ? (void) (0) : __assert_fail ("l_1488 == 0", "t.c", 1647, 0));
                     (*l_1501) &= (0x2F13335EL >= ((((p_45 , (**l_1159)) != p_46) <= l_1489) | (safe_mul_func_int16_t_s_s((safe_add_func_uint32_t_u_u((safe_mod_func_int64_t_s_s(0L, (0xC2C55D5C1C62DEF3LL & (((safe_lshift_func_uint8_t_u_u(0xF0L, 2)) < (safe_sub_func_uint64_t_u_u(((252UL & g_792.f2) != (***l_1159)), l_1500))) | (-10L))))), 0x3B274A78L)), 65535UL))));
                     l_1507++;
                 }
 
-                ((l_1488 == 0 || l_1488 == &l_944) ? (void) (0) : __assert_fail ("l_1488 == 0 || l_1488 == &l_944", "t.c", 1652, __PRETTY_FUNCTION__));
+                ((l_1488 == 0 || l_1488 == &l_944) ? (void) (0) : __assert_fail ("l_1488 == 0 || l_1488 == &l_944", "t.c", 1652, 0));
             }
         }
 
-        ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 1656, __PRETTY_FUNCTION__));
-        ((p_46 == &g_62 || p_46 == &g_25) ? (void) (0) : __assert_fail ("p_46 == &g_62 || p_46 == &g_25", "t.c", 1657, __PRETTY_FUNCTION__));
+        ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 1656, 0));
+        ((p_46 == &g_62 || p_46 == &g_25) ? (void) (0) : __assert_fail ("p_46 == &g_62 || p_46 == &g_25", "t.c", 1657, 0));
         --l_1629;
         (*l_1607) = (safe_lshift_func_int8_t_s_s((-7L), (0x0AL < ((l_1634 && ((safe_mul_func_uint8_t_u_u(((safe_sub_func_int32_t_s_s(((l_1439 != l_1439) != (g_1639 , (safe_mod_func_uint8_t_u_u((p_46 == (void*)0), ((safe_rshift_func_int16_t_s_s(((safe_lshift_func_uint16_t_u_s((safe_mul_func_int8_t_s_s(g_803.f3, p_45)), 7)) < (-2L)), 4)) || p_44))))), (*p_46))) ^ p_44), g_125.f1)) ^ 0UL)) , (*l_1612)))));
         --l_1709;
@@ -3075,8 +3075,8 @@ l_1440 = l_1439;
         ++l_2001;
     }
 
-    ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 1954, __PRETTY_FUNCTION__));
-    ((p_46 == &g_62 || p_46 == &g_25) ? (void) (0) : __assert_fail ("p_46 == &g_62 || p_46 == &g_25", "t.c", 1955, __PRETTY_FUNCTION__));
+    ((g_116 == &g_62 || g_116 == &g_25) ? (void) (0) : __assert_fail ("g_116 == &g_62 || g_116 == &g_25", "t.c", 1954, 0));
+    ((p_46 == &g_62 || p_46 == &g_25) ? (void) (0) : __assert_fail ("p_46 == &g_62 || p_46 == &g_25", "t.c", 1955, 0));
     (*l_709) = func_49((safe_add_func_uint64_t_u_u((((!(safe_rshift_func_int8_t_s_s(p_44, ((*g_107) == &p_46)))) > ((safe_mod_func_uint64_t_u_u((l_2011 , l_2012), (safe_add_func_uint64_t_u_u(g_2015, (0xFDL ^ (l_1240 != g_1174)))))) == (**l_709))) ^ p_44), p_44)), (*l_709), p_45, p_46);
     --l_2187;
     return p_45;
@@ -3143,7 +3143,7 @@ if (((g_126 , (p_48 == p_48)) >= (*g_116)))
         }
         (*g_131) = &p_48;
 
-        ((g_132 == &p_48) ? (void) (0) : __assert_fail ("g_132 == &p_48", "t.c", 2022, __PRETTY_FUNCTION__));
+        ((g_132 == &p_48) ? (void) (0) : __assert_fail ("g_132 == &p_48", "t.c", 2022, 0));
         if ((((g_126.f5 == ((safe_rshift_func_uint8_t_u_s((safe_lshift_func_uint16_t_u_s(((safe_sub_func_int8_t_s_s((((&g_116 == (((*p_48) , (((((l_128 >= l_139) != (*g_116)) != 4UL) < ((safe_mod_func_uint16_t_u_u((0xBC2055579FD63578LL & (l_139 <= l_139)), 0xCC80L)) ^ l_139)) , l_139)) , &p_48)) , 0x6EFADCADL) < (*g_116)), 251UL)) ^ 0x58EBF8EC998684FALL), 1)), g_125.f1)) ^ 0L)) , (void*)0) != p_48))
         {
             int16_t l_142 = 0x2DFFL;
@@ -3633,7 +3633,7 @@ if (((g_126 , (p_48 == p_48)) >= (*g_116)))
             }
             (*g_132) = func_49((~(safe_rshift_func_uint16_t_u_u((safe_mod_func_int16_t_s_s((((((safe_add_func_uint64_t_u_u(((g_59 , (safe_mul_func_uint8_t_u_u((((safe_mul_func_int8_t_s_s(l_520, l_501)) & ((1UL & (((l_441 != l_504) ^ (&l_404 == p_48)) > ((&p_48 != (*g_107)) >= l_428))) | l_269)) || 0x6BEF7124L), l_404))) <= 65528UL), g_62)) > l_139) , (-1L)) , (void*)0) == (*g_132)), 0x5768L)), 6))), &l_441, l_139, l_584);
 
-            ((p_48 == &l_441 || p_48 == &l_151) ? (void) (0) : __assert_fail ("p_48 == &l_441 || p_48 == &l_151", "t.c", 2512, __PRETTY_FUNCTION__));
+            ((p_48 == &l_441 || p_48 == &l_151) ? (void) (0) : __assert_fail ("p_48 == &l_441 || p_48 == &l_151", "t.c", 2512, 0));
             g_687++;
             --g_692;
         }
@@ -3649,7 +3649,7 @@ if (((g_126 , (p_48 == p_48)) >= (*g_116)))
     }
 
 
-    ((g_132 == &g_116 || g_132 == &p_48) ? (void) (0) : __assert_fail ("g_132 == &g_116 || g_132 == &p_48", "t.c", 2528, __PRETTY_FUNCTION__));
+    ((g_132 == &g_116 || g_132 == &p_48) ? (void) (0) : __assert_fail ("g_132 == &g_116 || g_132 == &p_48", "t.c", 2528, 0));
     return g_313.f0;
 
 
@@ -3679,7 +3679,7 @@ static int32_t * func_49(uint8_t p_50, int32_t * p_51, int8_t p_52, int32_t * p_
         const int32_t * const **l_88 = &l_89;
         (*l_88) = (void*)0;
 
-        ((l_89 == 0) ? (void) (0) : __assert_fail ("l_89 == 0", "t.c", 2558, __PRETTY_FUNCTION__));
+        ((l_89 == 0) ? (void) (0) : __assert_fail ("l_89 == 0", "t.c", 2558, 0));
         return p_53;
 
 
@@ -3717,7 +3717,7 @@ static int32_t * func_49(uint8_t p_50, int32_t * p_51, int8_t p_52, int32_t * p_
                 int32_t *l_124 = &g_62;
                 (*l_120) = l_124;
 
-                ((l_63 == &g_62) ? (void) (0) : __assert_fail ("l_63 == &g_62", "t.c", 2596, __PRETTY_FUNCTION__));
+                ((l_63 == &g_62) ? (void) (0) : __assert_fail ("l_63 == &g_62", "t.c", 2596, 0));
                 g_80 = g_125;
                 p_51 = p_51;
             }
@@ -3730,7 +3730,7 @@ static int32_t * func_49(uint8_t p_50, int32_t * p_51, int8_t p_52, int32_t * p_
 
     g_116 = l_61;
 
-    ((g_116 == &g_62) ? (void) (0) : __assert_fail ("g_116 == &g_62", "t.c", 2609, __PRETTY_FUNCTION__));
+    ((g_116 == &g_62) ? (void) (0) : __assert_fail ("g_116 == &g_62", "t.c", 2609, 0));
     return p_51;
 
 
@@ -3958,7 +3958,7 @@ transparent_crc(g_2321.f3, "g_2321.f3", print_hash_value);
                 int32_t *l_124 = &g_62;
                 (*(&g_116)) = l_124;
 
-                ((g_116 == &g_62) ? (void) (0) : __assert_fail ("g_116 == &g_62", "t.c", 2838, __PRETTY_FUNCTION__));
+                ((g_116 == &g_62) ? (void) (0) : __assert_fail ("g_116 == &g_62", "t.c", 2838, 0));
                 g_313 = g_1594;
                 g_116 = g_116;
             }
@@ -3990,7 +3990,7 @@ transparent_crc(g_2952.f0, "g_2952.f0", print_hash_value);
         struct S0 **l_4144 = &g_1529;
         (*l_4144) = (g_803 , &g_803);
 
-        ((g_1529 == &g_803) ? (void) (0) : __assert_fail ("g_1529 == &g_803", "t.c", 2870, __PRETTY_FUNCTION__));
+        ((g_1529 == &g_803) ? (void) (0) : __assert_fail ("g_1529 == &g_803", "t.c", 2870, 0));
     }
 
 }
