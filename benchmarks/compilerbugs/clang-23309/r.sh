@@ -2,7 +2,7 @@
 BADCC1=()
 BADCC3=("clang-3.6.0  -O3")
 BADCC2=()
-MODE=$MODE
+MODE=("-m32" "-m64")
 
 # need to configure this part 
 #BADCC1=("clang-7.1.0 -O3")  # compilation failures
