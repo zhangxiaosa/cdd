@@ -72,13 +72,13 @@ fi
 #
 # compcert first
 #
-if $USE_COMPCERT ; then
-  timeout -s 9 $TIMEOUTCCOMP ccomp -interp -fall $CFILE >& /dev/null
-  ret=$?
-  if [ $ret != 0 ] ; then
-    exit 1
-  fi
+
+timeout -s 9 $TIMEOUTCCOMP ccomp -interp -fall $CFILE >& /dev/null
+ret=$?
+if [ $ret != 0 ] ; then
+  exit 1
 fi
+
 ###################################################
 # clang-7.1.0 memory sanitizer
 ###################################################

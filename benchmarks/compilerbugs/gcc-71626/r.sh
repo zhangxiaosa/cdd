@@ -10,8 +10,19 @@ BADCC=("gcc-4.9.0 -O3")
 GOODCC=("gcc")
 CFILE=small.c
 TIMEOUTCC=30
+readonly TIMEOUTCCOMP=20
 
 rm -f out*.txt
+
+#
+# compcert first
+#
+
+timeout -s 9 $TIMEOUTCCOMP ccomp -interp -fall $CFILE >& /dev/null
+ret=$?
+if [ $ret != 0 ] ; then
+  exit 1
+fi
 
 #############################
 # iterate over the good ones
