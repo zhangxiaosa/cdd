@@ -10,12 +10,15 @@ def delete_non_xml_files(path):
                 os.remove(file_to_remove)
 
 
-BENCHMARK_LIST = ['xml10', 'xml12', 'xml15', 'xml17', 'xml18', 'xml19', 'xml2', 'xml20', 'xml21', 'xml22', 'xml23',
-                  'xml26', 'xml27', 'xml3', 'xml30', 'xml31', 'xml32', 'xml33', 'xml36', 'xml38', 'xml39',
-                  'xml4', 'xml41', 'xml42', 'xml43', 'xml50', 'xml51', 'xml52', 'xml53', 'xml54', 'xml55',
-                  'xml56', 'xml58', 'xml59', 'xml60', 'xml61', 'xml62', 'xml63', 'xml64', 'xml65', 'xml66', 'xml67',
-                  'xml68', 'xml69', 'xml7', 'xml70', 'xml71', 'xml72', 'xml73', 'xml74', 'xml75', 'xml76', 'xml77',
-                  'xml78', 'xml79', 'xml80', 'xml81', 'xml9']
+BENCHMARK_LIST = ['xml-071d221-1', 'xml-071d221-2', 'xml-1e9bc83-1', 'xml-1e9bc83-2', 'xml-1e9bc83-3',
+                  'xml-1e9bc83-4', 'xml-1e9bc83-5', 'xml-1e9bc83-6', 'xml-1e9bc83-7', 'xml-1e9bc83-8',
+                  'xml-1e9bc83-9', 'xml-2d4ec80-1', 'xml-327c8af-1', 'xml-3398ac2-1', 'xml-3398ac2-2',
+                  'xml-3398ac2-3', 'xml-3398ac2-4', 'xml-3398ac2-5', 'xml-4c99b96-1', 'xml-4c99b96-10',
+                  'xml-4c99b96-11', 'xml-4c99b96-12', 'xml-4c99b96-13', 'xml-4c99b96-14', 'xml-4c99b96-15',
+                  'xml-4c99b96-16', 'xml-4c99b96-17', 'xml-4c99b96-18', 'xml-4c99b96-19', 'xml-4c99b96-2',
+                  'xml-4c99b96-3', 'xml-4c99b96-4', 'xml-4c99b96-5', 'xml-4c99b96-6', 'xml-4c99b96-7',
+                  'xml-4c99b96-8', 'xml-4c99b96-9', 'xml-8ede045-1', 'xml-8ede045-2', 'xml-8ede045-3',
+                  'xml-8ede045-4', 'xml-8ede045-5', 'xml-8ede045-6', 'xml-8ede045-7', 'xml-8ede045-8', 'xml-f053486-1']
 
 RESULT_PATH = sys.argv[1]
 
