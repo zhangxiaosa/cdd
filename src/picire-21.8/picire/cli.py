@@ -98,6 +98,9 @@ def create_parser():
                         help='partition size start from a specified number, instead of half of the total size')
     parser.add_argument('--init-probability', metavar='NUMBER', type=float, default=0.1,
                         help='provide the initial probability for probdd, default value is 0.1')
+    parser.add_argument('--shuffle', metavar='NUMBER', type=int, default=None,
+                        help='Shuffle the list only if a seed value is provided; otherwise, leave as is. '
+                             'Default seed is None.')
     parser.add_argument('--id', metavar='NUMBER', type=int, default=0, help='just used for identify each trail')
 
     return parser
@@ -174,6 +177,7 @@ def process_args(args):
              start_from_n=args.start_from_n,
              init_probability=args.init_probability,
              dd=args.dd,
+             shuffle=args.shuffle,
              id=args.id,
              )
     )

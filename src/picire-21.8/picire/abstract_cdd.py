@@ -9,6 +9,7 @@ import logging
 import time
 import math
 import sys
+import random
 
 from .outcome import Outcome
 
@@ -30,6 +31,7 @@ class AbstractCDD(object):
         self._id_prefix = id_prefix
         self.init_probability = other_config["init_probability"]
         self.dd = other_config["dd"]
+        self.shuffle = other_config["shuffle"]
         self.threshold = 0.8
 
     def __call__(self, config):
@@ -56,6 +58,10 @@ class AbstractCDD(object):
 
         else:
             raise ValueError("dd should be either cdd or probdd")
+
+        # init random seed
+        if self.shuffle:
+            random.seed(self.shuffle)
 
         # initialize current best config idx, all true
         self.current_best_config_idx = [True for _ in range(len(config))]
@@ -160,12 +166,16 @@ class AbstractCDD(object):
         sorted_available_idx_with_counter = sorted(available_idx_with_counter, key=lambda x: x[1])
 
         # extract sorted idx
-        sorted_available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
+        available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
+
+        # shuffle idx
+        if random.shuffle:
+            random.shuffle(available_idx)
 
         counter_min = self.find_min_counter()
         current_size = self.compute_size(counter_min)
 
-        config_idx_to_delete = sorted_available_idx[:current_size]
+        config_idx_to_delete = available_idx[:current_size]
         logger.info("\tSelected deletion size (cdd): " + str(len(config_idx_to_delete)))
         return config_idx_to_delete
 
@@ -180,16 +190,20 @@ class AbstractCDD(object):
         sorted_available_idx_with_probability = sorted(available_idx_with_probability, key=lambda x: x[1])
 
         # extract sorted idx
-        sorted_available_idx = [idx for idx, _ in sorted_available_idx_with_probability]
+        available_idx = [idx for idx, _ in sorted_available_idx_with_probability]
+
+        # shuffle idx
+        if random.shuffle:
+            random.shuffle(available_idx)
 
         current_size = 0
         accumulated_probability = 1
         current_gain = 1
         last_gain = 0
-        while current_size < len(sorted_available_idx):
+        while current_size < len(available_idx):
             current_size += 1
 
-            current_idx = sorted_available_idx[current_size - 1]
+            current_idx = available_idx[current_size - 1]
             accumulated_probability = accumulated_probability * (1 - self.probabilities[current_idx])
 
             current_gain = accumulated_probability * current_size
@@ -200,7 +214,7 @@ class AbstractCDD(object):
                 break
             last_gain = current_gain
 
-        config_idx_to_delete = sorted_available_idx[:current_size]
+        config_idx_to_delete = available_idx[:current_size]
 
         logger.info("\tSelected deletion size (probdd): " + str(len(config_idx_to_delete)))
         return config_idx_to_delete
