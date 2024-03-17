@@ -67,8 +67,9 @@ else
 fi
 
 
- compcert first
-
+#
+# compcert first
+#
 
  timeout -s 9 $TIMEOUTCCOMP ccomp -interp -fall $CFILE >& /dev/null
  ret=$?
