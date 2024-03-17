@@ -60,7 +60,7 @@ class AbstractCDD(object):
             raise ValueError("dd should be either cdd or probdd")
 
         # init random seed
-        if self.shuffle:
+        if self.shuffle is not None:
             random.seed(self.shuffle)
 
         # initialize current best config idx, all true
@@ -169,7 +169,7 @@ class AbstractCDD(object):
         available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
 
         # shuffle idx
-        if random.shuffle:
+        if self.shuffle is not None:
             random.shuffle(available_idx)
 
         counter_min = self.find_min_counter()
