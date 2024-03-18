@@ -49,7 +49,7 @@ def process_log_files(benchmark_list, result_path):
                                 output_file.write(f"{benchmark}, {total_size}, {delete_size}, {status}\n")
 
                             # if delete complement
-                            match = re.search(r'Try deleting(complement of) (\d+) elements', line)
+                            match = re.search(r'Try deleting\(complement of\) (\d+) elements', line)
                             if match:
                                 delete_size = total_size - int(match.group(1))
                                 # Check for deletion success before the next deletion attempt
