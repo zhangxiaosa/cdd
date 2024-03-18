@@ -58,7 +58,10 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         result_path = sys.argv[1]
         stats = process_results_file(result_path)
+        result_string = ""
         for key, value in stats.items():
             print(f"{key}: {value}")
+            result_string += f"{value:.2f},"
+        print(result_string)
     else:
         print("Usage: python script.py <result_path>")
