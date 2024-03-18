@@ -15,11 +15,13 @@ def process_results_file(result_path):
         delete_size_fail_sum = 0
         num_success = 0
         num_fail = 0
+        num_all = 0
 
         for line in lines:
             benchmark, total_size, delete_size, status = line.strip().split(', ')
             if benchmark not in BENCHMARK_LIST:
                 continue
+            num_all += 1
             total_size = int(total_size)
             delete_size = int(delete_size)
 
@@ -33,7 +35,6 @@ def process_results_file(result_path):
                 num_fail += 1
                 delete_size_fail_sum += delete_size
 
-        num_all = len(lines)
         mean_list_size = total_size_sum / num_all if num_all else 0
         mean_delete_size_all = delete_size_sum / num_all if num_all else 0
         mean_delete_size_success = delete_size_success_sum / num_success if num_success else 0
