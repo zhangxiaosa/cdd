@@ -33,9 +33,25 @@ def process_log_files(benchmark_list, result_path):
                                 total_size = int(match.group(1))
                         if 'Try deleting' in line:
                             # Get delete_size
+                            # if delete subset
                             match = re.search(r'Try deleting (\d+) elements', line)
                             if match:
                                 delete_size = int(match.group(1))
+                                # Check for deletion success before the next deletion attempt
+                                for j in range(i+1, len(lines)):
+                                    if 'Deleted' in lines[j]:
+                                        status = 'success'
+                                        break
+                                    if 'Try deleting' in lines[j]:
+                                        status = 'fail'
+                                        break
+                                # Write to file
+                                output_file.write(f"{benchmark}, {total_size}, {delete_size}, {status}\n")
+
+                            # if delete complement
+                            match = re.search(r'Try deleting(complement of) (\d+) elements', line)
+                            if match:
+                                delete_size = total_size - int(match.group(1))
                                 # Check for deletion success before the next deletion attempt
                                 for j in range(i+1, len(lines)):
                                     if 'Deleted' in lines[j]:
