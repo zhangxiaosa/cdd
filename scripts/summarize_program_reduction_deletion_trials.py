@@ -1,0 +1,58 @@
+import sys
+
+
+def process_results_file(result_path):
+    try:
+        with open(result_path, 'r') as file:
+            lines = file.readlines()
+
+        total_size_sum = 0
+        delete_size_sum = 0
+        delete_size_success_sum = 0
+        delete_size_fail_sum = 0
+        num_success = 0
+        num_fail = 0
+
+        for line in lines:
+            _, total_size, delete_size, status = line.strip().split(', ')
+            total_size = int(total_size)
+            delete_size = int(delete_size)
+
+            total_size_sum += total_size
+            delete_size_sum += delete_size
+
+            if status == "success":
+                num_success += 1
+                delete_size_success_sum += delete_size
+            elif status == "fail":
+                num_fail += 1
+                delete_size_fail_sum += delete_size
+
+        num_all = len(lines)
+        mean_list_size = total_size_sum / num_all if num_all else 0
+        mean_delete_size_all = delete_size_sum / num_all if num_all else 0
+        mean_delete_size_success = delete_size_success_sum / num_success if num_success else 0
+        mean_delete_size_fail = delete_size_fail_sum / num_fail if num_fail else 0
+
+        return {
+            "query_num_all": num_all,
+            "query_num_success": num_success,
+            "query_num_fail": num_fail,
+            "mean_list_size": mean_list_size,
+            "mean_delete_size_all": mean_delete_size_all,
+            "mean_delete_size_success": mean_delete_size_success,
+            "mean_delete_size_fail": mean_delete_size_fail,
+        }
+    except FileNotFoundError:
+        print(f"File not found: {result_path}")
+        return {}
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        result_path = sys.argv[1]
+        stats = process_results_file(result_path)
+        for key, value in stats.items():
+            print(f"{key}: {value}")
+    else:
+        print("Usage: python script.py <result_path>")
