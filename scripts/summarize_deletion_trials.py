@@ -1,5 +1,8 @@
 import sys
 
+BENCHMARK_LIST = ['clang-22382', 'clang-23353',
+                  'clang-25900', 'clang-27747',
+                  'gcc-61917', 'gcc-65383', 'gcc-71626']
 
 def process_results_file(result_path):
     try:
@@ -14,7 +17,9 @@ def process_results_file(result_path):
         num_fail = 0
 
         for line in lines:
-            _, total_size, delete_size, status = line.strip().split(', ')
+            benchmark, total_size, delete_size, status = line.strip().split(', ')
+            if benchmark not in BENCHMARK_LIST:
+                continue
             total_size = int(total_size)
             delete_size = int(delete_size)
 
