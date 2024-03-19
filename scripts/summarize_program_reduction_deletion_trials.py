@@ -15,11 +15,15 @@ def process_results_file(result_path):
         delete_size_fail_sum = 0
         num_success = 0
         num_fail = 0
+        num_complement = 0
+        num_success_complement = 0
+        num_repeated = 0
+        num_success_repeated = 0
         num_all = 0
         delete_size_frequency = {}  # To keep track of the frequencies
 
         for line in lines:
-            benchmark, total_size, delete_size, status = line.strip().split(', ')
+            benchmark, total_size, delete_size, complement, repeated, status = line.strip().split(', ')
             if benchmark not in BENCHMARK_LIST:
                 continue
             num_all += 1
@@ -42,6 +46,17 @@ def process_results_file(result_path):
                 num_fail += 1
                 delete_size_fail_sum += delete_size
 
+            if complement == "True":
+                num_complement += 1
+                if status == "success":
+                    num_success_complement += 1
+
+            if repeated == "True":
+                num_repeated += 1
+                if status == "success":
+                    num_success_repeated += 1
+
+
         mean_list_size = total_size_sum / num_all if num_all else 0
         mean_delete_size_all = delete_size_sum / num_all if num_all else 0
         mean_delete_size_success = delete_size_success_sum / num_success if num_success else 0
@@ -55,6 +70,10 @@ def process_results_file(result_path):
             "mean_delete_size_all": mean_delete_size_all,
             "mean_delete_size_success": mean_delete_size_success,
             "mean_delete_size_fail": mean_delete_size_fail,
+            "query_complement_num_all": num_complement,
+            "query_complement_num_success": num_success_complement,
+            "query_repeated_num_all": num_repeated,
+            "query_repeated_num_success": num_success_repeated,
         }
 
         # Adding delete_size_frequency to the results

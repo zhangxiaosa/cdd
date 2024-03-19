@@ -19,11 +19,14 @@ def process_log_files(benchmark_list, result_path):
     with open('all_deletion_trials.txt', 'w') as output_file:
         for benchmark in benchmark_list:
             log_file_path = os.path.join(result_path, f'log_{benchmark}.txt')
+            history = set()  # Track deletion attempts for each benchmark
             try:
                 with open(log_file_path, 'r') as file:
                     lines = file.readlines()
                     total_size = 0
                     delete_size = 0
+                    complement = False  # Default value for complement
+                    repeated = False  # Default value for repeated
                     status = 'fail'  # Default status
                     for i, line in enumerate(lines):
                         if 'Run #0' in line:
@@ -31,37 +34,36 @@ def process_log_files(benchmark_list, result_path):
                             match = re.search(r'Config size: (\d+)', lines[i+1])
                             if match:
                                 total_size = int(match.group(1))
+                            # Reset history for a new run
+                            history = set()
                         if 'Try deleting' in line:
-                            # Get delete_size
-                            # if delete subset
-                            match = re.search(r'Try deleting (\d+) elements', line)
+                            match = re.search(r'Try deleting (\d+) elements. Idx: (\[.*?\])', line)
+                            idx = ''
                             if match:
                                 delete_size = int(match.group(1))
-                                # Check for deletion success before the next deletion attempt
-                                for j in range(i+1, len(lines)):
-                                    if 'Deleted' in lines[j]:
-                                        status = 'success'
-                                        break
-                                    if 'Try deleting' in lines[j]:
-                                        status = 'fail'
-                                        break
-                                # Write to file
-                                output_file.write(f"{benchmark}, {total_size}, {delete_size}, {status}\n")
-
-                            # if delete complement
-                            match = re.search(r'Try deleting\(complement of\) (\d+) elements', line)
-                            if match:
-                                delete_size = total_size - int(match.group(1))
-                                # Check for deletion success before the next deletion attempt
-                                for j in range(i+1, len(lines)):
-                                    if 'Deleted' in lines[j]:
-                                        status = 'success'
-                                        break
-                                    if 'Try deleting' in lines[j]:
-                                        status = 'fail'
-                                        break
-                                # Write to file
-                                output_file.write(f"{benchmark}, {total_size}, {delete_size}, {status}\n")
+                                idx = match.group(2)
+                                complement = False  # Default assumption
+                                repeated = idx in history
+                                history.add(idx)
+                            else:
+                                match = re.search(r'Try deleting\(complement of\) (\d+) elements. Idx: (\[.*?\])', line)
+                                if match:
+                                    delete_size = total_size - int(match.group(1))
+                                    idx = match.group(2)
+                                    complement = True
+                                    repeated = idx in history
+                                    history.add(idx)
+                            # Check for deletion success before the next deletion attempt
+                            for j in range(i+1, len(lines)):
+                                if 'Deleted' in lines[j]:
+                                    status = 'success'
+                                    break
+                                if 'Try deleting' in lines[j]:
+                                    status = 'fail'
+                                    break
+                            # Write to file
+                            if idx:  # Ensure we only write if there was a matching deletion attempt
+                                output_file.write(f"{benchmark}, {total_size}, {delete_size}, {complement}, {repeated}, {status}\n")
             except FileNotFoundError:
                 print(f"Log file for {benchmark} not found in {result_path}")
 
