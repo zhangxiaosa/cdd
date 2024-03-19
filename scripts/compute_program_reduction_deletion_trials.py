@@ -46,13 +46,11 @@ def process_log_files(benchmark_list, result_path):
                                 repeated = idx in history
                                 history.add(idx)
                             else:
-                                match = re.search(r'Try deleting\(complement of\) (\d+) elements. Idx: (\[.*?\])', line)
+                                match = re.search(r'Try deleting\(complement of\) (\d+) elements', line)
                                 if match:
                                     delete_size = total_size - int(match.group(1))
-                                    idx = match.group(2)
                                     complement = True
-                                    repeated = idx in history
-                                    history.add(idx)
+                                    repeated = False
                             # Check for deletion success before the next deletion attempt
                             for j in range(i+1, len(lines)):
                                 if 'Deleted' in lines[j]:
