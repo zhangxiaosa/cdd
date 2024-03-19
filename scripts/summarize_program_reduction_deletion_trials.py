@@ -81,10 +81,13 @@ def process_results_file(result_path):
             "mean_delete_size_fail": mean_delete_size_fail,
             "query_complement_num_all": num_complement,
             "query_complement_num_success": num_success_complement,
+            "query_complement_num_fail": num_complement - num_success_complement,
             "query_repeated_num_all": num_repeated,
             "query_repeated_num_success": num_success_repeated,
+            "query_repeated_num_fail": num_repeated - num_success_repeated,
             "query_large_num_all": num_large,
             "query_large_num_success": num_success_large,
+            "query_large_num_fail": num_large - num_success_large,
         }
 
         # Adding delete_size_frequency to the results
