@@ -4,6 +4,8 @@ BENCHMARK_LIST = ['clang-22382', 'clang-23353',
                   'clang-25900', 'clang-27747',
                   'gcc-61917', 'gcc-65383', 'gcc-71626']
 
+S0 = 10
+
 def process_results_file(result_path):
     try:
         with open(result_path, 'r') as file:
@@ -19,6 +21,8 @@ def process_results_file(result_path):
         num_success_complement = 0
         num_repeated = 0
         num_success_repeated = 0
+        num_large = 0
+        num_success_large = 0
         num_all = 0
         delete_size_frequency = {}  # To keep track of the frequencies
 
@@ -56,6 +60,11 @@ def process_results_file(result_path):
                 if status == "success":
                     num_success_repeated += 1
 
+            if complement == "False" and repeated == "False" and delete_size > S0:
+                num_large += 1
+                if status == "success":
+                    num_success_large += 1
+
 
         mean_list_size = total_size_sum / num_all if num_all else 0
         mean_delete_size_all = delete_size_sum / num_all if num_all else 0
@@ -74,6 +83,8 @@ def process_results_file(result_path):
             "query_complement_num_success": num_success_complement,
             "query_repeated_num_all": num_repeated,
             "query_repeated_num_success": num_success_repeated,
+            "query_large_num_all": num_large,
+            "query_large_num_success": num_success_large,
         }
 
         # Adding delete_size_frequency to the results
