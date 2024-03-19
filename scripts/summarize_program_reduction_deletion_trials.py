@@ -50,7 +50,7 @@ def process_results_file(result_path):
                 num_fail += 1
                 delete_size_fail_sum += delete_size
 
-            if complement == "True" and delete_size * 2 < total_size:
+            if complement == "True" and total_size > 2:
                 num_complement += 1
                 if status == "success":
                     num_success_complement += 1
