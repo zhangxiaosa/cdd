@@ -16,6 +16,7 @@ def process_results_file(result_path):
         num_success = 0
         num_fail = 0
         num_all = 0
+        delete_size_frequency = {}  # To keep track of the frequencies
 
         for line in lines:
             benchmark, total_size, delete_size, status = line.strip().split(', ')
@@ -24,6 +25,12 @@ def process_results_file(result_path):
             num_all += 1
             total_size = int(total_size)
             delete_size = int(delete_size)
+
+            # Update delete_size frequency
+            if delete_size in delete_size_frequency:
+                delete_size_frequency[delete_size] += 1
+            else:
+                delete_size_frequency[delete_size] = 1
 
             total_size_sum += total_size
             delete_size_sum += delete_size
@@ -40,7 +47,7 @@ def process_results_file(result_path):
         mean_delete_size_success = delete_size_success_sum / num_success if num_success else 0
         mean_delete_size_fail = delete_size_fail_sum / num_fail if num_fail else 0
 
-        return {
+        stats = {
             "query_num_all": num_all,
             "query_num_success": num_success,
             "query_num_fail": num_fail,
@@ -49,6 +56,11 @@ def process_results_file(result_path):
             "mean_delete_size_success": mean_delete_size_success,
             "mean_delete_size_fail": mean_delete_size_fail,
         }
+
+        # Adding delete_size_frequency to the results
+        stats["delete_size_frequency"] = delete_size_frequency
+
+        return stats
     except FileNotFoundError:
         print(f"File not found: {result_path}")
         return {}
@@ -60,8 +72,12 @@ if __name__ == "__main__":
         stats = process_results_file(result_path)
         result_string = ""
         for key, value in stats.items():
-            print(f"{key}: {value}")
-            result_string += f"{value:.2f},"
-        print(result_string)
+            if key != "delete_size_frequency":
+                print(f"{key}: {value}")
+                result_string += f"{value:.2f},"
+            else:
+                print("frequency of each size")
+                print(f"{key}: {value}")  # Print the frequency dictionary directly
+        print(result_string[:-1])  # Remove the last comma
     else:
         print("Usage: python script.py <result_path>")
