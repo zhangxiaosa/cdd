@@ -59,9 +59,7 @@ def process_log_files(benchmark_list, result_path):
                                 if 'Try deleting' in lines[j]:
                                     status = 'fail'
                                     break
-                            # Write to file
-                            if idx:  # Ensure we only write if there was a matching deletion attempt
-                                output_file.write(f"{benchmark}, {total_size}, {delete_size}, {complement}, {repeated}, {status}\n")
+                            output_file.write(f"{benchmark}, {total_size}, {delete_size}, {complement}, {repeated}, {status}\n")
             except FileNotFoundError:
                 print(f"Log file for {benchmark} not found in {result_path}")
 
