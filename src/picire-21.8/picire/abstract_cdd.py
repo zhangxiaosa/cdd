@@ -56,8 +56,8 @@ class AbstractCDD(object):
         elif self.dd == "probdd":
             # initialize probabilities
             if self.shuffle is not None:
-                random_variance = self.init_probability * 0.01 * random.random()
-                self.probabilities = [self.init_probability + random_variance for _ in range(len(config))]
+                self.probabilities = [self.init_probability + self.init_probability * 0.01 * random.random()
+                                      for _ in range(len(config))]
             else:
                 self.probabilities = [self.init_probability for _ in range(len(config))]
 
