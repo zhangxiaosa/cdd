@@ -10,6 +10,7 @@ import time
 import math
 import sys
 import random
+import numpy as np
 
 from .outcome import Outcome
 
@@ -39,6 +40,10 @@ class AbstractCDD(object):
         time_start = time.time()
         self.original_config = config[:]
 
+        # init random seed
+        if self.shuffle is not None:
+            random.seed(self.shuffle)
+
         # initialize based on the specificed sample startegy
         if self.dd == "cdd":
             # initialize counters
@@ -50,7 +55,12 @@ class AbstractCDD(object):
 
         elif self.dd == "probdd":
             # initialize probabilities
-            self.probabilities = [self.init_probability for _ in range(len(config))]
+            if self.shuffle is not None:
+                random_variance = self.init_probability * 0.01 * random.random()
+                self.probabilities = [self.init_probability + random_variance for _ in range(len(config))]
+            else:
+                self.probabilities = [self.init_probability for _ in range(len(config))]
+
             self.sample = self.sample_by_probability
             self.update_when_pass = self.update_when_pass_probdd
             self.update_when_fail = self.update_when_fail_probdd
@@ -58,10 +68,6 @@ class AbstractCDD(object):
 
         else:
             raise ValueError("dd should be either cdd or probdd")
-
-        # init random seed
-        if self.shuffle is not None:
-            random.seed(self.shuffle)
 
         # initialize current best config idx, all true
         self.current_best_config_idx = [True for _ in range(len(config))]
@@ -98,7 +104,6 @@ class AbstractCDD(object):
             log_to_print = utils.generate_log(config_idx_to_delete, "Try deleting", print_idx=True, threshold=30)
             logger.info(log_to_print)
             config_log_id = ('r%d' % run,)
-
 
             config_to_keep = self.current_best_config_idx[:]
             for idx in config_idx_to_delete:
@@ -168,10 +173,6 @@ class AbstractCDD(object):
         # extract sorted idx
         available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
 
-        # shuffle idx
-        if self.shuffle is not None:
-            random.shuffle(available_idx)
-
         counter_min = self.find_min_counter()
         current_size = self.compute_size(counter_min)
 
@@ -191,10 +192,6 @@ class AbstractCDD(object):
 
         # extract sorted idx
         available_idx = [idx for idx, _ in sorted_available_idx_with_probability]
-
-        # shuffle idx
-        if random.shuffle:
-            random.shuffle(available_idx)
 
         current_size = 0
         accumulated_probability = 1
