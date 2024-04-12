@@ -1,4 +1,4 @@
-# Artifact for "CDD: A Simple Yet Effective Counter-Based Model for Delta Debugging"
+# Artifact for "Toward a Better Understandings of Probabilistic Delta Debugging"
 
 ## Introduction
 
