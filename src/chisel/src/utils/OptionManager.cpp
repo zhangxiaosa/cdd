@@ -64,7 +64,7 @@ static struct option long_options[] = {
     {"onepass", no_argument, 0, 'B'},
     {"start_from_n", required_argument, 0, 'E'},
     {"init_probability", required_argument, 0, 'I'},
-    {"shuffle", no_argument, 0, 'r'},
+    {"shuffle", required_argument, 0, 'r'},
     {0, 0, 0, 0}};
 
 static const char *optstring = "ho:t:sDdglcLGCpvSXaiABE";
