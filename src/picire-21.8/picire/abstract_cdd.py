@@ -184,7 +184,7 @@ class AbstractCDD(object):
                                           probability != -1]
 
         # shuffle
-        if self.shuffle:
+        if self.shuffle is not None:
             random.shuffle(available_idx_with_probability)
 
         # sort idx by probability
