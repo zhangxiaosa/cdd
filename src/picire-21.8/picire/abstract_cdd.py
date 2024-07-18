@@ -55,11 +55,7 @@ class AbstractCDD(object):
 
         elif self.dd == "probdd":
             # initialize probabilities
-            if self.shuffle is not None:
-                self.probabilities = [self.init_probability + self.init_probability * 0.01 * random.random()
-                                      for _ in range(len(config))]
-            else:
-                self.probabilities = [self.init_probability for _ in range(len(config))]
+            self.probabilities = [self.init_probability for _ in range(len(config))]
 
             self.sample = self.sample_by_probability
             self.update_when_pass = self.update_when_pass_probdd
@@ -186,6 +182,10 @@ class AbstractCDD(object):
         # filter out those removed elements (probability is -1)
         available_idx_with_probability = [(idx, probability) for idx, probability in enumerate(self.probabilities) if
                                           probability != -1]
+
+        # shuffle
+        if self.shuffle:
+            random.shuffle(available_idx_with_probability)
 
         # sort idx by probability
         sorted_available_idx_with_probability = sorted(available_idx_with_probability, key=lambda x: x[1])
