@@ -48,7 +48,7 @@ def get_test_num(log_file):
 
 with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
     CSV_WRITER = csv.writer(csvfile)
-    CSV_WRITER.writerow(["target", "time", "char num", "test num"])
+    CSV_WRITER.writerow(["target", "time", "line num", "test num"])
 
     for target in BENCHMARK_LIST:
         row = [target]  # Initialize row with target as the first column
@@ -64,14 +64,14 @@ with open(os.path.join(RESULT_PATH, 'summary.csv'), 'w', newline='') as csvfile:
 
         if os.path.isfile(final_program_finish_path) or os.path.isfile(final_program_timeout_path):
             final_program_path = final_program_finish_path if os.path.isfile(final_program_finish_path) else final_program_timeout_path
-            token_num = get_char_num(final_program_path)
+            line_num = get_line_num(final_program_path)
             log_file = os.path.join(RESULT_PATH, "log_" + target + ".txt")
             query_stat_file = os.path.join(RESULT_PATH, "query_stat_" + target + ".txt")
             time = get_time_from_log(log_file)
             test_num = get_test_num(query_stat_file)
-            print("target: %s: time: %s, token num: %s, test num: %d"
-                  % (target, time, token_num, test_num))
-            row.extend([time, token_num, test_num])
+            print("target: %s: time: %s, line num: %s, test num: %d"
+                  % (target, time, line_num, test_num))
+            row.extend([time, line_num, test_num])
         else:
             print("%s: result not available" % target)
             row.extend([None, None, None, None])
