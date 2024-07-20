@@ -25,7 +25,8 @@ def get_char_num(file):
 
 def get_line_num(file):
     with open(file, 'r', encoding='utf-8') as f:
-        return sum(1 for line in f)
+        lines = f.readlines()
+        return len(lines)
 
 def get_char_num_from_log(file):
     with open(file, 'r') as f:
