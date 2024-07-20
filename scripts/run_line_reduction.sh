@@ -25,7 +25,7 @@ ${root}/scripts/build_hdd.sh
 
 # output folder
 out_folder_name=$(date +"%Y%m%d%H%M%S")
-out_path="${root}/results/utilitybugs/${out_folder_name}"
+out_path="${root}/results/utilitybugs-line/${out_folder_name}"
 echo "out_path is ${out_path}"
 if [ ! -d "$out_path" ]; then
     mkdir -p $out_path
@@ -148,5 +148,5 @@ done
 # wait for the last few tasks to complete
 wait
 
-python ${root}/scripts/summarize_string_reduction.py ${out_path}
-python ${root}/scripts/cleanup_string_reduction.py ${out_path}
+python ${root}/scripts/summarize_line_reduction.py ${out_path}
+python ${root}/scripts/cleanup_line_reduction.py ${out_path}
