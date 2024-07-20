@@ -1,0 +1,15 @@
+#! /bin/bash
+UTILITY="look"
+VERSION="8.2"
+BIN_PATH="/home/coq/cdd/benchmarks/utilitybugs/${UTILITY}-${VERSION}/bin/${UTILITY}"
+
+TIMEOUT=30
+echo $(pwd)
+timeout -s 9 $TIMEOUT $BIN_PATH -d a input
+ret=$?
+echo ret is $ret
+if [ $ret != 137 ]; then
+	exit 1
+fi
+
+exit 0
