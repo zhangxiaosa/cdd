@@ -29,7 +29,8 @@ def get_line_num(file):
     if result.returncode != 0:
         print(f"Error counting lines in file {file}: {result.stderr}")
         return None
-    return int(result.stdout.strip().split()[0])
+    # wc -l count the number of newline character, so +1
+    return int(result.stdout.strip().split()[0]) + 1
 
 def get_char_num_from_log(file):
     with open(file, 'r') as f:
