@@ -1,5 +1,6 @@
 import os
 import re
+import subprocess
 import sys
 import csv
 
@@ -24,9 +25,11 @@ def get_char_num(file):
     return os.path.getsize(file)
 
 def get_line_num(file):
-    with open(file, 'r', encoding='utf-8') as f:
-        lines = f.readlines()
-        return len(lines)
+    result = subprocess.run(['wc', '-l', file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if result.returncode != 0:
+        print(f"Error counting lines in file {file}: {result.stderr}")
+        return None
+    return int(result.stdout.strip().split()[0])
 
 def get_char_num_from_log(file):
     with open(file, 'r') as f:
