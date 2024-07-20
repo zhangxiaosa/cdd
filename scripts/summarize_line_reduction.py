@@ -23,6 +23,9 @@ def get_time_from_log(log_file):
 def get_char_num(file):
     return os.path.getsize(file)
 
+def get_line_num(file):
+    with open(file, 'r', encoding='utf-8') as f:
+        return sum(1 for line in f)
 
 def get_char_num_from_log(file):
     with open(file, 'r') as f:
