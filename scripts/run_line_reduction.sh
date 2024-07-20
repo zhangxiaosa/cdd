@@ -19,7 +19,7 @@ function handle_interrupt(){
 trap handle_interrupt INT
 
 root=$(pwd)
-benchmark_path=${root}/benchmarks/utilitybugs
+benchmark_path=${root}/benchmarks/utilitybugs-line
 
 ${root}/scripts/build_hdd.sh
 
