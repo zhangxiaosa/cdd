@@ -77,7 +77,6 @@ def process_random_lines(input_file, script_file, num_lines, total_lines, log_fi
     removed_lines = remove_random_lines(input_tmp_path, num_lines, total_lines)
     script_path = os.path.join(tmp_dir, 'r.sh')
 
-    print(f"Executing script in {tmp_dir} after removing lines {removed_lines}")  # Debugging info
     result = run_script(script_path, cwd=tmp_dir)
     success = result == 0
 
@@ -112,7 +111,7 @@ def main(input_file, script_file, num_lines, jobs, attempts, mode):
         try:
             for future in concurrent.futures.as_completed(futures):
                 removed_lines, success = future.result()
-                print(f"Progress: Removed lines {removed_lines}, Result: {'Success' if success else 'Failure'}")
+                print(f"Progress: {'Success' if success else 'Failure'}")
         except KeyboardInterrupt:
             print("Process interrupted by user. Cleaning up...")
             executor.shutdown(wait=False)
