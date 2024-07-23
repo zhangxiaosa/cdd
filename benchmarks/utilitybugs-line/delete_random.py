@@ -48,7 +48,8 @@ def remove_random_lines(input_path, num_lines, total_lines):
 def log_result(log_path, removed_lines, success):
     with lock:
         with open(log_path, 'a') as log_file:
-            log_file.write(f"Removed lines {removed_lines}: {'Success' if success else 'Failure'}\n")
+            #log_file.write(f"Removed lines {removed_lines}: {'Success' if success else 'Failure'}\n")
+            log_file.write(f"Removed {len(removed_lines)} lines: {'Success' if success else 'Failure'}\n")
 
 def process_window(input_file, script_file, num_lines, total_lines, log_file):
     tmp_dir = copy_files_to_tmp(input_file, script_file)
