@@ -35,9 +35,11 @@ def remove_random_lines(input_path, num_lines, total_lines):
     if num_lines >= total_lines:
         raise ValueError("num_lines must be less than the total number of lines in the file")
 
-    random_indices = sorted(random.sample(range(total_lines), num_lines), reverse=True)
-    modified_lines = [line for i, line in enumerate(lines) if i not in random_indices]
-    
+    random_indices = random.sample(range(total_lines), num_lines)
+
+    random_indices_set = set(random_indices)
+    modified_lines = [line for i, line in enumerate(lines) if i not in random_indices_set]
+
     with open(input_path, 'w', encoding='latin1') as file:
         file.writelines(modified_lines)
     
@@ -74,6 +76,7 @@ def process_random_lines(input_file, script_file, num_lines, total_lines, log_fi
     removed_lines = remove_random_lines(input_tmp_path, num_lines, total_lines)
     script_path = os.path.join(tmp_dir, 'r.sh')
     
+    print(f"Executing script in {tmp_dir} after removing lines {removed_lines}")  # Debugging info
     result = run_script(script_path, cwd=tmp_dir)
     success = result == 0
     
@@ -105,9 +108,14 @@ def main(input_file, script_file, num_lines, jobs, attempts, mode):
             elif mode == 'random':
                 futures.append(executor.submit(process_random_lines, input_file, script_file, num_lines, total_lines, log_file))
 
-        for future in concurrent.futures.as_completed(futures):
-            removed_lines, success = future.result()
-            print(f"Progress: Removed lines {removed_lines}, Result: {'Success' if success else 'Failure'}")
+        try:
+            for future in concurrent.futures.as_completed(futures):
+                removed_lines, success = future.result()
+                print(f"Progress: Removed lines {removed_lines}, Result: {'Success' if success else 'Failure'}")
+        except KeyboardInterrupt:
+            print("Process interrupted by user. Cleaning up...")
+            executor.shutdown(wait=False)
+            raise
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process input file and script with random or sliding window line removal.')
