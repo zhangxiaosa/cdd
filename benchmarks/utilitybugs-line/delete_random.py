@@ -22,9 +22,9 @@ def run_script(script_path, cwd):
 def remove_lines(input_path, start_line, num_lines):
     with open(input_path, 'r', encoding='latin1') as file:
         lines = file.readlines()
-    
+
     modified_lines = [line for i, line in enumerate(lines) if i < start_line or i >= start_line + num_lines]
-    
+
     with open(input_path, 'w', encoding='latin1') as file:
         file.writelines(modified_lines)
 
@@ -42,7 +42,7 @@ def remove_random_lines(input_path, num_lines, total_lines):
 
     with open(input_path, 'w', encoding='latin1') as file:
         file.writelines(modified_lines)
-    
+
     return random_indices
 
 def log_result(log_path, removed_lines, success):
@@ -53,53 +53,53 @@ def log_result(log_path, removed_lines, success):
 def process_window(input_file, script_file, num_lines, total_lines, log_file):
     tmp_dir = copy_files_to_tmp(input_file, script_file)
     input_tmp_path = os.path.join(tmp_dir, 'input')
-    
+
     start_line = random.randint(0, total_lines - num_lines)
     remove_lines(input_tmp_path, start_line, num_lines)
     removed_lines = list(range(start_line + 1, start_line + num_lines + 1))
-    
+
     script_path = os.path.join(tmp_dir, 'r.sh')
-    
+
     result = run_script(script_path, cwd=tmp_dir)
     success = result == 0
-    
+
     log_result(log_file, removed_lines, success)
-    
+
     shutil.rmtree(tmp_dir)
-    
+
     return removed_lines, success
 
 def process_random_lines(input_file, script_file, num_lines, total_lines, log_file):
     tmp_dir = copy_files_to_tmp(input_file, script_file)
     input_tmp_path = os.path.join(tmp_dir, 'input')
-    
+
     removed_lines = remove_random_lines(input_tmp_path, num_lines, total_lines)
     script_path = os.path.join(tmp_dir, 'r.sh')
-    
+
     print(f"Executing script in {tmp_dir} after removing lines {removed_lines}")  # Debugging info
     result = run_script(script_path, cwd=tmp_dir)
     success = result == 0
-    
+
     log_result(log_file, removed_lines, success)
-    
+
     shutil.rmtree(tmp_dir)
-    
+
     return removed_lines, success
 
 def main(input_file, script_file, num_lines, jobs, attempts, mode):
-    log_file = f"{mode}_result.log"
-    
+    log_file = f"{num_lines}lines_{jobs}jobs_{attempts}attempts_{mode}mode.log"
+
     with open(log_file, 'w') as log_file_clear:
         log_file_clear.write("Log of removed lines and results:\n")
 
     with open(input_file, 'r', encoding='latin1') as file:
         original_lines = file.readlines()
     total_lines = len(original_lines)
-    
+
     if total_lines < num_lines:
         print(f"File has fewer than {num_lines} lines. Exiting.")
         return
-    
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = []
         for _ in range(attempts):
