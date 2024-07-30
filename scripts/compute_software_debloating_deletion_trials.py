@@ -42,27 +42,23 @@ def process_log_files(benchmark_list, result_path):
                                 repeated = False  # Reset repeated flag
                                 idx = ''
                                 # Check the next line for Try deleting information
-                                next_line = lines[i+1]
-                                match_delete = re.search(r'Try deleting\(complement of\): (\[.*?\])', next_line)
+                                match_delete = re.search(r'Try deleting\(complement of\): (\[.*?\])', lines[i+1])
                                 if match_delete:
                                     complement = True
                                     idx = match_delete.group(1)
                                 else:
-                                    match_delete = re.search(r'Try deleting: (\[.*?\])', next_line)
+                                    match_delete = re.search(r'Try deleting: (\[.*?\])', lines[i+1])
                                     if match_delete:
                                         idx = match_delete.group(1)
                                         repeated = idx in history
                                         history.add(idx)
                                     else:
                                         continue
-                                # Check for deletion success before the next deletion attempt
-                                for j in range(i+2, len(lines)):
-                                    if 'Deleted' in lines[j]:
-                                        status = 'success'
-                                        break
-                                    if 'Selected partition size:' in lines[j]:
-                                        status = 'fail'
-                                        break
+                                # Check for deletion success in the line after the Try deleting line
+                                if 'Deleted' in lines[i+2]:
+                                    status = 'success'
+                                else:
+                                    status = 'fail'
                                 output_file.write(f"{benchmark}, {total_size}, {delete_size}, {complement}, {repeated}, {status}\n")
             except FileNotFoundError:
                 print(f"Log file for {benchmark} not found in {result_path}")
