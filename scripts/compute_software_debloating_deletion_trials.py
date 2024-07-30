@@ -34,8 +34,8 @@ def process_log_files(benchmark_list, result_path):
                                 total_size = int(match.group(1))
                             # Reset history for a new run
                             history = set()
-                        if 'Selected partition size:' in line:
-                            match = re.search(r'Selected partition size: (\d+)', line)
+                        if re.search(r'Selected (partition|deletion) size:', line):
+                            match = re.search(r'Selected (partition|deletion) size: (\d+)', line)
                             if match:
                                 delete_size = int(match.group(1))
                                 complement = False  # Default assumption
