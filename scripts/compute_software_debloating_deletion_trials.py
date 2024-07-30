@@ -27,9 +27,8 @@ def process_log_files(benchmark_list, result_path):
                     repeated = False  # Default value for repeated
                     status = 'fail'  # Default status
                     for i, line in enumerate(lines):
-                        if 'Run #0' in line:
-                            # Get total_size from the next line
-                            match = re.search(r'Config size: (\d+)', lines[i+1])
+                        if 'Config size:' in line:
+                            match = re.search(r'Config size: (\d+)', line)
                             if match:
                                 total_size = int(match.group(1))
                             # Reset history for a new run
@@ -58,3 +57,4 @@ def process_log_files(benchmark_list, result_path):
 
 if __name__ == "__main__":
     process_log_files(BENCHMARK_LIST, RESULT_PATH)
+
