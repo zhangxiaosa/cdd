@@ -1,0 +1,60 @@
+import os
+import re
+import sys
+
+# List of benchmarks
+BENCHMARK_LIST = [
+    "bzip2-1.0.5", "chown-8.2", "date-8.21", "grep-2.19", 
+    "gzip-1.2.4", "mkdir-5.2.1", "rm-8.4", "sort-8.16", 
+    "tar-1.14", "uniq-8.16"
+]
+
+# The path to the results directory
+RESULT_PATH = sys.argv[1]
+
+def process_log_files(benchmark_list, result_path):
+    # Open file to write all trials
+    with open('all_deletion_trials.txt', 'w') as output_file:
+        for benchmark in benchmark_list:
+            log_file_path = os.path.join(result_path, f'log_{benchmark}.txt')
+            history = set()  # Track deletion attempts for each benchmark
+            try:
+                with open(log_file_path, 'r') as file:
+                    lines = file.readlines()
+                    total_size = 0
+                    delete_size = 0
+                    complement = False  # Default value for complement
+                    repeated = False  # Default value for repeated
+                    status = 'fail'  # Default status
+                    for i, line in enumerate(lines):
+                        if 'Run #0' in line:
+                            # Get total_size from the next line
+                            match = re.search(r'Config size: (\d+)', lines[i+1])
+                            if match:
+                                total_size = int(match.group(1))
+                            # Reset history for a new run
+                            history = set()
+                        if 'Selected partition size:' in line:
+                            match = re.search(r'Selected partition size: (\d+)', line)
+                            idx = ''
+                            if match:
+                                delete_size = int(match.group(1))
+                                complement = 'Try deleting(complement of)' in lines[i+1]
+                                idx = lines[i+1] if not complement else ''
+                                repeated = idx in history
+                                if idx:
+                                    history.add(idx)
+                            # Check for deletion success before the next deletion attempt
+                            for j in range(i+1, len(lines)):
+                                if 'Deleted' in lines[j]:
+                                    status = 'success'
+                                    break
+                                if 'Selected partition size:' in lines[j]:
+                                    status = 'fail'
+                                    break
+                            output_file.write(f"{benchmark}, {total_size}, {delete_size}, {complement}, {repeated}, {status}\n")
+            except FileNotFoundError:
+                print(f"Log file for {benchmark} not found in {result_path}")
+
+if __name__ == "__main__":
+    process_log_files(BENCHMARK_LIST, RESULT_PATH)
