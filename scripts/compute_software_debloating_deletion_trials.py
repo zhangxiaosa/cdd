@@ -35,23 +35,20 @@ def process_log_files(benchmark_list, result_path):
                             history = set()
                         if 'Selected partition size:' in line:
                             match = re.search(r'Selected partition size: (\d+)', line)
-                            idx = ''
                             if match:
                                 delete_size = int(match.group(1))
                                 complement = 'Try deleting(complement of)' in lines[i+1]
-                                idx = lines[i+1] if not complement else ''
-                                repeated = idx in history
-                                if idx:
+                                if not complement:
+                                    match_idx = re.search(r'Try deleting: (\[.*?\])', lines[i+1])
+                                    idx = match_idx.group(2)
+                                    repeated = idx in history
                                     history.add(idx)
-                            # Check for deletion success before the next deletion attempt
-                            for j in range(i+1, len(lines)):
-                                if 'Deleted' in lines[j]:
+                                # Check for deletion success before the next deletion attempt
+                                if 'Deleted' in lines[i+2]:
                                     status = 'success'
-                                    break
-                                if 'Selected partition size:' in lines[j]:
+                                else:
                                     status = 'fail'
-                                    break
-                            output_file.write(f"{benchmark}, {total_size}, {delete_size}, {complement}, {repeated}, {status}\n")
+                                output_file.write(f"{benchmark}, {total_size}, {delete_size}, {complement}, {repeated}, {status}\n")
             except FileNotFoundError:
                 print(f"Log file for {benchmark} not found in {result_path}")
 
