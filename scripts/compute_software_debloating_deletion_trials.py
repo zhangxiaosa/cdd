@@ -40,7 +40,7 @@ def process_log_files(benchmark_list, result_path):
                                 complement = 'Try deleting(complement of)' in lines[i+1]
                                 if not complement:
                                     match_idx = re.search(r'Try deleting: (\[.*?\])', lines[i+1])
-                                    idx = match_idx.group(2)
+                                    idx = match_idx.group(1)
                                     repeated = idx in history
                                     history.add(idx)
                                 # Check for deletion success before the next deletion attempt
