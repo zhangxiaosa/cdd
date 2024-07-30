@@ -37,7 +37,7 @@ def process_log_files(benchmark_list, result_path):
                         if re.search(r'Selected (partition|deletion) size:', line):
                             match = re.search(r'Selected (partition|deletion) size: (\d+)', line)
                             if match:
-                                delete_size = int(match.group(1))
+                                delete_size = int(match.group(2))
                                 complement = False  # Default assumption
                                 repeated = False  # Reset repeated flag
                                 idx = ''
