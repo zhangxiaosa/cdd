@@ -27,8 +27,9 @@ def process_log_files(benchmark_list, result_path):
                     repeated = False  # Default value for repeated
                     status = 'fail'  # Default status
                     for i, line in enumerate(lines):
-                        if 'Config size:' in line:
-                            match = re.search(r'Config size: (\d+)', line)
+                        if 'Running ddmin - Size' in line:
+                            # Get total_size from the next line
+                            match = re.search(r'Config size: (\d+)', lines[i+1])
                             if match:
                                 total_size = int(match.group(1))
                             # Reset history for a new run
@@ -37,21 +38,34 @@ def process_log_files(benchmark_list, result_path):
                             match = re.search(r'Selected partition size: (\d+)', line)
                             if match:
                                 delete_size = int(match.group(1))
-                                complement = 'Try deleting(complement of)' in lines[i+1]
-                                if not complement:
-                                    match_idx = re.search(r'Try deleting: (\[.*?\])', lines[i+1])
-                                    idx = match_idx.group(1)
-                                    repeated = idx in history
-                                    history.add(idx)
-                                # Check for deletion success before the next deletion attempt
-                                if 'Deleted' in lines[i+2]:
-                                    status = 'success'
+                                complement = False  # Default assumption
+                                repeated = False  # Reset repeated flag
+                                idx = ''
+                                # Check the next line for Try deleting information
+                                next_line = lines[i+1]
+                                match_delete = re.search(r'Try deleting\(complement of\): (\[.*?\])', next_line)
+                                if match_delete:
+                                    complement = True
+                                    idx = match_delete.group(1)
                                 else:
-                                    status = 'fail'
+                                    match_delete = re.search(r'Try deleting: (\[.*?\])', next_line)
+                                    if match_delete:
+                                        idx = match_delete.group(1)
+                                        repeated = idx in history
+                                        history.add(idx)
+                                    else:
+                                        continue
+                                # Check for deletion success before the next deletion attempt
+                                for j in range(i+2, len(lines)):
+                                    if 'Deleted' in lines[j]:
+                                        status = 'success'
+                                        break
+                                    if 'Selected partition size:' in lines[j]:
+                                        status = 'fail'
+                                        break
                                 output_file.write(f"{benchmark}, {total_size}, {delete_size}, {complement}, {repeated}, {status}\n")
             except FileNotFoundError:
                 print(f"Log file for {benchmark} not found in {result_path}")
 
 if __name__ == "__main__":
     process_log_files(BENCHMARK_LIST, RESULT_PATH)
-
