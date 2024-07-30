@@ -27,7 +27,7 @@ def process_log_files(benchmark_list, result_path):
                     repeated = False  # Default value for repeated
                     status = 'fail'  # Default status
                     for i, line in enumerate(lines):
-                        if 'Running ddmin - Size' in line:
+                        if re.search(r'Running .* - Size', line):
                             # Get total_size from the next line
                             match = re.search(r'Config size: (\d+)', lines[i+1])
                             if match:
