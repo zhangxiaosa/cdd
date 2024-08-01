@@ -119,6 +119,36 @@ class AbstractCDD(object):
 
             run += 1
 
+        # After main reduction loop, try deleting each element one by one
+        reduction_possible = True
+        current_best_config_idx_backup = self.current_best_config_idx[:]
+
+        while reduction_possible:
+            reduction_possible = False
+            config_size_before = self.get_current_config_size()
+
+            for idx in range(config_size_before):
+                if not self.current_best_config_idx[idx]:
+                    continue
+
+                config_to_keep = self.current_best_config_idx[:]
+                config_to_keep[idx] = False
+                outcome = self._test_config(config_to_keep, ('single_pass_%d' % idx,))
+
+                if outcome is Outcome.PASS:
+                    self.current_best_config_idx[idx] = False
+                    reduction_possible = True
+                    log_to_print = utils.generate_log([idx], "Deleted single element", print_idx=True, threshold=30)
+                    logger.info(log_to_print)
+
+            # If no further reduction was possible, exit the loop
+            if config_size_before == self.get_current_config_size():
+                break
+
+        # Log the final reduction after all possible deletions
+        logger.info("Reduced one by one: %d/%d", self.get_current_config_size(), len(current_best_config_idx_backup))
+        self.current_best_config_idx = current_best_config_idx_backup[:]
+
         logger.info("Final size: %d/%d" % (self.get_current_config_size(), len(config)))
         logger.info("Execution time at this level: %f s" % (time.time() - time_start))
         return self.map_idx_to_config(self.current_best_config_idx)
