@@ -135,7 +135,7 @@ class AbstractCDD(object):
                 config_to_keep[idx] = False
                 outcome = self._test_config(config_to_keep, ('single_pass_%d' % idx,))
 
-                if outcome is Outcome.PASS:
+                if outcome is Outcome.FAIL:
                     self.current_best_config_idx[idx] = False
                     reduction_possible = True
                     log_to_print = utils.generate_log([idx], "Deleted single element", print_idx=True, threshold=30)
