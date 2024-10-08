@@ -129,7 +129,7 @@ for benchmark in "${benchmarks[@]}"; do
         mkdir ./output_dir
 	      cp ./${benchmark}.c ./output_dir
 
-        timeout -s 9 10800s /home/coq/cdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ${args_for_tool} ./test.sh ./${benchmark}.c
+        timeout -s 9 48h /home/coq/cdd/build/bin/chisel --skip_local_dep --skip_global_dep --skip_dce --output_dir ./output_dir ${args_for_tool} ./test.sh ./${benchmark}.c
         ret=$?
         # save result
         cp -r ./output_dir ${result_path}
