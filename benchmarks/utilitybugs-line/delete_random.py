@@ -73,7 +73,7 @@ def remove_random_chars(input_path, num_chars, total_chars):
 def log_result(log_path, removed_units, success, unit_type):
     with lock:
         with open(log_path, 'a') as log_file:
-            log_file.write(f"Removed {len(removed_units)} {unit_type}: {'Success' if success else 'Failure'}\n")
+            log_file.write(f"Removed {removed_units} {unit_type}: {'Success' if success else 'Failure'}\n")
 
 def process_window(input_file, script_file, num_units, total_units, log_file, unit_type):
     tmp_dir = copy_files_to_tmp(input_file, script_file)
@@ -121,9 +121,6 @@ def process_random_units(input_file, script_file, num_units, total_units, log_fi
 
 def main(input_file, script_file, num_units, jobs, attempts, mode, unit_type):
     log_file = f"{num_units}_{unit_type}_{jobs}_jobs_{attempts}_attempts_{mode}_mode.log"
-
-    with open(log_file, 'w') as log_file_clear:
-        log_file_clear.write("Log of removed units and results:\n")
 
     if unit_type == 'lines':
         with open(input_file, 'r', encoding='latin1') as file:
