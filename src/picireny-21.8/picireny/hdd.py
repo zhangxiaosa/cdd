@@ -59,7 +59,7 @@ def hddmin(hdd_tree, *,
         _collect_level_nodes(hdd_tree, 0)
         return level_nodes
 
-    for iter_cnt in itertools.count():
+    for iter_cnt in [0]:
         logger.info('Iteration #%d', iter_cnt)
 
         changed = False
