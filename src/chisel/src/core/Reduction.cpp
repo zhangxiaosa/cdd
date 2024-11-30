@@ -230,33 +230,40 @@ bool intersect(std::vector<int>& A,std::vector<int>& B){
   return false;
 }
 
-std::vector<int> sort_index(std::vector<float>& p, int shuffle) {
-    std::vector<int> idx(p.size());
+template <typename T>
+std::vector<int> sort_and_shuffle_indices(const std::vector<T>& values, int shuffle_seed) {
+    std::vector<int> idx(values.size());
     std::iota(idx.begin(), idx.end(), 0);
 
-    // Shuffle the indices using the provided seed if shuffle is not -1
-    if (shuffle != -1) {
-        std::mt19937 g(shuffle);
-        std::shuffle(idx.begin(), idx.end(), g);
-    }
-
-    std::stable_sort(idx.begin(), idx.end(), [&p](int i1, int i2) {
-        return p[i1] < p[i2];
+    // sort indices
+    std::sort(idx.begin(), idx.end(), [&values](int i1, int i2) {
+        return values[i1] < values[i2];
     });
+
+    // shuffle elements with the same value
+    if (shuffle_seed != -1) {
+        std::mt19937 g(shuffle_seed);
+
+        for (size_t i = 0; i < idx.size();) {
+            size_t j = i + 1;
+            while (j < idx.size() && values[idx[i]] == values[idx[j]]) {
+                ++j;
+            }
+            // now idx[i..j-1] have the same value
+            if (j - i > 1) {
+                std::shuffle(idx.begin() + i, idx.begin() + j, g);
+            }
+            i = j;
+        }
+    }
 
     return idx;
 }
 
-std::vector<int> sort_index_counter(std::vector<int>& counters) {
-  std::vector<int> idx(counters.size());
-  iota(idx.begin(),idx.end(),0);
-  stable_sort(idx.begin(),idx.end(),[&counters](int i1, int i2) {return counters[i1] < counters[i2];});
-  return idx;
-}
 
 std::vector<int> sample(std::vector<float>& p, int shuffle) {
   std::vector<int> res;
-  std::vector<int> idx = sort_index(p, shuffle);
+  std::vector<int> idx = sort_and_shuffle_indices(p, shuffle);
   double tmp = 1;
   double last = 0;
   int k = 0;
@@ -326,9 +333,9 @@ int compute_size_by_counter(int counter, float init_probability) {
     return size;
 }
 
-std::vector<int> sample_by_counter(std::vector<int>& counters, float init_probability) {
+std::vector<int> sample_by_counter(std::vector<int>& counters, int shuffle, float init_probability) {
   std::vector<int> res;
-  std::vector<int> idx = sort_index_counter(counters);
+  std::vector<int> idx = sort_and_shuffle_indices(counters, shuffle);
   int counter_min = find_min_counter(counters);
   int size_current = compute_size_by_counter(counter_min, init_probability);
   int num_available_element = count_available_element(counters);
@@ -605,7 +612,7 @@ DDElementSet Reduction::doCDD(DDElementVector &Decls) {
   while (true) {
     spdlog::get("Logger")->info("Config size: {}", configSize);
     // select a subsequence for testing
-    index=sample_by_counter(counters, initialP);
+    index=sample_by_counter(counters, shuffle, initialP);
     program.clear();
     spdlog::get("Logger")->info("Selected deletion size: {}", index.size());
 
