@@ -183,15 +183,34 @@ class AbstractCDD(object):
         available_idx_with_probability = [(idx, probability) for idx, probability in enumerate(self.probabilities) if
                                           probability != -1]
 
-        # shuffle
-        if self.shuffle is not None:
-            random.shuffle(available_idx_with_probability)
-
         # sort idx by probability
-        sorted_available_idx_with_probability = sorted(available_idx_with_probability, key=lambda x: x[1])
+        sorted_available_idx_with_probability = sorted(
+            available_idx_with_probability, key=lambda x: x[1]
+        )
+
+        # now shuffle elements with the same probability
+        from itertools import groupby
+        from operator import itemgetter
+
+        # group the sorted list by probability
+        grouped = [
+            list(group) for _, group in groupby(
+                sorted_available_idx_with_probability, key=itemgetter(1)
+            )
+        ]
+
+        # shuffle each group if self.shuffle is not None
+        if self.shuffle is not None:
+            for group in grouped:
+                random.shuffle(group)
+
+        # flatten the list back
+        sorted_shuffled_available_idx_with_probability = [
+            item for group in grouped for item in group
+        ]
 
         # extract sorted idx
-        available_idx = [idx for idx, _ in sorted_available_idx_with_probability]
+        available_idx = [idx for idx, _ in sorted_shuffled_available_idx_with_probability]
 
         current_size = 0
         accumulated_probability = 1
