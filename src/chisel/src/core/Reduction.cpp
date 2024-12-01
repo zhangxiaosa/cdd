@@ -602,6 +602,7 @@ DDElementSet Reduction::doCDD(DDElementVector &Decls) {
   int len=Decls.size();
   float delta=0.1;
   float initialP=OptionManager::InitProbability;
+  int shuffle=OptionManager::Shuffle;
   
   std::vector<int> counters(len, 0);
 
