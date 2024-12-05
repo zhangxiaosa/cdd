@@ -178,44 +178,28 @@ class AbstractCDD(object):
 
     # how probdd compute the next subset to delete
     def sample_by_probability(self):
+        # Filter out those removed elements (probability is -1)
+        available_idx_with_probability = [
+            (idx, probability) for idx, probability in enumerate(self.probabilities) if probability != -1
+        ]
 
-        # filter out those removed elements (probability is -1)
-        available_idx_with_probability = [(idx, probability) for idx, probability in enumerate(self.probabilities) if
-                                          probability != -1]
+        # Shuffle the list first if self.shuffle is not None
+        if self.shuffle is not None:
+            random.shuffle(available_idx_with_probability)
 
-        # sort idx by probability
+        # Sort the list by probability
         sorted_available_idx_with_probability = sorted(
             available_idx_with_probability, key=lambda x: x[1]
         )
 
-        # now shuffle elements with the same probability
-        from itertools import groupby
-        from operator import itemgetter
-
-        # group the sorted list by probability
-        grouped = [
-            list(group) for _, group in groupby(
-                sorted_available_idx_with_probability, key=itemgetter(1)
-            )
-        ]
-
-        # shuffle each group if self.shuffle is not None
-        if self.shuffle is not None:
-            for group in grouped:
-                random.shuffle(group)
-
-        # flatten the list back
-        sorted_shuffled_available_idx_with_probability = [
-            item for group in grouped for item in group
-        ]
-
-        # extract sorted idx
-        available_idx = [idx for idx, _ in sorted_shuffled_available_idx_with_probability]
+        # Extract sorted indices
+        available_idx = [idx for idx, _ in sorted_available_idx_with_probability]
 
         current_size = 0
         accumulated_probability = 1
         current_gain = 1
         last_gain = 0
+
         while current_size < len(available_idx):
             current_size += 1
 
@@ -224,7 +208,7 @@ class AbstractCDD(object):
 
             current_gain = accumulated_probability * current_size
 
-            # find out the size with max gain and stop
+            # Find out the size with max gain and stop
             if current_gain < last_gain:
                 current_size -= 1
                 break
