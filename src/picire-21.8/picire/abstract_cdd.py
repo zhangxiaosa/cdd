@@ -159,20 +159,30 @@ class AbstractCDD(object):
 
     # how cdd compute the next subset to delete
     def sample_by_counter(self):
+        # Filter out those removed elements (counter is -1)
+        available_idx_with_counter = [
+            (idx, counter) for idx, counter in enumerate(self.counters) if counter != -1
+        ]
 
-        # filter out those removed elements (counter is -1)
-        available_idx_with_counter = [(idx, counter) for idx, counter in enumerate(self.counters) if counter != -1]
+        # Shuffle the list first if self.shuffle is not None
+        if self.shuffle is not None:
+            random.shuffle(available_idx_with_counter)
 
-        # sort idx by counter
-        sorted_available_idx_with_counter = sorted(available_idx_with_counter, key=lambda x: x[1])
+        # Sort the list by counter
+        sorted_available_idx_with_counter = sorted(
+            available_idx_with_counter, key=lambda x: x[1]
+        )
 
-        # extract sorted idx
+        # Extract sorted indices
         available_idx = [idx for idx, _ in sorted_available_idx_with_counter]
 
+        # Compute the size based on the minimum counter
         counter_min = self.find_min_counter()
         current_size = self.compute_size(counter_min)
 
+        # Select indices to delete
         config_idx_to_delete = available_idx[:current_size]
+
         logger.info("\tSelected deletion size (cdd): " + str(len(config_idx_to_delete)))
         return config_idx_to_delete
 
