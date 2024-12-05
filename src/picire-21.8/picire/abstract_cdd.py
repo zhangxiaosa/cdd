@@ -134,14 +134,36 @@ class AbstractCDD(object):
 
     # directly compute the size of next subset based on the counter
     def compute_size(self, counter):
-        size = round(-1 / math.log(1 - self.init_probability, math.e))
-        i = 0
-        while i < counter:
-            size = math.floor(size * (1 - pow(math.e, -1)))
-            i = i + 1
-        size = min(size, len(self.counters))
-        size = max(size, 1)
-        return size
+        # Compute the current probability based on the initial probability and the counter
+        current_probability = self.init_probability
+        factor = 1 - pow(math.e, -1)
+
+        for _ in range(counter):
+            current_probability /= factor
+
+        # Loop to find the size that maximizes the formula: size * (1 - current_probability)^size
+        max_size = 1
+        max_gain = 0
+        size = 1
+
+        while True:
+            gain = size * pow(1 - current_probability, size)
+
+            if gain > max_gain:
+                max_gain = gain
+                max_size = size
+            elif gain == max_gain:
+                # If the gain is equal, prefer the larger size
+                max_size = size
+            else:
+                break
+            size += 1
+
+        # Ensure the size is within bounds
+        max_size = min(max_size, len(self.counters))
+        max_size = max(max_size, 1)
+
+        return max_size
 
     # increase all counters by 1
     def increase_all_counters(self):
