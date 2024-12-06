@@ -235,27 +235,16 @@ std::vector<int> sort_and_shuffle_indices(const std::vector<T>& values, int shuf
     std::vector<int> idx(values.size());
     std::iota(idx.begin(), idx.end(), 0);
 
+    // shuffle elements
+    if (shuffle_seed != -1) {
+        std::mt19937 g(shuffle_seed);
+        std::shuffle(idx.begin(), idx.end(), g);
+    }
+
     // sort indices
     std::sort(idx.begin(), idx.end(), [&values](int i1, int i2) {
         return values[i1] < values[i2];
     });
-
-    // shuffle elements with the same value
-    if (shuffle_seed != -1) {
-        std::mt19937 g(shuffle_seed);
-
-        for (size_t i = 0; i < idx.size();) {
-            size_t j = i + 1;
-            while (j < idx.size() && values[idx[i]] == values[idx[j]]) {
-                ++j;
-            }
-            // now idx[i..j-1] have the same value
-            if (j - i > 1) {
-                std::shuffle(idx.begin() + i, idx.begin() + j, g);
-            }
-            i = j;
-        }
-    }
 
     return idx;
 }
