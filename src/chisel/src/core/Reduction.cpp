@@ -2,11 +2,11 @@
 
 #include <algorithm>
 #include <spdlog/spdlog.h>
-#include <cmath>
 #include <map>
 #include <set>
 #include <iostream>
 #include <iterator>
+#include <vector>
 
 #include "clang/Basic/SourceManager.h"
 #include "llvm/Support/Program.h"
@@ -312,14 +312,38 @@ int find_min_counter(std::vector<int>& counters) {
 }
 
 int compute_size_by_counter(int counter, float init_probability) {
-    int size = round(-1.0 / log(1 - init_probability));
-    int i = 0;
-    while (i < counter) {
-        size = floor(size * (1 - exp(-1)));
-        i = i + 1;
+    // Compute the current probability based on the initial probability and the counter
+    float current_probability = init_probability;
+    float factor = 1 - std::exp(-1);
+
+    for (int i = 0; i < counter; ++i) {
+        current_probability /= factor;
     }
-    size = std::max(size, 1);
-    return size;
+
+    // Loop to find the size that maximizes the formula: size * (1 - current_probability)^size
+    int max_size = 1;
+    float max_gain = 0.0;
+    int size = 1;
+
+    while (true) {
+        float gain = size * std::pow(1 - current_probability, size);
+
+        if (gain > max_gain) {
+            max_gain = gain;
+            max_size = size;
+        } else if (gain == max_gain) {
+            // If the gain is equal, prefer the larger size
+            max_size = size;
+        } else {
+            break;
+        }
+        ++size;
+    }
+
+    // Ensure the size is within bounds
+    max_size = std::max(max_size, 1);
+
+    return max_size;
 }
 
 std::vector<int> sample_by_counter(std::vector<int>& counters, int shuffle, float init_probability) {
