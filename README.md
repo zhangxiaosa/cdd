@@ -1,4 +1,4 @@
-# Artifact for "Toward a Better Understandings of Probabilistic Delta Debugging"
+# Artifact for "Toward a Better Understanding of Probabilistic Delta Debugging"
 
 ## Introduction
 
