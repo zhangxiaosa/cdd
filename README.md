@@ -38,11 +38,11 @@ To evaluate this artifact, a Linux machine with [docker](https://docs.docker.com
 In this project,
 benchmark suite are in folder `./benchmarks`.
 
-1. `./benchmarks/compilerbugs`: 20 cases triggering C compiler bugs.
+1. `./benchmarks/compilerbugs`(BM-C): 20 cases triggering C compiler bugs.
 
-2. `./benchmarks/debloating`: 10 cases for software debloating.
+2. `./benchmarks/debloating`(BM-DBT): 10 cases for software debloating.
 
-3. `./benchmarks/xmlprocessorbugs`: 46 cases triggering XML processor bugs.
+3. `./benchmarks/xmlprocessorbugs`(BM-XML): 46 cases triggering XML processor bugs.
 
 ### Build the Tools
 
@@ -54,79 +54,85 @@ cd /home/coq/cdd
 ./scripts/build_chisel.sh
 ```
 
-### Reproduce RQ1 & RQ2: the Effectiveness and Efficiency of DDMIN, ProbDD and CDD.
+### Run ddmin, ProbDD and CDD on each benchmark suite.
 
-1. Evaluate DDMIN, ProbDD and CDD on 20 programs triggering compiler bugs.
+##### Evaluate DDMIN, ProbDD and CDD on BM-C.
 
    ```bash
    cd /home/coq/cdd
 
-   # evaluate algorithms on 20 compiler bugs.
+   # ddmin (around 100 hours given single process)
+   ./scripts/run_program_reduction.sh --args_for_picireny "--dd ddmin"
 
-   # ddmin on 20 compiler bugs (around 53 hours given single process)
-   ./scripts/run_hdd.sh --args_for_picireny "--dd ddmin"
+   # probdd (around 50 hours given single process)
+   ./scripts/run_program_reduction.sh --args_for_picireny "--dd probdd"
 
-   # evaluate Probdd (around 25 hours given single process)
-   ./scripts/run_hdd.sh --args_for_picireny "--dd probdd"
-
-   # evaluate CDD (around 25 hours given single process)
-   ./scripts/run_hdd.sh --args_for_picireny "--dd counterdd"
+   # evaluate CDD (around 50 hours given single process)
+   ./scripts/run_program_reduction.sh --args_for_picireny "--dd cdd"
 
    # To evaluate on multiple benchmarks concurrently, use the flag --max_jobs, for example:
-   ./scripts/run_hdd.sh --args_for_picireny "--dd ddmin" --max_jobs "8"
+   ./scripts/run_program_reduction.sh --args_for_picireny "--dd ddmin" --max_jobs "8"
 
    # To evaluate a specific benchmark, use the flag --benchmark, for example:
-   ./scripts/run_hdd.sh --args_for_picireny "--dd ddmin" --benchmark "clang-22382"
+   ./scripts/run_program_reduction.sh --args_for_picireny "--dd ddmin" --benchmark "clang-22382"
    ```
 
-2. Results and log.
+Results and log.
 
-   Note that every time you start `./run_chisel.sh`, a folder named by current timestamp is created in
-   `~/cdd/results/hdd`.
-   For instance, if current time is 2023/09/12,23:06:25, all results produced by this run will be saved in `~/cdd/results/hdd/20230912230625/`. Besides, there is a config.txt recording the options in this run, under the folder `20230912230625`.
+   Note that every time you start `./run_program_reduction.sh`, a folder named by current timestamp is created in
+   `~/cdd/results/compilerbugs`.
+   For instance, if current time is 2023/09/12,23:06:25, all results produced by this run will be saved in `~/cdd/results/compilerbugs/20230912230625/`. Besides, there is a config.txt recording the options in this run, under the folder `20230912230625`.
 
    Summarize the result in this run.
 
    ```bash
-   cd ~/cdd/results/hdd/20230912230625/
-   python ~/cdd/script/summarize_hdd.py .
+   cd ~/cdd/results/compilerbugs/20230912230625/
+   python ~/cdd/script/summarize_program_reduction.py .
    ```
 
-   Then, file `summary.csv` will be saved in `~/cdd/results/hdd/20230912230625/`.
+   Then, file `summary.csv` will be saved in `~/cdd/results/compilerbugs/20230912230625/`.
    In `summary.csv`, data such as time, final size and query number for each benchmark is displayed.
 
-3. Evaluate DDMIN, ProbDD and CDD on 10 programs in software debloating.
+##### Evaluate ddmin, ProbDD and CDD on BM-DBT.
 
-   Similar to how we evaluate algorithms in `compilerbug`, just run `./script/run_chisel.sh` with correct options.
+   Similar to how we evaluate algorithms in BM-C, just run `./script/run_chisel.sh` with correct options.
 
    ```bash
-   # ddmin
-   ./scripts/run_chisel.sh --args_for_chisel "--algorithm ddmin"
-   # ProbDD
-   ./scripts/run_chisel.sh --args_for_chisel "--algorithm probdd"
-   # CDD
-   ./scripts/run_chisel.sh --args_for_chisel "--algorithm counterdd"
+   # ddmin (around 180 hours given single process)
+   ./scripts/run_software_debloating.sh --args_for_chisel "--algorithm ddmin"
+   # ProbDD (around 120 hours given single process)
+   ./scripts/run_software_debloating.sh --args_for_chisel "--algorithm probdd"
+   # CDD (around 120 hours given single process)
+   ./scripts/run_software_debloating.sh --args_for_chisel "--algorithm cdd"
 
    # To run multiple benchmarks concurrently, use --max_jobs
-   ./scripts/run_chisel.sh --args_for_chisel "--algorithm ddmin" --max_jobs "8"
+   ./scripts/run_software_debloating.sh --args_for_chisel "--algorithm ddmin" --max_jobs "8"
    # To run a specific benchmark, use --benchmark
-   ./scripts/run_chisel.sh --args_for_chisel "--algorithm ddmin" --benchmark "mkdir-5.2.1"
+   ./scripts/run_software_debloating.sh --args_for_chisel "--algorithm ddmin" --benchmark "mkdir-5.2.1"
    ```
 
    Similarly, results will be stored in a folder named by current timestamp, under `~/results/chisel`. Run `summarize_chisel.py` to generate `summary.csv`.
 
    ```bash
-   cd ~/cdd/results/chisel/20230912230625/
-   python ~/cdd/script/summarize_chisel.py .
+   cd ~/cdd/results/software_debloating/20230912230625/
+   python ~/cdd/script/summarize_software_debloating.py .
+   ```
+   
+##### Evaluate ddmin, ProbDD and CDD on BM-XML.
+
+   Similarly, 
+   
+   ```bash
+   cd /home/coq/cdd
+
+   # ddmin (around 12 hours given single process)
+   ./scripts/run_xml_reduction.sh --args_for_picireny "--dd ddmin"
+
+   # probdd (around 10 hours given single process)
+   ./scripts/run_xml_reduction.sh --args_for_picireny "--dd probdd"
+
+   # evaluate CDD (around 10 hours given single process)
+   ./scripts/run_xml_reduction.sh --args_for_picireny "--dd cdd"
+   
    ```
 
-### Reproduce RQ3: Performance of ProbDD and CDD with Different Initial Probabilities
-
-In RQ1 and RQ2, the initial probability is 0.1 by default. In this RQ, we explictly specify different initial probability (0.05, 0.15, 0.2, 0.25) for evaluation. Everything else is the same as RQ1 and RQ2.
-
-```bash
-# for 20 cases about compiler bugs
-./scripts/run_hdd.sh --args_for_picireny "--dd probdd --init-probability 0.05"
-# foe 10 cases about software debloating
-./scripts/run_chisel.sh --args_for_chisel "--algorithm ddmin --init_probability 0.05"
-```
