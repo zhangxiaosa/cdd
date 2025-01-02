@@ -62,19 +62,19 @@ cd /home/coq/cdd
    cd /home/coq/cdd
 
    # ddmin (around 100 hours given single process)
-   ./scripts/run_program_reduction.sh --args_for_picireny "--dd ddmin --init-probability 0.1"
+   ./scripts/run_program_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.1"
 
    # probdd (around 50 hours given single process)
-   ./scripts/run_program_reduction.sh --args_for_picireny "--dd probdd --init-probability 0.1"
+   ./scripts/run_program_reduction.sh --args_for_tool "--dd probdd --init-probability 0.1"
 
    # evaluate CDD (around 50 hours given single process)
-   ./scripts/run_program_reduction.sh --args_for_picireny "--dd cdd --init-probability 0.1"
+   ./scripts/run_program_reduction.sh --args_for_tool "--dd cdd --init-probability 0.1"
 
    # To evaluate on multiple benchmarks concurrently, use the flag --max_jobs, for example:
-   ./scripts/run_program_reduction.sh --args_for_picireny "--dd ddmin --init-probability 0.1" --max_jobs "8"
+   ./scripts/run_program_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.1" --max_jobs "8"
 
    # To evaluate a specific benchmark, use the flag --benchmark, for example:
-   ./scripts/run_program_reduction.sh --args_for_picireny "--dd ddmin --init-probability 0.1" --benchmark "clang-22382"
+   ./scripts/run_program_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.1" --benchmark "clang-22382"
    ```
 
 Results and log.
@@ -99,22 +99,22 @@ Results and log.
 
    ```bash
    # ddmin (around 180 hours given single process)
-   ./scripts/run_software_debloating.sh --args_for_chisel "--algorithm ddmin --init_probability 0.1"
+   ./scripts/run_software_debloating.sh --args_for_tool "--algorithm ddmin --init_probability 0.1"
    # ProbDD (around 120 hours given single process)
-   ./scripts/run_software_debloating.sh --args_for_chisel "--algorithm probdd --init_probability 0.1"
+   ./scripts/run_software_debloating.sh --args_for_tool "--algorithm probdd --init_probability 0.1"
    # CDD (around 120 hours given single process)
-   ./scripts/run_software_debloating.sh --args_for_chisel "--algorithm cdd --init_probability 0.1"
+   ./scripts/run_software_debloating.sh --args_for_tool "--algorithm cdd --init_probability 0.1"
 
    # To run multiple benchmarks concurrently, use --max_jobs
-   ./scripts/run_software_debloating.sh --args_for_chisel "--algorithm ddmin --init_probability 0.1" --max_jobs "8"
+   ./scripts/run_software_debloating.sh --args_for_tool "--algorithm ddmin --init_probability 0.1" --max_jobs "8"
    # To run a specific benchmark, use --benchmark
-   ./scripts/run_software_debloating.sh --args_for_chisel "--algorithm ddmin --init_probability 0.1" --benchmark "mkdir-5.2.1"
+   ./scripts/run_software_debloating.sh --args_for_tool "--algorithm ddmin --init_probability 0.1" --benchmark "mkdir-5.2.1"
    ```
 
    Similarly, results will be stored in a folder named by current timestamp, under `~/results/chisel`. Run `summarize_chisel.py` to generate `summary.csv`.
 
    ```bash
-   cd ~/cdd/results/software_debloating/20230912230625/
+   cd ~/cdd/results/chisel/20230912230625/
    python ~/cdd/script/summarize_software_debloating.py .
    ```
    
@@ -126,13 +126,13 @@ Results and log.
    cd /home/coq/cdd
 
    # ddmin (around 12 hours given single process)
-   ./scripts/run_xml_reduction.sh --args_for_picireny "--dd ddmin --init-probability 0.0025"
+   ./scripts/run_xml_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.0025"
 
    # probdd (around 10 hours given single process)
-   ./scripts/run_xml_reduction.sh --args_for_picireny "--dd probdd --init-probability 0.0025"
+   ./scripts/run_xml_reduction.sh --args_for_tool "--dd probdd --init-probability 0.0025"
 
    # evaluate CDD (around 10 hours given single process)
-   ./scripts/run_xml_reduction.sh --args_for_picireny "--dd cdd --init-probability 0.0025"
+   ./scripts/run_xml_reduction.sh --args_for_tool "--dd cdd --init-probability 0.0025"
 
    ```
 
@@ -141,14 +141,15 @@ Randomness can be enabled or disabled, like this:
 
    ```bash
    # randomness is disabled by default
-   ./scripts/run_program_reduction.sh --args_for_picireny "--dd ddmin --init-probability 0.1"
+   ./scripts/run_program_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.1"
 
    # randomness is enabled by --shuffle, 0 being a random seed passed to the random library.
-   ./scripts/run_program_reduction.sh --args_for_picireny "--dd ddmin --init-probability 0.1 --shuffle 0"
+   ./scripts/run_program_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.1 --shuffle 0"
    ```
 
 ### Compute p-value
 All important data has been precomputed and saved in ./script/data.csv. To compute the p-value via Wilcoxon signed-rank test, run:
+
    ```bash
    # p-value between ddmin, ProbDD and CDD
    cd ~/cdd/scripts/
