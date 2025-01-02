@@ -133,9 +133,18 @@ Results and log.
 
    # evaluate CDD (around 10 hours given single process)
    ./scripts/run_xml_reduction.sh --args_for_picireny "--dd cdd --init-probability 0.0025"
-   
+
    ```
 
 ### Enable or disable the randomness
+Randomness can be enabled or disabled, like this:
 
+   ```bash
+   # randomness is disabled by default
+   ./scripts/run_program_reduction.sh --args_for_picireny "--dd ddmin --init-probability 0.1"
 
+   # randomness is enabled by --shuffle, 0 being a random seed passed to the random library.
+   ./scripts/run_program_reduction.sh --args_for_picireny "--dd ddmin --init-probability 0.1 --shuffle 0"
+   ```
+
+### Compute p-value
