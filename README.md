@@ -148,3 +148,13 @@ Randomness can be enabled or disabled, like this:
    ```
 
 ### Compute p-value
+All important data has been precomputed and saved in ./script/data.csv. To compute the p-value via Wilcoxon signed-rank test, run:
+   ```bash
+   # p-value between ddmin, ProbDD and CDD
+   cd ~/cdd/scripts/
+   python ./wilconxon_all.py
+
+   # p-value between ProbDD and ProbDD-no-random
+   cd ~/cdd/scripts/
+   python ./wilconxon_randomness.py
+   ```
