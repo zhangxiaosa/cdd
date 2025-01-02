@@ -75,10 +75,6 @@ def process_benchmark(data, start, end, columns, benchmark_name):
         perform_wilcoxon_test(ddmin_data, cdd_data, metric_name, "ddmin", "cdd")
         perform_wilcoxon_test(probdd_data, cdd_data, metric_name, "probdd", "cdd")
 
-# Process each benchmark suite
-for benchmark_name, (start, end) in benchmark_ranges.items():
-    process_benchmark(data, start, end, columns, benchmark_name)
-
 # Process total data
 print("\nWilcoxon Signed-Rank Test for Total Data:")
 total_start, total_end = 161, 236
