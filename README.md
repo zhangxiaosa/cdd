@@ -6,17 +6,11 @@ Thank you for evaluating this artifact!
 
 To evaluate this artifact, a Linux machine with [docker](https://docs.docker.com/get-docker/) installed is needed.
 
-### List of Claims Supported by the Artifact
-
-- CDD simplifies ProbDD by substituting probabilities with counters, and thus ease comprehension and implementation.
-
-- On various intial settings, CDD consistently performs comparable to ProbDD, or even better than ProbDD.
-
 ### Notes
 
 - All the experiments take long time to finish, so it is recommended to use tools like screen and tmux to manage sessions if the experiments are run on remote server. We also provide flags for multi-processing.
 
-- The evaluation results may not exactly the same as shown in the paper, because both ProbDD and CDD are affected by randomness. Replicating the experiments for multiple times will such impact. However, the deviation should be trivial, and the results should still support the original claims in the paper.
+- The evaluation results may not exactly the same as shown in the paper, because both ProbDD and CDD are affected by randomness. Replicating the experiments for multiple times will mitigate such impact. However, the deviation should be trivial, and the results should still support the original claims in the paper.
 
 ### Docker Environment Setup
 
@@ -24,14 +18,14 @@ To evaluate this artifact, a Linux machine with [docker](https://docs.docker.com
 2. Install the docker image.
 
    ```bash
-   docker pull codesubmission/cdd:latest
+   docker pull m492zhan/cdd:latest
    # This step might takes a while, mainly depending on the network bandwidth. It also takes up much disk space (nearly 80GB)
    ```
 
 3. Start a container.
 
    ```bash
-   docker container run --cap-add SYS_PTRACE --interactive --tty codesubmission/cdd:latest /bin/bash
+   docker container run --cap-add SYS_PTRACE --interactive --tty m492zhan/cdd:latest /bin/bash
    # You should be at /tmp after the above command finishes
    # Your user name should be `coq` and all the following command are executed in docker
 
@@ -44,9 +38,11 @@ To evaluate this artifact, a Linux machine with [docker](https://docs.docker.com
 In this project,
 benchmark suite are in folder `./benchmarks`.
 
-1. `./benchmarks/compilerbug`: 20 cases for program reduction.
+1. `./benchmarks/compilerbugs`: 20 cases triggering C compiler bugs.
 
 2. `./benchmarks/debloating`: 10 cases for software debloating.
+
+3. `./benchmarks/xmlprocessorbugs`: 46 cases triggering XML processor bugs.
 
 ### Build the Tools
 
