@@ -12,7 +12,24 @@ To evaluate this artifact, a Linux machine with [docker](https://docs.docker.com
 
 - The evaluation results may not exactly the same as shown in the paper, because both ProbDD and CDD are affected by randomness. Replicating the experiments for multiple times will mitigate such impact. However, the deviation should be trivial, and the results should still support the original claims in the paper.
 
-### Structure Overview
+### Paper Overview
+
+This paper is structured around six key findings, with a combination of theoretical analysis and experimental evaluation.
+
+1. **Finding 1 & Finding 2**: These findings focus on theoretical proofs related to the reduction algorithms, establishing key properties of the techniques used.
+
+2. **Finding 3**: This finding presents a comprehensive evaluation of ddmin, ProbDD, and CDD across all benchmark suites, providing empirical insights into their performance.
+
+3. **Finding 4**: This finding investigates the role of randomness in ProbDD, evaluating whether the introduced randomness contributes to improved reduction efficiency.
+
+4. **Finding 5**: This finding analyzes the true bottlenecks of ddmin, identifying which parts of the algorithm contribute most to its overall execution time.
+
+5. **Finding 6**: This finding explores the limitations of ProbDD and CDD, analyzing cases where these approaches may not perform optimally.
+
+Among these findings, Finding 3, Finding 4, and Finding 5 involve experimental validation. The experiments will be structured based on these findings to ensure clear, targeted evaluations of the reduction techniques.
+
+
+### Project Structure Overview
 - **`src/`**: Contains source code for reduction techniques.
   - `chisel/`: Implements **ddmin, ProbDD, and CDD** in `src/core/Reduction.cpp`.
   - `picire-21.8/`: Implements **ddmin** in `picire/abstract_dd.py` and **ProbDD & CDD** in `picire/abstract_cdd.py`.
@@ -62,7 +79,7 @@ cd /home/coq/cdd
 ./scripts/build_chisel.sh
 ```
 
-### Run ddmin, ProbDD and CDD on each benchmark suite. (finding 3)
+### Finding 3: Run ddmin, ProbDD and CDD on each benchmark suite.
 
 ##### Evaluate DDMIN, ProbDD and CDD on BM-C.
 
@@ -157,7 +174,7 @@ All important data has been precomputed and saved in ./script/data.csv. To compu
    python ./wilconxon_randomness.py
   ```
 
-### Verify the impact of randomness (finding 4)
+### Finding 4: Verify the impact of randomness.
 Randomness can be enabled or disabled, like this:
 
    ```bash
@@ -168,7 +185,7 @@ Randomness can be enabled or disabled, like this:
    ./scripts/run_program_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.1 --shuffle 0"
    ```
 
-### Explore the bottleneck of ddmin (finding 5)
+### Finding 5: Explore the bottleneck of ddmin.
 Run the following scripts to reproduce the Fig. 2 in the paper.
 
 ```bash
