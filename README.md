@@ -62,7 +62,7 @@ cd /home/coq/cdd
 ./scripts/build_chisel.sh
 ```
 
-### Run ddmin, ProbDD and CDD on each benchmark suite.
+### Run ddmin, ProbDD and CDD on each benchmark suite. (finding 3)
 
 ##### Evaluate DDMIN, ProbDD and CDD on BM-C.
 
@@ -144,17 +144,6 @@ Results and log.
 
    ```
 
-### Enable or disable the randomness
-Randomness can be enabled or disabled, like this:
-
-   ```bash
-   # randomness is disabled by default
-   ./scripts/run_program_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.1"
-
-   # randomness is enabled by --shuffle, 0 being a random seed passed to the random library.
-   ./scripts/run_program_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.1 --shuffle 0"
-   ```
-
 ### Compute p-value
 All important data has been precomputed and saved in ./script/data.csv. To compute the p-value via Wilcoxon signed-rank test, run:
 
@@ -166,4 +155,24 @@ All important data has been precomputed and saved in ./script/data.csv. To compu
    # p-value between ProbDD and ProbDD-no-random
    cd ~/cdd/scripts/
    python ./wilconxon_randomness.py
+  ```
+
+### Verify the impact of randomness (finding 4)
+Randomness can be enabled or disabled, like this:
+
+   ```bash
+   # randomness is disabled by default
+   ./scripts/run_program_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.1"
+
+   # randomness is enabled by --shuffle, 0 being a random seed passed to the random library.
+   ./scripts/run_program_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.1 --shuffle 0"
    ```
+
+### Explore the bottleneck of ddmin (finding 5)
+Run the following scripts to reproduce the Fig. 2 in the paper.
+
+```bash
+./script/draw_c_stacked_barchart.py
+./script/draw_software_debloating_stacked_barchart.py
+./script/draw_xml_stacked_barchart.py
+```

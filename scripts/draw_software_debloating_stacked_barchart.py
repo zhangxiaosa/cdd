@@ -83,4 +83,4 @@ ax.legend()
 plt.subplots_adjust(left=0.14, right=0.98, top=0.99, bottom=0.07)
 # plt.tight_layout()
 # Saving the adjusted plot as a PDF file
-plt.savefig('./rq2_chisel_stacked_barchart.pdf')
+plt.savefig('./software_debloating_stacked_barchart.pdf')

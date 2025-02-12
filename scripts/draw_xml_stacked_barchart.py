@@ -81,4 +81,4 @@ ax.legend()
 plt.subplots_adjust(left=0.12, right=0.98, top=0.99, bottom=0.07)
 # plt.tight_layout()
 # Saving the adjusted plot as a PDF file
-plt.savefig('./rq2_xml_stacked_barchart.pdf')
+plt.savefig('./xml_stacked_barchart.pdf')
