@@ -161,7 +161,7 @@ Results and log.
 
    ```
 
-### Compute p-value
+##### Compute p-value
 All important data has been precomputed and saved in ./script/data.csv. To compute the p-value via Wilcoxon signed-rank test, run:
 
    ```bash
