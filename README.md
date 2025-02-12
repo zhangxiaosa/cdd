@@ -33,16 +33,23 @@ To evaluate this artifact, a Linux machine with [docker](https://docs.docker.com
    cd /home/coq/cdd
    ```
 
-### Benchmark Suites
+### Structure Overview:
+- **`src/`**: Contains source code for reduction techniques.
+  - `chisel/`: Implements **ddmin, ProbDD, and CDD** in `src/core/Reduction.cpp`.
+  - `picire-21.8/`: Implements **ddmin** in `picire/abstract_dd.py` and **ProbDD & CDD** in `picire/abstract_cdd.py`.
+  - `picireny-21.8/`: Implements **HDD**.
 
-In this project,
-benchmark suite are in folder `./benchmarks`.
+- **`benchmarks/`**: Contains benchmark suites used for evaluation.
+  - `compilerbugs/` (**BM-C**): 20 cases triggering C compiler bugs.
+  - `debloating/` (**BM-DBT**): 10 cases for software debloating.
+  - `xmlprocessorbugs/` (**BM-XML**): 46 cases triggering XML processor bugs.
 
-1. `./benchmarks/compilerbugs`(BM-C): 20 cases triggering C compiler bugs.
+- **`tools/`**: Contains utility tools, such as `token_counter.jar` for counting tokens.
 
-2. `./benchmarks/debloating`(BM-DBT): 10 cases for software debloating.
-
-3. `./benchmarks/xmlprocessorbugs`(BM-XML): 46 cases triggering XML processor bugs.
+- **`scripts/`**: Includes scripts for:
+  - Compiling (such as `build_chisel.sh`),
+  - Running experiments (such as `run_xml_reduction.sh`),
+  - Analyzing results (such as `summarize_xml_reduction.py`).
 
 ### Build the Tools
 
