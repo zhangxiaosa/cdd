@@ -12,10 +12,10 @@ To reduce string benchmarks by characters
 
 ```bash
 # ddmin
-./scripts/run_line_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.0000001 --atom char" --max_jobs 3
+./scripts/run_string_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.0000001 --atom char" --max_jobs 3
 ```
 
-To reduce string benchmarks by lines
+To reduce string benchmarks by lines (I broke each string benchmark into lines)
 
 ```bash
 # ddmin
