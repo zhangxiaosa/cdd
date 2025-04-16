@@ -1,5 +1,46 @@
 # Artifact for "Toward a Better Understanding of Probabilistic Delta Debugging"
 
+## 2025.4.16 update
+
+Location of docker image with string benchmarks
+
+```bash
+docker pull m492zhan/cdd:2025_04_16
+```
+
+To reduce string benchmarks by characters
+
+```bash
+# ddmin
+./scripts/run_line_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.0000001 --atom char" --max_jobs 3
+```
+
+To reduce string benchmarks by lines
+
+```bash
+# ddmin
+./scripts/run_line_reduction.sh --args_for_tool "--dd ddmin --init-probability 0.0000001 --atom line" --max_jobs 3
+```
+To run ProbDD and CDD.
+
+```bash
+# probdd
+./scripts/run_program_reduction.sh --args_for_tool "--dd probdd --init-probability 0.1" --max_jobs 3
+
+# cdd
+./scripts/run_program_reduction.sh --args_for_tool "--dd cdd --init-probability 0.1" --max_jobs 3
+
+```
+
+Script to simulate deletion success rate in a list. You can specify: total length, number of critical elements, and deletion mode (random/consecutive), etc.
+
+```bash
+./scripts/simulation.py
+```
+
+Some other experimental results: please check string.xlsx.
+
+
 ## Introduction
 
 Thank you for evaluating this artifact!
